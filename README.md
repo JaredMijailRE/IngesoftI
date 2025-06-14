@@ -22,10 +22,10 @@ Colaboradores:
 ---
 
 ## Descripción
-**SportsU** Es una aplicación web y móvil creada para mejorar y tomar, de forma eficiente, métricas y registros de actividades deportivas orientado a docentes de patinaje (temporal).
+**SportU** Es una aplicación web y móvil creada para mejorar y tomar, de forma eficiente, métricas y registros de actividades deportivas orientado a docentes de patinaje (temporal).
 
 ## Objetivo 
-**SportsU** busca facilitar y centralizar la toma de datos para actividades deportivas de estudiantes desde el punto de vista del profesor de forma interactiva y eficiente.
+**SportU** busca facilitar y centralizar la toma de datos para actividades deportivas de estudiantes desde el punto de vista del profesor de forma interactiva y eficiente.
 
 ---
 
