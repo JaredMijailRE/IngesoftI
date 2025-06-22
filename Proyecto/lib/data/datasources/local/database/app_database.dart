@@ -16,18 +16,8 @@ import 'daos/participants_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [
-    UsersTable,
-    SportsTable,
-    EventsTable,
-    ParticipantsTable,
-  ],
-  daos: [
-    UsersDao,
-    SportsDao,
-    EventsDao,
-    ParticipantsDao,
-  ],
+  tables: [UsersTable, SportsTable, EventsTable, ParticipantsTable],
+  daos: [UsersDao, SportsDao, EventsDao, ParticipantsDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -54,8 +44,19 @@ class AppDatabase extends _$AppDatabase {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, AppConfig.databaseName));
-    return NativeDatabase.createInBackground(file);
+    // Usar la implementación apropiada según la plataforma
+    if (Platform.isAndroid ||
+        Platform.isIOS ||
+        Platform.isWindows ||
+        Platform.isMacOS ||
+        Platform.isLinux) {
+      // Para plataformas nativas
+      final dbFolder = await getApplicationDocumentsDirectory();
+      final file = File(p.join(dbFolder.path, AppConfig.databaseName));
+      return NativeDatabase.createInBackground(file);
+    } else {
+      // Para web
+      return NativeDatabase.memory();
+    }
   });
-} 
+}
