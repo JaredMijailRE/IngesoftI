@@ -1,174 +1,171 @@
-# USport - Vue 3 + Electron + Tailwind CSS
+# SportU - Aplicación Monolítica
 
-A modern sports management platform built with Vue 3, Electron, and Tailwind CSS, following the best development practices.
+Una aplicación Flutter monolítica para la gestión de eventos deportivos, desarrollada con Drift para el manejo de base de datos local.
 
-## 🚀 Features
+## 🏗️ Estructura del Proyecto
 
-- **Vue 3** with Composition API
-- **Electron** for cross-platform desktop app
-- **Tailwind CSS** for modern styling
-- **Pinia** for state management
-- **Vue Router** for navigation
-- **Bun** for fast package management
-- **Vite** for lightning-fast builds
-- **ESLint & Prettier** for code quality
-- **Auto-imports** for better DX
-- **Iconify** for beautiful icons
+```
+lib/
+├── main.dart                 # Punto de entrada de la aplicación
+├── app/                      # Configuración principal de la app
+│   ├── app.dart             # Widget principal de la aplicación
+│   └── app_config.dart      # Configuraciones globales
+├── core/                     # Funcionalidades core
+│   ├── constants/           # Constantes de la aplicación
+│   ├── theme/               # Temas y estilos
+│   ├── utils/               # Utilidades y helpers
+│   └── widgets/             # Widgets comunes reutilizables
+├── data/                     # Capa de datos
+│   ├── models/              # Modelos de datos
+│   ├── repositories/        # Repositorios (interfaces)
+│   └── datasources/         # Fuentes de datos
+│       └── local/           # Datos locales
+│           ├── database/    # Base de datos Drift
+│           │   ├── tables/  # Definición de tablas
+│           │   ├── daos/    # Data Access Objects
+│           │   └── app_database.dart
+│           └── preferences/ # Preferencias locales
+├── domain/                   # Lógica de negocio
+│   ├── entities/            # Entidades del dominio
+│   ├── repositories/        # Interfaces de repositorios
+│   └── usecases/            # Casos de uso
+├── presentation/             # Capa de presentación
+│   ├── pages/               # Páginas de la aplicación
+│   ├── widgets/             # Widgets específicos
+│   └── providers/           # Providers/State Management
+└── routes/                   # Configuración de rutas
+    └── app_router.dart
+```
 
-## 📦 Tech Stack
+## 🚀 Características
 
-- **Frontend**: Vue 3, Tailwind CSS, Pinia, Vue Router
-- **Desktop**: Electron
-- **Build Tool**: Vite
-- **Package Manager**: Bun
-- **Code Quality**: ESLint, Prettier
-- **Icons**: Iconify
-- **HTTP Client**: Axios
+- **Arquitectura Monolítica**: Aplicación autocontenida sin APIs externas
+- **Base de Datos Local**: Drift (SQLite) para persistencia de datos
+- **State Management**: Provider para gestión de estado
+- **Navegación**: Go Router para navegación declarativa
+- **Tema Adaptativo**: Soporte para modo claro y oscuro
+- **Validaciones**: Sistema robusto de validación de formularios
+- **Widgets Reutilizables**: Componentes comunes para consistencia UI
 
-## 🛠️ Development Setup
+## 📱 Funcionalidades Principales
 
-### Prerequisites
+- **Gestión de Usuarios**: Registro, login y perfiles
+- **Gestión de Deportes**: CRUD de deportes disponibles
+- **Gestión de Eventos**: Creación y gestión de eventos deportivos
+- **Gestión de Participantes**: Inscripción y seguimiento de participantes
+- **Estadísticas**: Reportes y métricas de eventos
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Bun](https://bun.sh/) (recommended) or npm
+## 🛠️ Tecnologías Utilizadas
 
-### Installation
+- **Flutter**: Framework de desarrollo
+- **Drift**: ORM para SQLite
+- **Provider**: State management
+- **Go Router**: Navegación
+- **Intl**: Internacionalización
+- **Path Provider**: Gestión de rutas de archivos
 
-1. **Clone the repository**
+## 📦 Instalación
+
+1. **Clonar el repositorio**
    ```bash
    git clone <repository-url>
-   cd usport
+   cd Proyecto
    ```
 
-2. **Install dependencies**
+2. **Instalar dependencias**
    ```bash
-   bun install
+   flutter pub get
    ```
 
-3. **Set up environment variables**
+3. **Generar código de Drift**
    ```bash
-   cp env.example .env
+   flutter packages pub run build_runner build
    ```
 
-### Development Commands
+4. **Ejecutar la aplicación**
+   ```bash
+   flutter run
+   ```
 
+## 🗄️ Base de Datos
+
+La aplicación utiliza Drift (anteriormente Moor) como ORM para SQLite. Las tablas principales incluyen:
+
+- **Users**: Información de usuarios
+- **Sports**: Deportes disponibles
+- **Events**: Eventos deportivos
+- **Participants**: Participantes en eventos
+
+### Generación de Código
+
+Después de modificar las tablas o DAOs, ejecuta:
 ```bash
-# Start development server (Vue only)
-bun run dev
-
-# Start Electron in development mode
-bun run electron:dev
-
-# Build for production
-bun run build
-
-# Build Electron app
-bun run electron:build
-
-# Lint code
-bun run lint
-
-# Format code
-bun run format
-
-# Preview production build
-bun run preview
+flutter packages pub run build_runner build --delete-conflicting-outputs
 ```
 
-## 📁 Project Structure
+## 🎨 Temas y Estilos
 
+La aplicación incluye:
+- **Tema Claro**: Colores vibrantes y legibles
+- **Tema Oscuro**: Colores suaves para uso nocturno
+- **Adaptación Automática**: Cambio automático según configuración del sistema
+
+## 📁 Organización de Código
+
+### Convenciones de Nomenclatura
+
+- **Archivos**: `snake_case.dart`
+- **Clases**: `PascalCase`
+- **Variables**: `camelCase`
+- **Constantes**: `UPPER_SNAKE_CASE`
+
+### Patrones de Diseño
+
+- **Repository Pattern**: Para acceso a datos
+- **Provider Pattern**: Para gestión de estado
+- **Factory Pattern**: Para creación de objetos
+- **Builder Pattern**: Para construcción de widgets complejos
+
+## 🔧 Configuración
+
+### Variables de Entorno
+
+Las configuraciones principales se encuentran en `lib/app/app_config.dart`:
+
+- Nombre de la aplicación
+- Versión de la base de datos
+- Rutas de assets
+- Configuraciones de animación
+
+### Constantes
+
+Las constantes de la aplicación están organizadas en:
+- `lib/core/constants/app_constants.dart`: Constantes generales
+- `lib/core/constants/database_constants.dart`: Constantes de base de datos
+
+## 🧪 Testing
+
+Para ejecutar las pruebas:
+```bash
+flutter test
 ```
-src/
-├── components/          # Reusable Vue components
-│   ├── BaseButton.vue
-│   ├── BaseCard.vue
-│   └── HelloWorld.vue
-├── composables/         # Vue composables
-│   ├── useApi.js
-│   └── useLocalStorage.js
-├── layouts/            # Layout components
-├── router/             # Vue Router configuration
-│   └── index.js
-├── stores/             # Pinia stores
-│   └── app.js
-├── utils/              # Utility functions
-├── views/              # Page components
-│   ├── Home.vue
-│   ├── About.vue
-│   └── NotFound.vue
-├── App.vue             # Root component
-├── main.js             # App entry point
-└── style.css           # Global styles
 
-electron/
-├── main.js             # Electron main process
-└── preload.js          # Electron preload script
-```
+## 📝 Contribución
 
-## 🎨 Styling
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
-This project uses **Tailwind CSS** with custom configuration:
+## 📄 Licencia
 
-- Custom color palette (primary, secondary)
-- Custom animations and transitions
-- Responsive design utilities
-- Form and typography plugins
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
-### Custom Classes
+## 🤝 Contacto
 
-- `.btn` - Base button styles
-- `.btn-primary` - Primary button variant
-- `.btn-secondary` - Secondary button variant
-- `.card` - Card component styles
-- `.input` - Input field styles
+Para preguntas o soporte, contacta al equipo de desarrollo.
 
-## 🔧 Configuration Files
+---
 
-- `vite.config.js` - Vite configuration with plugins
-- `tailwind.config.js` - Tailwind CSS configuration
-- `.eslintrc.cjs` - ESLint rules
-- `.prettierrc` - Prettier formatting rules
-- `package.json` - Project dependencies and scripts
-
-## 📱 Electron Features
-
-- Cross-platform desktop application
-- Secure context isolation
-- Preload script for safe IPC communication
-- Development and production builds
-- Auto-updater ready
-
-## 🚀 Best Practices
-
-### Code Organization
-- **Components**: Reusable, single-responsibility
-- **Composables**: Logic extraction and reusability
-- **Stores**: Centralized state management
-- **Views**: Page-level components
-
-### Development Workflow
-- **ESLint**: Code quality and consistency
-- **Prettier**: Code formatting
-- **Auto-imports**: Reduced boilerplate
-- **Type checking**: Runtime safety
-
-### Performance
-- **Lazy loading**: Route-based code splitting
-- **Tree shaking**: Unused code elimination
-- **Optimized builds**: Production-ready bundles
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run linting and formatting
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🆘 Support
-
-For support and questions, please open an issue in the repository.
+**Desarrollado con ❤️ para la gestión deportiva**
