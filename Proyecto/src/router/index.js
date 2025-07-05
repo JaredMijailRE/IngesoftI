@@ -18,6 +18,14 @@ const routes = [
     }
   },
   {
+    path: '/logIn',
+    name: 'LogIn',
+    component: () => import('@/views/LogIn.vue'),
+    meta: {
+      title: 'Log In'
+    }
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/NotFound.vue'),

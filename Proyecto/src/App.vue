@@ -27,6 +27,12 @@ import HelloWorld from './components/HelloWorld.vue'
             >
               About
             </router-link>
+            <router-link 
+              to="/logIn" 
+            > <button>
+              Log in
+            </button>
+            </router-link>
           </div>
         </div>
       </div>

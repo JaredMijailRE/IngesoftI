@@ -12,7 +12,7 @@ Table Profesor {
 
 Table PerfilDeportivo {
   id integer [pk, increment]
-  profesor_id integer [ref: > Profesor.id]
+  profesor_id integer [not null, ref: - Profesor.id]
   weight decimal(5,2) [not null]
   height decimal(5,2) [not null]
   body_fat_percentage decimal(5,2)
@@ -21,7 +21,7 @@ Table PerfilDeportivo {
 }
 
 Table Estudiante {
-  id integer [pk, increment]
+  id integer [pk, note: 'Documento de Identidad']
   first_name varchar(100) [not null]
   last_name varchar(100) [not null]
   birth_date date
@@ -45,18 +45,16 @@ Table Ejercicio {
   name varchar(150) [not null]
   unit enum('repeticiones','distancia','tiempo','peso') [not null]
   impact_area enum('Tronco Inferior','Tronco Superior','Tronco Medio','Cuerpo Completo')
-  is_force boolean [default: false]
-  is_resistance boolean [default: false]
-  is_elasticity boolean [default: false]
-  is_toning boolean [default: false]
-  difficulty enum('Baja','Media','Alta')
+  type enum('Fuerza', 'Resistencia', 'Elasticidad', 'Tonificación')
+  exigency enum('Baja','Media','Alta')
   description text
 }
 
 Table PlanEntrenamiento_Ejercicio {
   plan_id integer [ref: > PlanEntrenamiento.id]
   ejercicio_id integer [ref: > Ejercicio.id]
-  repetitions integer [not null]
+  repetitions integer [not null, default: 1, note: 'repeticiones por set'] 
+  sets integer [not null, default: 1]
   notes text
 
   Indexes {
@@ -104,6 +102,7 @@ Table Asistencia {
 Table Evento {
   id integer [pk, increment]
   title varchar(150) [not null]
+  description text
   event_date date [not null]
   link varchar(255)
   price decimal(10,2)
@@ -133,17 +132,21 @@ Table EstadisticaEntrenamiento {
   estudiante_id integer [ref: > Estudiante.id]
   ejercicio_id integer [ref: > Ejercicio.id]
   value decimal(7,2) [not null]
-  unit enum('repeticiones','distancia','tiempo','peso') [not null]
   clase_id integer [ref: > Clase.id]
   recorded_at datetime [not null]
 }
 
-Table Matricula {
-  id integer [pk, increment]
-  estudiante_id integer [ref: > Estudiante.id]
-  enrollment_fee decimal(10,2)
-  account_status enum('Pendiente','Pagada','Vencida','Cancelada') [not null]
-  due_date date
-  payment_date date
-  receipt_url varchar(255)
+Table Profesor_Grupo {
+  profesor_id integer [ref: > Profesor.id]
+  grupo_id integer [ref: > Grupo.id]
 }
+
+Table EstadisticaPersonal {
+  id integer [pk, increment]
+  profesor_id integer [ref: > Profesor.id]
+  plan_id integer [ref: > PlanEntrenamiento.id]
+  ejercicio_id integer [ref: > Ejercicio.id]
+  value decimal(7,2) [not null]
+  recorded_at datetime [not null]
+}
+
