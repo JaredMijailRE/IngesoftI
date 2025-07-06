@@ -15,11 +15,13 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "vue": "^3.5.17",
-    "vue-router": "^4.3.0",
-    "pinia": "^2.2.0",
     "@vueuse/core": "^11.0.0",
-    "axios": "^1.7.0"
+    "axios": "^1.7.0",
+    "pinia": "^2.2.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
+    "vue": "^3.5.17",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
