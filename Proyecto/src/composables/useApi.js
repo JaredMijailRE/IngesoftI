@@ -6,13 +6,13 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 })
 
 // Request interceptor
 api.interceptors.request.use(
-  (config) => {
+  config => {
     // Add auth token if available
     const token = localStorage.getItem('auth_token')
     if (token) {
@@ -20,15 +20,15 @@ api.interceptors.request.use(
     }
     return config
   },
-  (error) => {
+  error => {
     return Promise.reject(error)
   }
 )
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     // Handle common errors
     if (error.response?.status === 401) {
       // Handle unauthorized
@@ -43,10 +43,10 @@ export function useApi() {
   const loading = ref(false)
   const error = ref(null)
 
-  const request = async (config) => {
+  const request = async config => {
     loading.value = true
     error.value = null
-    
+
     try {
       const response = await api(config)
       return response.data
@@ -59,9 +59,12 @@ export function useApi() {
   }
 
   const get = (url, config = {}) => request({ ...config, method: 'GET', url })
-  const post = (url, data, config = {}) => request({ ...config, method: 'POST', url, data })
-  const put = (url, data, config = {}) => request({ ...config, method: 'PUT', url, data })
-  const del = (url, config = {}) => request({ ...config, method: 'DELETE', url })
+  const post = (url, data, config = {}) =>
+    request({ ...config, method: 'POST', url, data })
+  const put = (url, data, config = {}) =>
+    request({ ...config, method: 'PUT', url, data })
+  const del = (url, config = {}) =>
+    request({ ...config, method: 'DELETE', url })
 
   return {
     loading,
@@ -70,6 +73,6 @@ export function useApi() {
     get,
     post,
     put,
-    delete: del
+    delete: del,
   }
-} 
+}

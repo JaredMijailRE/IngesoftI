@@ -6,33 +6,33 @@ const routes = [
     name: 'Home',
     component: () => import('@/views/Home.vue'),
     meta: {
-      title: 'Home'
-    }
+      title: 'Home',
+    },
   },
   {
     path: '/about',
     name: 'About',
     component: () => import('@/views/About.vue'),
     meta: {
-      title: 'About'
-    }
+      title: 'About',
+    },
   },
   {
     path: '/logIn',
     name: 'LogIn',
     component: () => import('@/views/LogIn.vue'),
     meta: {
-      title: 'Log In'
-    }
+      title: 'Log In',
+    },
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/NotFound.vue'),
     meta: {
-      title: '404 - Not Found'
-    }
-  }
+      title: '404 - Not Found',
+    },
+  },
 ]
 
 const router = createRouter({
@@ -44,7 +44,7 @@ const router = createRouter({
     } else {
       return { top: 0 }
     }
-  }
+  },
 })
 
 // Navigation guards
@@ -54,4 +54,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-export default router 
+export default router

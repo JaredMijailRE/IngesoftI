@@ -11,28 +11,23 @@ import HelloWorld from './components/HelloWorld.vue'
           <router-link to="/" class="text-2xl font-bold text-primary-600">
             USport
           </router-link>
-          
+
           <div class="flex space-x-6">
-            <router-link 
-              to="/" 
+            <router-link
+              to="/"
               class="text-gray-600 hover:text-primary-600 transition-colors"
               active-class="text-primary-600 font-medium"
             >
               Home
             </router-link>
-            <router-link 
-              to="/about" 
+            <router-link
+              to="/about"
               class="text-gray-600 hover:text-primary-600 transition-colors"
               active-class="text-primary-600 font-medium"
             >
               About
             </router-link>
-            <router-link 
-              to="/logIn" 
-            > <button>
-              Log in
-            </button>
-            </router-link>
+            <router-link to="/logIn"> <button>Log in</button> </router-link>
           </div>
         </div>
       </div>

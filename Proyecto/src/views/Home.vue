@@ -6,29 +6,41 @@
           Welcome to <span class="text-primary-600">USport</span>
         </h1>
         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Your ultimate sports management platform built with Vue 3, Electron, and Tailwind CSS
+          Your ultimate sports management platform built with Vue 3, Electron,
+          and Tailwind CSS
         </p>
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         <div class="card p-6 hover:shadow-lg transition-shadow">
-          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+          <div
+            class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4"
+          >
             <Icon icon="mdi:vuejs" class="w-6 h-6 text-primary-600" />
           </div>
           <h3 class="text-xl font-semibold mb-2">Vue 3</h3>
-          <p class="text-gray-600">Modern reactive framework with Composition API</p>
+          <p class="text-gray-600">
+            Modern reactive framework with Composition API
+          </p>
         </div>
 
         <div class="card p-6 hover:shadow-lg transition-shadow">
-          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-            <Icon icon="mdi:electron-framework" class="w-6 h-6 text-primary-600" />
+          <div
+            class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4"
+          >
+            <Icon
+              icon="mdi:electron-framework"
+              class="w-6 h-6 text-primary-600"
+            />
           </div>
           <h3 class="text-xl font-semibold mb-2">Electron</h3>
           <p class="text-gray-600">Cross-platform desktop application</p>
         </div>
 
         <div class="card p-6 hover:shadow-lg transition-shadow">
-          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+          <div
+            class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4"
+          >
             <Icon icon="mdi:tailwind" class="w-6 h-6 text-primary-600" />
           </div>
           <h3 class="text-xl font-semibold mb-2">Tailwind CSS</h3>
@@ -52,4 +64,4 @@ const getStarted = () => {
   // Add your logic here
   console.log('Get started clicked!')
 }
-</script> 
+</script>

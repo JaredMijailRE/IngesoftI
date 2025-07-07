@@ -15,6 +15,7 @@ export async function SequelizeTryConnect(config) {
 
     // crear tablas si no existen (migración básica)
     await sequelize.sync({ alter: true }); 
+    console.log('Migracion de la base de datos ejecutada.');
 
     console.log('Base de datos sincronizada correctamente.');
   } catch (error) {
@@ -23,3 +24,5 @@ export async function SequelizeTryConnect(config) {
     await sequelize.close(); // cerramos conexión
   }
 }
+
+export default SequelizeTryConnect;

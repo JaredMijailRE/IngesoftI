@@ -10,9 +10,11 @@
     "preview": "vite preview",
     "electron:dev": "concurrently \"bun run dev\" \"wait-on http://localhost:5173 && electron .\"",
     "electron:build": "bun run build && electron-builder",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-pattern .gitignore",
     "format": "prettier --write src/",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "check-db": "bun db/setup.mjs",
+    "setup": "bun install && bun run check-db && bun run format  && bun run electron:dev  && bun run lint && bun run type-check" 
   },
   "dependencies": {
     "@vueuse/core": "^11.0.0",
@@ -36,6 +38,7 @@
     "@tailwindcss/forms": "^0.5.0",
     "@tailwindcss/typography": "^0.5.0",
     "eslint": "^9.0.0",
+    "@eslint/js": "^9.0.0",
     "eslint-plugin-vue": "^9.0.0",
     "@vue/eslint-config-prettier": "^9.0.0",
     "prettier": "^3.0.0",

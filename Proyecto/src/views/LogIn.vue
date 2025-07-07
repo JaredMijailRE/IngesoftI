@@ -1,3 +1,3 @@
 <template>
-    <p>Agregar Login Pls</p>
+  <p>Agregar Login Pls</p>
 </template>

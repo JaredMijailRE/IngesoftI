@@ -13,7 +13,7 @@ export const useAppStore = defineStore('app', () => {
   const hasNotifications = computed(() => notifications.value.length > 0)
 
   // Actions
-  const setLoading = (loading) => {
+  const setLoading = loading => {
     isLoading.value = loading
   }
 
@@ -27,21 +27,21 @@ export const useAppStore = defineStore('app', () => {
     sidebarOpen.value = !sidebarOpen.value
   }
 
-  const addNotification = (notification) => {
+  const addNotification = notification => {
     const id = Date.now()
     notifications.value.push({
       id,
       ...notification,
-      timestamp: new Date()
+      timestamp: new Date(),
     })
-    
+
     // Auto remove after 5 seconds
     setTimeout(() => {
       removeNotification(id)
     }, 5000)
   }
 
-  const removeNotification = (id) => {
+  const removeNotification = id => {
     const index = notifications.value.findIndex(n => n.id === id)
     if (index > -1) {
       notifications.value.splice(index, 1)
@@ -58,17 +58,17 @@ export const useAppStore = defineStore('app', () => {
     theme,
     sidebarOpen,
     notifications,
-    
+
     // Getters
     isDark,
     hasNotifications,
-    
+
     // Actions
     setLoading,
     toggleTheme,
     toggleSidebar,
     addNotification,
     removeNotification,
-    clearNotifications
+    clearNotifications,
   }
-}) 
+})
