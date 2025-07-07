@@ -1,5 +1,5 @@
 {
-  "name": "usport",
+  "name": "sportu",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -42,8 +42,8 @@
     "@iconify/vue": "^4.1.0"
   },
   "build": {
-    "appId": "com.usport.app",
-    "productName": "USport",
+    "appId": "com.sportu.app",
+    "productName": "SportU",
     "directories": {
       "output": "dist-electron"
     },

@@ -13,6 +13,10 @@ import HelloWorld from './components/HelloWorld.vue'
           </router-link>
           
           <div class="flex space-x-6">
+            <router-link
+              to="/main"> 
+              TESTIN
+            </router-link>
             <router-link 
               to="/" 
               class="text-gray-600 hover:text-primary-600 transition-colors"
