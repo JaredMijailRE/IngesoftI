@@ -19,11 +19,20 @@ const toGrupo = (id) => {
   // Hacer el código cuando este lo de los grupos
   console.log('Navegando al grupo con ID: ', id)
 }
+
+const toEvento = (id) => {
+  // Hacer el código cuando este lo de los eventos
+  console.log('Navegando al evento con ID: ', id)
+}
+
+
+
 </script>
 
 <template>
-  <!-- bg-gradient-to-br from-primary-50 to-secondary-50 -->
- <div class="min-h-screen bg-gradient-to-tr from-sportu-600 to-sportu-50/100 to-sportu-600 ">
+  <div class="min-h-screen bg-gradient-to-tr from-sportu-600 from-10% via-primary-400 via-80% to-primary-400 p-1">
+  <div class="bg-white shadow-md rounded-lg my-auto mx-auto mt-10 mx-10 p-2">
+
     <div class="container mx-auto px-4 py-3">
       <div class="text-left mb-12">
         <h1 class="text-4xl md:text-6xl font-bold text-gray-700 mb-4 mt-4">
@@ -32,7 +41,8 @@ const toGrupo = (id) => {
       </div>
       
       <!-- Elementos de la Página (Grupos y Eventos) -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12 me-8">
+      <hr class="divider mb-8">
+      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-8 mx-4">
 
         <div class="card p-6 shadow-lg transition-shadow">
           <div class="rounded-lg flex items-center justify-left mb-4">
@@ -61,7 +71,7 @@ const toGrupo = (id) => {
 
           <ul>
             <li v-for="evento in eventos" :key="evento.id" class="text-gray-600 mb-2">
-              <button class="btn-primary bg-sportu-50 w-full px-5 py-3 text-lg hover:shadow-lg" @click="toGrupo(grupo.id)">
+              <button class="btn-primary bg-sportu-50 w-full px-5 py-3 text-lg hover:shadow-lg" @click="toEvento(evento.id)">
                 <div class="column">  <p>{{ evento.nombre }}</p>   <p class="text-sportu-600 text-xs">{{ evento.fecha }}</p>  </div>
               </button>
             </li>
@@ -69,10 +79,18 @@ const toGrupo = (id) => {
         </div>
         
       </div>
+
     </div>
+
+  </div>
   </div>
 </template>
 
-<style>
+<style scoped>
+
+.divider {
+  border: none;
+  border-top: 2px solid rgba(0, 0, 0, 0.100); 
+}
 
 </style>
