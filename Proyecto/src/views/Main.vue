@@ -2,18 +2,33 @@
 import { ref } from 'vue'
 import { Icon } from '@iconify/vue'
 
-const nombre = ref('Nicolas')
-const grupos = ref([
-  { id: 1, nombre: 'Grupo A' },
-  { id: 2, nombre: 'Grupo B' },
-  { id: 3, nombre: 'Grupo C' },
-  { id: 4, nombre: 'Grupo D' }
-])
-const eventos = ref([
-  { id: 1, nombre: 'Evento 1', fecha: '2025-9-01'  },
-  { id: 2, nombre: 'Evento 2', fecha: '2025-10-15' },
-  { id: 3, nombre: 'Evento 3', fecha: '2025-11-01' }
-])
+const usuario = ref({
+  username: 'admin',
+  grupos: [
+    { id: 1, nombre: 'Grupo A' },
+    { id: 2, nombre: 'Grupo B' },
+    { id: 3, nombre: 'Grupo C' },
+    { id: 4, nombre: 'Grupo D' },
+    { id: 5, nombre: 'Grupo E' },
+    { id: 6, nombre: 'Grupo F' }
+  ],
+  eventos: [
+    { id: 1, nombre: 'Evento 1', fecha: '2025-9-01'  },
+    { id: 2, nombre: 'Evento 2', fecha: '2025-10-15' },
+    { id: 3, nombre: 'Evento 3', fecha: '2025-11-01' },
+    { id: 4, nombre: 'Evento 4', fecha: '2025-12-20' },
+    { id: 5, nombre: 'Evento 5', fecha: '2026-01-05' }
+  ]
+})
+
+const usuario2 = ref({
+  username: 'user',
+  grupos: [],
+  eventos: [
+    { id: 1, nombre: 'Evento A', fecha: '2025-9-01' },
+    { id: 2, nombre: 'Evento B', fecha: '2025-10-15' }
+  ]
+})
 
 const toGrupo = (id) => {
   // Hacer el código cuando este lo de los grupos
@@ -30,52 +45,62 @@ const toEvento = (id) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-tr from-sportu-600 from-10% via-primary-400 via-80% to-primary-400 p-1">
-  <div class="bg-white shadow-md rounded-lg my-auto mx-auto mt-10 mx-10 p-2">
+  <div class="min-h-screen bg-gradient-to-tr from-sportu-600 from-10% via-sportu-400 via-20% to-sportu-50 p-1">
+  <div class="bg-white shadow-md rounded-lg my-10 mx-10 p-2 flex items-center justify-center">
 
     <div class="container mx-auto px-4 py-3">
       <div class="text-left mb-12">
-        <h1 class="text-4xl md:text-6xl font-bold text-gray-700 mb-4 mt-4">
-          Welcome, <span class="text-primary-600">{{ nombre }}</span>!
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-700 my-4">
+          Welcome, <span class="text-sportu-100">{{ usuario.username }}</span>!
         </h1>
       </div>
       
       <!-- Elementos de la Página (Grupos y Eventos) -->
       <hr class="divider mb-8">
-      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-8 mx-4">
+      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-8 mx-4" :style="{ minHeight: '369px' }">
 
         <div class="card p-6 shadow-lg transition-shadow">
           <div class="rounded-lg flex items-center justify-left mb-4">
             <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-              <Icon icon="mdi:format-list-bulleted" class="w-6 h-6 text-primary-600" />
+              <Icon icon="mdi:format-list-bulleted" class="w-6 h-6 text-sportu-50" />
             </div>
             <h3 class="text-xl font-semibold mb-4 ml-3">Grupos</h3>
           </div>
 
-          <ul>
-            <li v-for="grupo in grupos" :key="grupo.id" class="text-gray-600 mb-2">
-              <button class="btn-primary bg-sportu-50 w-full px-5 py-3 text-lg hover:shadow-lg" @click="toGrupo(grupo.id)">
-                {{ grupo.nombre }}
-              </button>
-            </li>
-          </ul>
+          <div v-if="usuario.grupos.length != 0">
+            <ul>
+              <li v-for="grupo in usuario.grupos.slice(0,4)" :key="grupo.id" class="text-gray-600 mb-2">
+                <button class="btn-primary bg-sportu-200 w-full px-5 py-3 text-lg hover:bg-sportu-50" @click="toGrupo(grupo.id)">
+                  {{ grupo.nombre }}
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div v-else class="text-gray-600 flex items-center justify-center h-48">
+            <p class="text-gray-500">No tienes grupos asignados</p>
+          </div>
         </div>
 
         <div class="card p-6 shadow-lg transition-shadow">
           <div class="rounded-lg flex items-center justify-left mb-4">
             <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-              <Icon icon="material-symbols:assignment-outline" class="w-6 h-6 text-primary-600" />
+              <Icon icon="material-symbols:assignment-outline" class="w-6 h-6 text-sportu-50" />
             </div>
             <h3 class="text-xl font-semibold mb-4 ml-3">Eventos</h3>
           </div>
 
-          <ul>
-            <li v-for="evento in eventos" :key="evento.id" class="text-gray-600 mb-2">
-              <button class="btn-primary bg-sportu-50 w-full px-5 py-3 text-lg hover:shadow-lg" @click="toEvento(evento.id)">
-                <div class="column">  <p>{{ evento.nombre }}</p>   <p class="text-sportu-600 text-xs">{{ evento.fecha }}</p>  </div>
-              </button>
-            </li>
-          </ul>
+          <div v-if="usuario.eventos.length != 0">
+            <ul>
+              <li v-for="evento in usuario.eventos.slice(0,3)" :key="evento.id" class="text-gray-600 mb-2">
+                <button class="btn-primary bg-sportu-200 w-full px-5 py-3.5 text-lg hover:bg-sportu-50" @click="toEvento(evento.id)">
+                  <div class="column">  <p>{{ evento.nombre }}</p>   <p class="text-sportu-600 text-xs">{{ evento.fecha }}</p>  </div>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div v-else class="text-gray-600 flex items-center justify-center h-48">
+            <p class="text-gray-500">No tienes eventos programados</p>
+          </div>
         </div>
         
       </div>
