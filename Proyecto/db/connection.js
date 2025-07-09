@@ -1,27 +1,14 @@
-import { Sequelize } from 'sequelize';
-// importa tus modelos así: import { definePostModel } from './models/Post.js';
+import { initializeDatabase } from './migrate.js';
 
 export async function SequelizeTryConnect(config) {
-  const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: config?.storage || './database.sqlite', 
-    logging: false,
-  });
-
-
   try {
-    await sequelize.authenticate();
-    console.log('Conexion establecida correctamente.');
-
-    // crear tablas si no existen (migración básica)
-    await sequelize.sync({ alter: true }); 
-    console.log('Migracion de la base de datos ejecutada.');
-
-    console.log('Base de datos sincronizada correctamente.');
+    const { sequelize, models } = await initializeDatabase(config);
+    
+    // Devolver la instancia de sequelize y los modelos para uso posterior
+    return { sequelize, models };
   } catch (error) {
-    console.error('No se pudo conecta a la base de datos', error);
-  } finally {
-    await sequelize.close(); // cerramos conexión
+    console.error('❌ Error inicializando la base de datos:', error);
+    throw error;
   }
 }
 
