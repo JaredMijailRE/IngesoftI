@@ -21,15 +21,6 @@ const usuario = ref({
   ]
 })
 
-const usuario2 = ref({
-  username: 'user',
-  grupos: [],
-  eventos: [
-    { id: 1, nombre: 'Evento A', fecha: '2025-9-01' },
-    { id: 2, nombre: 'Evento B', fecha: '2025-10-15' }
-  ]
-})
-
 const toGrupo = (id) => {
   // Hacer el código cuando este lo de los grupos
   console.log('Navegando al grupo con ID: ', id)
@@ -40,7 +31,15 @@ const toEvento = (id) => {
   console.log('Navegando al evento con ID: ', id)
 }
 
+const toCrearGrupo = () => {
+  // Hacer el código cuando este lo de crear grupo
+  console.log('Navegando a crear un nuevo grupo')
+}
 
+const toAgregarEvento = () => {
+  // Hacer el código cuando este lo de agregar evento
+  console.log('Navegando a agregar un nuevo evento')
+}
 
 </script>
 
@@ -76,8 +75,9 @@ const toEvento = (id) => {
               </li>
             </ul>
           </div>
-          <div v-else class="text-gray-600 flex items-center justify-center h-48">
+          <div v-else class="text-gray-600 flex flex-col items-center justify-center h-48">
             <p class="text-gray-500">No tienes grupos asignados</p>
+            <button class="bg-white hover:bg-sportu-600 text-gray-400 font-bold px-2.5 py-1 rounded-full" @click="toCrearGrupo()">+</button>
           </div>
         </div>
 
@@ -98,8 +98,9 @@ const toEvento = (id) => {
               </li>
             </ul>
           </div>
-          <div v-else class="text-gray-600 flex items-center justify-center h-48">
+          <div v-else class="text-gray-600 flex flex-col items-center justify-center h-48">
             <p class="text-gray-500">No tienes eventos programados</p>
+            <button class="bg-white hover:bg-sportu-600 text-gray-400 font-bold px-2.5 py-1 rounded-full" @click="toAgregarEvento()">+</button>
           </div>
         </div>
         
