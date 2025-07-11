@@ -7,6 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        sportu: {
+        700: "#4998b3",
+        600: "#60a5bc",
+        500: "#77b2c6",
+        400: "#8dbfcf",
+        300: "#a4ccd9",
+        200: "#bbd8e2",
+        100: "#d2e5ec",
+        50:  "#e8f2f5",
+        },
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
@@ -31,6 +41,7 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
         }
+      
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
