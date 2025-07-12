@@ -3,35 +3,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('@/views/Home.vue'),
-    meta: {
-      title: 'Home',
-    },
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('@/views/About.vue'),
-    meta: {
-      title: 'About',
-    },
-  },
-  {
-    path: '/logIn',
-    name: 'LogIn',
+    name: 'Login',
     component: () => import('@/views/LogIn.vue'),
     meta: {
-      title: 'Log In',
+      title: 'USport - Iniciar Sesión',
     },
   },
   {
     path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: () => import('@/views/NotFound.vue'),
-    meta: {
-      title: '404 - Not Found',
-    },
+    redirect: '/',
   },
 ]
 
@@ -50,7 +30,7 @@ const router = createRouter({
 // Navigation guards
 router.beforeEach((to, from, next) => {
   // Update document title
-  document.title = to.meta.title ? `${to.meta.title} - USport` : 'USport'
+  document.title = to.meta.title || 'USport'
   next()
 })
 
