@@ -10,6 +10,8 @@ const email = ref('')
 const username = ref('')
 const firstnames = ref('')
 const lastnames = ref('')
+const birthdate = ref('')
+const gender = ref('')
 const password = ref('')
 const verifypassword = ref('')
 
@@ -32,6 +34,22 @@ function handleSubmit() {
 
   if (!lastnames.value) {
     errors.value.lastnames = 'El apellido es obligatorio.'
+  }
+  if (!birthdate.value) {
+    errors.value.username = 'La fecha de nacimiento es obligatoria.'
+  } else {
+    const enteredDate = new Date(birthdate.value)
+    const today = new Date()
+
+    if (isNaN(enteredDate)) {
+      errors.value.birthdate = 'La fecha ingresada no es válida.'
+    }else if (enteredDate > today) {
+    errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    }
+
+  }
+  if (!gender.value) {
+    errors.value.username = 'El genero es obligatorio.'
   }
 
   if (!password.value) {
@@ -79,6 +97,12 @@ function handleSubmit() {
 
             <input v-model="lastnames" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Apellidos":class="{'border-red-500':errors.lastnames}">
             <p v-if="errors.lastnames" class="text-sm text-red-500 mb-2">{{ errors.lastnames }}</p>
+
+            <input v-model="birthdate" type="date" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Fecha de Nacimiento":class="{'border-red-500':errors.birthdate}">
+            <p v-if="errors.birthdate" class="text-sm text-red-500 mb-2">{{ errors.birthdate }}</p>
+
+            <input v-model="gender" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Genero":class="{'border-red-500':errors.gender}">
+            <p v-if="errors.gender" class="text-sm text-red-500 mb-2">{{ errors.gender }}</p>
 
             <div class="relative">
                 <input :type="showPassword ? 'text' : 'password'" id="contraseña" v-model="password" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Contraseña":class="{'border-red-500':errors.password}">
