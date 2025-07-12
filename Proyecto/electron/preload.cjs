@@ -1,17 +1,43 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
-// Expose protected methods that allow the renderer process to use
-// the ipcRenderer without exposing the entire object
+// Exposicion segura de methodos
 contextBridge.exposeInMainWorld('electronAPI', {
-  // Example: Send a message to the main process
-  sendMessage: (message) => ipcRenderer.invoke('send-message', message),
+  // Authentication methods
+  auth: {
+    login: (credentials) => ipcRenderer.invoke('auth:login', credentials),
+    logout: () => ipcRenderer.invoke('auth:logout'),
+    checkAuth: () => ipcRenderer.invoke('auth:check'),
+    getCurrentUser: () => ipcRenderer.invoke('auth:getCurrentUser')
+  },
   
-  // Example: Receive a message from the main process
-  onMessage: (callback) => ipcRenderer.on('message', callback),
+  // API methods
+  api: {
+    request: (config) => ipcRenderer.invoke('api:request', config),
+    get: (url, config) => ipcRenderer.invoke('api:get', url, config),
+    post: (url, data, config) => ipcRenderer.invoke('api:post', url, data, config),
+    put: (url, data, config) => ipcRenderer.invoke('api:put', url, data, config),
+    delete: (url, config) => ipcRenderer.invoke('api:delete', url, config)
+  },
   
-  // Example: Get app version
-  getVersion: () => ipcRenderer.invoke('get-version'),
+  // LocalStorage methods
+  storage: {
+    get: (key) => ipcRenderer.invoke('storage:get', key),
+    set: (key, value) => ipcRenderer.invoke('storage:set', key, value),
+    remove: (key) => ipcRenderer.invoke('storage:remove', key),
+    clear: () => ipcRenderer.invoke('storage:clear')
+  },
   
-  // Example: Open external link
-  openExternal: (url) => ipcRenderer.invoke('open-external', url)
+  // General app methods
+  app: {
+    getVersion: () => ipcRenderer.invoke('app:getVersion'),
+    openExternal: (url) => ipcRenderer.invoke('app:openExternal'),
+    sendMessage: (message) => ipcRenderer.invoke('app:sendMessage', message)
+  },
+  
+  // Event listeners
+  events: {
+    onAuthChange: (callback) => ipcRenderer.on('auth:changed', callback),
+    onStorageChange: (callback) => ipcRenderer.on('storage:changed', callback),
+    removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+  }
 }) 

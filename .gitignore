@@ -1,3 +1,7 @@
+node_modules/
+Proyecto/bun.lock
+Proyecto/database.sqlite 
+
 # Logs
 logs
 *.log
