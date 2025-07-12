@@ -29,8 +29,36 @@ Colaboradores:
 
 ---
 
+## Quick Start
+
+Primero instalaremos nuestro gestor de paquetes **Bun** y clonaremos el repositorio:
+```bash
+# instalacion de bun
+curl -fsSL https://bun.sh/install | bash # linux y macOS
+
+powershell -c "irm bun.sh/install.ps1|iex" # Windows
+```
+
+```bash
+# Clonar el repositorio
+git clone git@github.com:JaredMijailRE/IngesoftI.git
+```
+
+Posteriormente, corremos el comando setup de bun dentro del directorio del proyecto para instalar las dependencias y configurar el entorno:
+
+```bash
+cd Proyecto
+bun run setup
+```
+
+El comando `setup` realiza las siguientes acciones:
+- Instala las dependencias del proyecto.
+- Configura la base de datos.
+- Inicia el entorno de desarrollo de Electron.
+- Ejecucion de test estatico y en futuro se agregaran test unitarios.
+
 ## Tecnologías Utilizadas
 
-🛠️ Kit de Desarrollo: Flutter
+🛠️ Kit de Desarrollo: Vue
 
-🗄️ Base de Datos: MySQL
+🗄️ Base de Datos: SQLlite

@@ -1,174 +1,174 @@
 # USport - Vue 3 + Electron + Tailwind CSS
 
-A modern sports management platform built with Vue 3, Electron, and Tailwind CSS, following the best development practices.
+Una plataforma moderna de gestión deportiva construida con Vue 3, Electron y Tailwind CSS, siguiendo las mejores prácticas de desarrollo.
 
-## 🚀 Features
+## 🚀 Características
 
-- **Vue 3** with Composition API
-- **Electron** for cross-platform desktop app
-- **Tailwind CSS** for modern styling
-- **Pinia** for state management
-- **Vue Router** for navigation
-- **Bun** for fast package management
-- **Vite** for lightning-fast builds
-- **ESLint & Prettier** for code quality
-- **Auto-imports** for better DX
-- **Iconify** for beautiful icons
+- **Vue 3** con Composition API
+- **Electron** para aplicación de escritorio multiplataforma
+- **Tailwind CSS** para estilos modernos
+- **Pinia** para gestión de estado
+- **Vue Router** para navegación
+- **Bun** para gestión rápida de paquetes
+- **Vite** para compilaciones ultrarrápidas
+- **ESLint & Prettier** para calidad de código
+- **Auto-imports** para mejor experiencia de desarrollo
+- **Iconify** para iconos atractivos
 
-## 📦 Tech Stack
+## 📦 Stack Tecnológico
 
 - **Frontend**: Vue 3, Tailwind CSS, Pinia, Vue Router
-- **Desktop**: Electron
-- **Build Tool**: Vite
-- **Package Manager**: Bun
-- **Code Quality**: ESLint, Prettier
-- **Icons**: Iconify
-- **HTTP Client**: Axios
+- **Escritorio**: Electron
+- **Herramienta de compilación**: Vite
+- **Gestor de paquetes**: Bun
+- **Calidad de código**: ESLint, Prettier
+- **Iconos**: Iconify
+- **Cliente HTTP**: Axios
 
-## 🛠️ Development Setup
+## 🛠️ Configuración de Desarrollo
 
-### Prerequisites
+### Prerrequisitos
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Bun](https://bun.sh/) (recommended) or npm
+- [Node.js](https://nodejs.org/) (v18 o superior)
+- [Bun](https://bun.sh/) (recomendado) o npm
 
-### Installation
+### Instalación
 
-1. **Clone the repository**
+1. **Clona el repositorio**
    ```bash
-   git clone <repository-url>
+   git clone <url-del-repositorio>
    cd usport
    ```
 
-2. **Install dependencies**
+2. **Instala las dependencias**
    ```bash
    bun install
    ```
 
-3. **Set up environment variables**
+3. **Configura las variables de entorno**
    ```bash
    cp env.example .env
    ```
 
-### Development Commands
+### Comandos de Desarrollo
 
 ```bash
-# Start development server (Vue only)
+# Iniciar servidor de desarrollo (solo Vue)
 bun run dev
 
-# Start Electron in development mode
+# Iniciar Electron en modo desarrollo
 bun run electron:dev
 
-# Build for production
+# Compilar para producción
 bun run build
 
-# Build Electron app
+# Compilar app de Electron
 bun run electron:build
 
-# Lint code
+# Lint de código
 bun run lint
 
-# Format code
+# Formatear código
 bun run format
 
-# Preview production build
+# Previsualizar build de producción
 bun run preview
 ```
 
-## 📁 Project Structure
+## 📁 Estructura del Proyecto
 
 ```
 src/
-├── components/          # Reusable Vue components
+├── components/          # Componentes Vue reutilizables
 │   ├── BaseButton.vue
 │   ├── BaseCard.vue
 │   └── HelloWorld.vue
-├── composables/         # Vue composables
+├── composables/         # Composables de Vue
 │   ├── useApi.js
 │   └── useLocalStorage.js
-├── layouts/            # Layout components
-├── router/             # Vue Router configuration
+├── layouts/            # Componentes de layout
+├── router/             # Configuración de Vue Router
 │   └── index.js
-├── stores/             # Pinia stores
+├── stores/             # Stores de Pinia
 │   └── app.js
-├── utils/              # Utility functions
-├── views/              # Page components
+├── utils/              # Funciones utilitarias
+├── views/              # Componentes de página
 │   ├── Home.vue
 │   ├── About.vue
 │   └── NotFound.vue
-├── App.vue             # Root component
-├── main.js             # App entry point
-└── style.css           # Global styles
+├── App.vue             # Componente raíz
+├── main.js             # Punto de entrada de la app
+└── style.css           # Estilos globales
 
 electron/
-├── main.js             # Electron main process
-└── preload.js          # Electron preload script
+├── main.js             # Proceso principal de Electron
+└── preload.js          # Script de preload de Electron
 ```
 
-## 🎨 Styling
+## 🎨 Estilos
 
-This project uses **Tailwind CSS** with custom configuration:
+Este proyecto utiliza **Tailwind CSS** con configuración personalizada:
 
-- Custom color palette (primary, secondary)
-- Custom animations and transitions
-- Responsive design utilities
-- Form and typography plugins
+- Paleta de colores personalizada (primario, secundario)
+- Animaciones y transiciones personalizadas
+- Utilidades de diseño responsivo
+- Plugins de formularios y tipografía
 
-### Custom Classes
+### Clases Personalizadas
 
-- `.btn` - Base button styles
-- `.btn-primary` - Primary button variant
-- `.btn-secondary` - Secondary button variant
-- `.card` - Card component styles
-- `.input` - Input field styles
+- `.btn` - Estilos base de botón
+- `.btn-primary` - Variante primaria de botón
+- `.btn-secondary` - Variante secundaria de botón
+- `.card` - Estilos de componente tarjeta
+- `.input` - Estilos de campos de entrada
 
-## 🔧 Configuration Files
+## 🔧 Archivos de Configuración
 
-- `vite.config.js` - Vite configuration with plugins
-- `tailwind.config.js` - Tailwind CSS configuration
-- `.eslintrc.cjs` - ESLint rules
-- `.prettierrc` - Prettier formatting rules
-- `package.json` - Project dependencies and scripts
+- `vite.config.js` - Configuración de Vite con plugins
+- `tailwind.config.js` - Configuración de Tailwind CSS
+- `.eslintrc.cjs` - Reglas de ESLint
+- `.prettierrc` - Reglas de formateo de Prettier
+- `package.json` - Dependencias y scripts del proyecto
 
-## 📱 Electron Features
+## 📱 Características de Electron
 
-- Cross-platform desktop application
-- Secure context isolation
-- Preload script for safe IPC communication
-- Development and production builds
-- Auto-updater ready
+- Aplicación de escritorio multiplataforma
+- Aislamiento de contexto seguro
+- Script de preload para comunicación IPC segura
+- Compilaciones de desarrollo y producción
+- Preparado para auto-actualizaciones
 
-## 🚀 Best Practices
+## 🚀 Buenas Prácticas
 
-### Code Organization
-- **Components**: Reusable, single-responsibility
-- **Composables**: Logic extraction and reusability
-- **Stores**: Centralized state management
-- **Views**: Page-level components
+### Organización del Código
+- **Componentes**: Reutilizables, responsabilidad única
+- **Composables**: Lógica reutilizable y extraída
+- **Stores**: Gestión centralizada del estado
+- **Views**: Componentes de página
 
-### Development Workflow
-- **ESLint**: Code quality and consistency
-- **Prettier**: Code formatting
-- **Auto-imports**: Reduced boilerplate
-- **Type checking**: Runtime safety
+### Flujo de Desarrollo
+- **ESLint**: Calidad y consistencia de código
+- **Prettier**: Formateo de código
+- **Auto-imports**: Menos código repetitivo
+- **Chequeo de tipos**: Seguridad en tiempo de ejecución
 
-### Performance
-- **Lazy loading**: Route-based code splitting
-- **Tree shaking**: Unused code elimination
-- **Optimized builds**: Production-ready bundles
+### Rendimiento
+- **Carga perezosa**: División de código por rutas
+- **Tree shaking**: Eliminación de código no usado
+- **Builds optimizadas**: Paquetes listos para producción
 
-## 🤝 Contributing
+## 🤝 Contribuir
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run linting and formatting
-5. Submit a pull request
+1. Haz un fork del repositorio
+2. Crea una rama para tu feature
+3. Realiza tus cambios
+4. Ejecuta linting y formateo
+5. Envía un pull request
 
-## 📄 License
+## 📄 Licencia
 
-This project is licensed under the MIT License.
+Este proyecto está bajo la Licencia MIT.
 
-## 🆘 Support
+## 🆘 Soporte
 
-For support and questions, please open an issue in the repository.
+Para soporte y preguntas, por favor abre un issue en el repositorio.

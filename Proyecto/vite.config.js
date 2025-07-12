@@ -30,6 +30,20 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  optimizeDeps: {
+    exclude: [
+      'pg-hstore',
+      'mysql2',
+      'mariadb',
+      'pg',
+      'tedious',
+      'oracledb',
+      'ibm_db'
+    ]
+  },
+  define: {
+    global: 'globalThis',
+  },
   server: {
     port: 5173,
     host: true,
@@ -38,6 +52,15 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     rollupOptions: {
+      external: [
+        'pg-hstore',
+        'mysql2',
+        'mariadb', 
+        'pg',
+        'tedious',
+        'oracledb',
+        'ibm_db'
+      ],
       output: {
         manualChunks: {
           vendor: ['vue', 'vue-router', 'pinia'],
