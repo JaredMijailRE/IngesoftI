@@ -2,7 +2,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 export function useLocalStorage(key, defaultValue = null) {
   const value = ref(defaultValue)
-  
+
   // Verificar si estamos en un entorno Electron
   const isElectron = typeof window !== 'undefined' && window.electronAPI
 
@@ -22,7 +22,7 @@ export function useLocalStorage(key, defaultValue = null) {
   }
 
   // Guardar valor
-  const saveValue = async (newValue) => {
+  const saveValue = async newValue => {
     if (!isElectron) {
       return
     }
@@ -48,7 +48,7 @@ export function useLocalStorage(key, defaultValue = null) {
   // Watch for changes and save to storage
   watch(
     value,
-    (newValue) => {
+    newValue => {
       saveValue(newValue)
     },
     { deep: true }
@@ -56,7 +56,7 @@ export function useLocalStorage(key, defaultValue = null) {
 
   onMounted(() => {
     loadValue()
-    
+
     if (isElectron) {
       window.electronAPI.events.onStorageChange(handleStorageChange)
     }

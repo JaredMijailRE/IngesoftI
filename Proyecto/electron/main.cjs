@@ -92,6 +92,74 @@ function createWindow() {
 // IPC Handlers
 
 // Authentication handlers
+ipcMain.handle('auth:signup', async (event, userData) => {
+  try {
+    if (!ProfesorModel) {
+      throw new Error('Database not initialized')
+    }
+
+    // Verificar si el email o username ya existen
+    const existingUser = await ProfesorModel.findOne({
+      where: {
+        [Op.or]: [
+          { email: userData.email },
+          { username: userData.username }
+        ]
+      }
+    })
+
+    if (existingUser) {
+      if (existingUser.email === userData.email) {
+        return { success: false, error: 'El correo electrónico ya está registrado' }
+      } else {
+        return { success: false, error: 'El nombre de usuario ya está en uso' }
+      }
+    }
+
+    // Hashear la contraseña
+    const passwordHash = await bcrypt.hash(userData.password, 12)
+
+    // Crear el nuevo profesor
+    const newProfesor = await ProfesorModel.create({
+      email: userData.email,
+      username: userData.username,
+      password_hash: passwordHash,
+      first_name: userData.firstnames,
+      last_name: userData.lastnames,
+      birth_date: userData.birth_date || null,
+      gender: userData.gender || null,
+      medical_conditions: userData.medical_conditions || null
+    })
+
+    // Crear usuario actual
+    currentUser = {
+      id: newProfesor.id,
+      username: newProfesor.username,
+      email: newProfesor.email,
+      first_name: newProfesor.first_name,
+      last_name: newProfesor.last_name
+    }
+
+    // Guardar en storage
+    storage.auth_user = currentUser
+    storage.auth_token = 'token_' + Date.now()
+    saveStorage()
+
+    // Notificar cambio
+    BrowserWindow.getAllWindows()[0]?.webContents.send('auth:changed', { user: currentUser, isAuthenticated: true })
+
+    return { 
+      success: true, 
+      user: currentUser,
+      message: 'Profesor registrado exitosamente'
+    }
+
+  } catch (error) {
+    console.error('Signup error:', error)
+    return { success: false, error: 'Error del servidor: ' + error.message }
+  }
+})
+
 ipcMain.handle('auth:login', async (event, credentials) => {
   try {
     if (!ProfesorModel) {

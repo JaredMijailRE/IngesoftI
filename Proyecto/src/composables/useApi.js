@@ -17,7 +17,7 @@ export function useApi() {
 
     try {
       const response = await window.electronAPI.api.request(config)
-      
+
       if (response.success) {
         return response.data
       } else {
@@ -32,13 +32,13 @@ export function useApi() {
   }
 
   const get = (url, config = {}) => request({ ...config, method: 'GET', url })
-  
+
   const post = (url, data, config = {}) =>
     request({ ...config, method: 'POST', url, data })
-  
+
   const put = (url, data, config = {}) =>
     request({ ...config, method: 'PUT', url, data })
-  
+
   const del = (url, config = {}) =>
     request({ ...config, method: 'DELETE', url })
 

@@ -8,14 +8,14 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "electron:dev": "concurrently \"bun run dev\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron": "concurrently \"bun run dev\" \"wait-on http://localhost:5173 && electron .\"",
     "electron:build": "bun run build && electron-builder",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-pattern .gitignore",
     "format": "prettier --write src/",
     "type-check": "vue-tsc --noEmit",
     "check-db": "bun db/setup.mjs",
     "seed-db": "bun db/seed.js",
-    "setup": "bun install && bun run check-db && bun run format  && bun run electron:dev  && bun run lint && bun run type-check"
+    "setup": "bun install && bun run check-db && bun run format  && bun run electron  && bun run lint && bun run type-check"
   },
   "dependencies": {
     "@vueuse/core": "^11.0.0",
