@@ -41,17 +41,6 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
         },
-        sportu: {
-          50:  '#4998b3',
-          100: '#60a5bc',
-          200: '#77b2c6',
-          300: '#8dbfcf',
-          400: '#a4ccd9',
-          500: '#bbd8e2',
-          600: '#d2e5ec',
-          700: '#e8f2f5'
-        }
-      
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

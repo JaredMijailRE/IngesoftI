@@ -63,7 +63,7 @@ function handleSubmit() {
        
 <div class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9">
     <div class="flex justify-center">
-        <div class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 flex-col px-8 py-8 ">
+        <div class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 min-w-[333px] flex-col px-8 py-8 ">
             <img class="w-40 h-40 mx-auto my-5 rounded-full object-cover" src="/src/assets/patin_logo.jpg" alt="Logo sportU">
             <h1 class="text-2xl text-center font-bold text-gray-700 mb-4">Bienvenid@ a SportU!</h1>
             <h1 class="text-1xl font-bold text-secondary-600 mb-2">Crea tu cuenta</h1>
