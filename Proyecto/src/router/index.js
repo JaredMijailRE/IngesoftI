@@ -7,6 +7,7 @@ const routes = [
     component: () => import('@/views/Main.vue'),
     meta: { title: 'Main' },
   },
+
   {
     path: '/',
     name: 'Login',
@@ -18,6 +19,18 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/',
+  },
+  {
+    path: '/grupos',
+    name: 'Grupos',
+    component: () => import('@/views/Grupos.vue'),
+    meta: { title: 'Grupos' },
+  },
+  {
+    path: '/grupos/:id/dashboard',
+    name: 'GrupoDashboard',
+    component: () => import('@/views/GrupoDashboard.vue'),
+    meta: { title: 'Dashboard del Grupo' },
   },
 ]
 

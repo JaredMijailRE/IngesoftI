@@ -104,6 +104,8 @@
           >
             Crear Nueva Cuenta
           </button>
+
+          <router-link to="/Grupos">Grupos</router-link>
         </div>
       </form>
     </div>
