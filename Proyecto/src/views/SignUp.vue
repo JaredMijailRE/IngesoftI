@@ -11,6 +11,8 @@ const email = ref('')
 const username = ref('')
 const firstnames = ref('')
 const lastnames = ref('')
+const birthdate = ref('')
+const gender = ref('')
 const password = ref('')
 const verifypassword = ref('')
 
@@ -40,6 +42,24 @@ function handleSubmit() {
     errors.value.lastnames = 'El apellido es obligatorio.'
   }
 
+  if (!birthdate.value) {
+    errors.value.username = 'La fecha de nacimiento es obligatoria.'
+  } else {
+    const enteredDate = new Date(birthdate.value)
+    const today = new Date()
+
+    if (isNaN(enteredDate)) {
+      errors.value.birthdate = 'La fecha ingresada no es válida.'
+    }else if (enteredDate > today) {
+    errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    }
+
+  }
+
+  if (!gender.value) {
+    errors.value.username = 'El genero es obligatorio.'
+  }
+
   if (!password.value) {
     errors.value.password = 'La contraseña es obligatoria.'
   } else if (password.value.length < 8) {
@@ -62,6 +82,8 @@ function handleSubmit() {
       username: username.value,
       firstnames: firstnames.value,
       lastnames: lastnames.value,
+      birthdate: birthdate.value,
+      gender: gender.value,
       password: password.value,
     }
 
@@ -76,6 +98,8 @@ function handleSubmit() {
           username.value = ''
           firstnames.value = ''
           lastnames.value = ''
+          birthdate.value = ''
+          gender.value = ''
           password.value = ''
           verifypassword.value = ''
 
@@ -102,13 +126,9 @@ function handleSubmit() {
 <template>
   <!-- html -->
 
-  <div
-    class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9"
-  >
+  <div class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9">
     <div class="flex justify-center">
-      <div
-        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 flex-col px-8 py-8"
-      >
+      <div class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 flex-col px-8 py-8">
         <img
           class="w-40 h-40 mx-auto my-5 rounded-full object-cover"
           src="/src/assets/patin_logo.jpg"
@@ -160,6 +180,20 @@ function handleSubmit() {
         <p v-if="errors.lastnames" class="text-sm text-red-500 mb-2">
           {{ errors.lastnames }}
         </p>
+
+         <input 
+          v-model="birthdate" 
+          type="date" 
+          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Fecha de Nacimiento":class="{'border-red-500':errors.birthdate}">
+            
+        <p v-if="errors.birthdate" class="text-sm text-red-500 mb-2">
+          {{ errors.birthdate }}
+        </p>
+
+          <input 
+          v-model="gender" 
+          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Genero":class="{'border-red-500':errors.gender}">
+          <p v-if="errors.gender" class="text-sm text-red-500 mb-2">{{ errors.gender }}</p>
 
         <div class="relative">
           <input
@@ -286,7 +320,7 @@ function handleSubmit() {
           v-if="signupMessage"
           class="mt-4 p-3 rounded-md text-center"
           :class="
-            signupMessage.includes('✅')
+            signupMessage.includes('exitoso')
               ? 'bg-green-100 text-green-700'
               : 'bg-red-100 text-red-700'
           "
