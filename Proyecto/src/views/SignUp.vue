@@ -314,6 +314,13 @@ function handleSubmit() {
             <span v-else>Registrarse</span>
           </button>
         </div>
+        <h1 class="text-xs font-bold text-secondary-600 mb-2">
+          Ya tienes cuenta?
+          <button class ='color-blue-600 hover:underline'
+            @click="$router.push('/login')">
+          Log In
+        </button>
+        </h1>
 
         <!-- Mensaje de resultado del registro -->
         <div
