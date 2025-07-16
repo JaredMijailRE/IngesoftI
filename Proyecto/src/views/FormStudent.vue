@@ -32,8 +32,9 @@ function handleSubmit() {
   } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.value)) {
     errors.value.email = 'El correo no es válido.'
   }
-  if (!username.value) {
-    errors.value.username = 'El nombre de usuario es obligatorio.'
+  
+  if (!id.value) {
+    errors.value.username = 'La identificación del estudiante es obligatoria.'
   }
 
   if (!firstnames.value) {
@@ -62,18 +63,6 @@ function handleSubmit() {
     errors.value.username = 'El genero es obligatorio.'
   }
 
-  if (!password.value) {
-    errors.value.password = 'La contraseña es obligatoria.'
-  } else if (password.value.length < 8) {
-    errors.value.password = 'La contraseña debe tener al menos 8 caracteres.'
-  }
-
-  if (!verifypassword.value) {
-    errors.value.verifypassword = 'Debes confirmar la contraseña.'
-  } else if (verifypassword.value !== password.value) {
-    errors.value.verifypassword = 'Las contraseñas no coinciden.'
-  }
-
   // Si no hay errores, proceder con el registro
   if (Object.keys(errors.value).length === 0) {
     isLoading.value = true
@@ -81,12 +70,16 @@ function handleSubmit() {
     // Preparar datos para el registro
     const userData = {
       email: email.value,
-      username: username.value,
+      id: id.value,
       firstnames: firstnames.value,
       lastnames: lastnames.value,
       birthdate: birthdate.value,
       gender: gender.value,
-      password: password.value,
+      preexistencias: preexistencias.value,
+      altura: altura.value,   
+      peso: peso.value,
+      porcentajegrasa: porcentajegrasa.value,
+      porcentajemusculo: porcentajemusculo.value
     }
 
     // Llamar al método de registro
@@ -97,13 +90,16 @@ function handleSubmit() {
           signupMessage.value = '¡Registro exitoso! Bienvenido a SportU'
           // Limpiar formulario
           email.value = ''
-          username.value = ''
+          id.value = ''
           firstnames.value = ''
           lastnames.value = ''
           birthdate.value = ''
           gender.value = ''
-          password.value = ''
-          verifypassword.value = ''
+          peso.value = ''
+          altura.value = ''
+          porcentajegrasa.value = ''
+          porcentajemusculo.value = ''
+          preexistencias.value = ''
 
           //
           setTimeout(() => {
