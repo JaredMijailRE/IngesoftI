@@ -6,7 +6,6 @@ import { ref, computed } from 'vue'
 
 
 
-const email = ref('')
 const preexistencias = ref('')
 const firstnames = ref('')
 const lastnames = ref('')
@@ -18,7 +17,7 @@ const peso = ref('')
 const porcentajegrasa = ref('')
 const porcentajemusculo = ref('')
 
-const errors = ref([])
+const errors = ref({})
 const isLoading = ref(false)
 const signupMessage = ref('')
 
@@ -27,69 +26,65 @@ function handleSubmit() {
   signupMessage.value = ''
 
   // Validaciones
-  if (!email.value) {
-    errors.value.email = 'El correo es obligatorio.'
-  } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.value)) {
-    errors.value.email = 'El correo no es válido.'
-  }
-  
   if (!id.value) {
     errors.value.id = 'La identificación del estudiante es obligatoria.'
   }
-
   if (!firstnames.value) {
     errors.value.firstnames = 'El nombre es obligatorio.'
   }
-
   if (!lastnames.value) {
     errors.value.lastnames = 'El apellido es obligatorio.'
   }
-
   if (!birthdate.value) {
     errors.value.birthdate = 'La fecha de nacimiento es obligatoria.'
   } else {
     const enteredDate = new Date(birthdate.value)
     const today = new Date()
-
     if (isNaN(enteredDate)) {
       errors.value.birthdate = 'La fecha ingresada no es válida.'
-    }else if (enteredDate > today) {
-    errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    } else if (enteredDate > today) {
+      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
     }
-
   }
-
   if (!gender.value) {
     errors.value.gender = 'El genero es obligatorio.'
+  } else if (!['M', 'F', 'O'].includes(gender.value)) {
+    errors.value.gender = 'El género debe ser M, F u O.'
+  }
+  // Validación de números
+  if (peso.value && isNaN(Number(peso.value))) {
+    errors.value.peso = 'El peso debe ser un número válido.'
+  }
+  if (altura.value && isNaN(Number(altura.value))) {
+    errors.value.altura = 'La altura debe ser un número válido.'
+  }
+  if (porcentajegrasa.value && isNaN(Number(porcentajegrasa.value))) {
+    errors.value.porcentajegrasa = 'El porcentaje de grasa debe ser un número válido.'
+  }
+  if (porcentajemusculo.value && isNaN(Number(porcentajemusculo.value))) {
+    errors.value.porcentajemusculo = 'El porcentaje de músculo debe ser un número válido.'
   }
 
   // Si no hay errores, proceder con el registro
   if (Object.keys(errors.value).length === 0) {
     isLoading.value = true
-
-    // Preparar datos para el registro
     const Estudiantedata = {
-      email: email.value,
       id: id.value,
       firstnames: firstnames.value,
       lastnames: lastnames.value,
       birthdate: birthdate.value,
       gender: gender.value,
       preexistencias: preexistencias.value,
-      altura: altura.value,   
+      altura: altura.value,
       peso: peso.value,
       porcentajegrasa: porcentajegrasa.value,
       porcentajemusculo: porcentajemusculo.value
     }
-
-    // Llamar al método de registro
-    window.electronAPI.auth
-      .signupEstudiante(Estudiantedata)
+    window.electronAPI.student.create(Estudiantedata)
       .then(response => {
         if (response.success) {
           signupMessage.value = '¡Registro exitoso! Bienvenido a SportU'
           // Limpiar formulario
-          email.value = ''
           id.value = ''
           firstnames.value = ''
           lastnames.value = ''
@@ -100,14 +95,17 @@ function handleSubmit() {
           porcentajegrasa.value = ''
           porcentajemusculo.value = ''
           preexistencias.value = ''
-
-          //
           setTimeout(() => {
-            // Aquí podrías redirigir a la página principal o dashboard
             console.log('Usuario registrado:', response.user)
           }, 100)
         } else {
-          signupMessage.value = `Error: ${response.error}`
+          if (typeof response.error === 'object') {
+            // Errores de validación
+            errors.value = response.error
+            signupMessage.value = 'Corrige los errores en el formulario.'
+          } else {
+            signupMessage.value = `Error: ${response.error}`
+          }
         }
       })
       .catch(error => {
@@ -157,15 +155,6 @@ function handleSubmit() {
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-            <input
-                v-model="email"
-                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-                placeholder="Correo del Estudiante"
-                :class="{ 'border-red-500': errors.email }"
-                />
-                <p v-if="errors.email" class="text-sm text-red-500 mb-2">
-                {{ errors.email }}
-                </p>
             <input
                 v-model="id"
                 class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"

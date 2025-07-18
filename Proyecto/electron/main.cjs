@@ -235,66 +235,69 @@ ipcMain.handle('auth:getCurrentUser', async () => {
   return storage.auth_user
 })
 
-ipcMain.handle('auth:signupEstudiante', async (event, Estudiantedata) => {
+ipcMain.handle('student:create', async (event, data) => {
   try {
-    if (!EstudianteModel) {
-      throw new Error('Database not initialized')
+    if (!EstudianteModel) throw new Error('Database not initialized');
+
+    // Validación de campos requeridos
+    const errors = {};
+    if (!data.id) errors.id = 'La identificación es obligatoria.';
+    if (!data.firstnames) errors.firstnames = 'El nombre es obligatorio.';
+    if (!data.lastnames) errors.lastnames = 'El apellido es obligatorio.';
+
+    // Validación de género
+    if (data.gender && !['M', 'F', 'O'].includes(data.gender)) {
+      errors.gender = 'El género debe ser M, F u O.';
     }
 
-    // Verificar si el email o username ya existen
-    const existingUser = await EstudianteModel.findOne({
-      where: { id: Estudiantedata.id }
-    })
+    // Validación de números
+    ['peso', 'altura', 'porcentajegrasa', 'porcentajemusculo'].forEach(field => {
+      if (data[field] && isNaN(Number(data[field]))) {
+        errors[field] = `El campo ${field} debe ser un número válido.`;
+      }
+    });
 
-    if (existingUser) {
-      return { success: false, error: 'El estudiante ya está registrado' }
+    if (Object.keys(errors).length > 0) {
+      return { success: false, error: errors };
     }
 
-    // Hashear la contraseña
-    //const passwordHash = await bcrypt.hash(userData.password, 12)
+    // Verificar si el estudiante ya existe
+    const existing = await EstudianteModel.findOne({ where: { id: data.id } });
+    if (existing) {
+      return { success: false, error: 'El estudiante ya está registrado' };
+    }
 
-    // Crear el nuevo estudiante
-    // No usamos autoIncrement ya que el ID es el documento de identidad
+    // Crear estudiante
     const newEstudiante = await EstudianteModel.create({
-      //email: Estudiantedata.email,
-      id: Estudiantedata.id,
-      first_name: Estudiantedata.firstnames,
-      last_name: Estudiantedata.lastnames,
-      birth_date: Estudiantedata.birthdate || null,
-      gender: Estudiantedata.gender || null,
-      medical_conditions: Estudiantedata.preexistencias || null,
-      weight: Estudiantedata.peso || null,
-      height: Estudiantedata.altura || null,
-      body_fat_percentage: Estudiantedata.porcentajegrasa || null,
-      muscle_mass_percentage: Estudiantedata.porcentajemusculo || null
-    })
+      id: data.id,
+      first_name: data.firstnames,
+      last_name: data.lastnames,
+      birth_date: data.birthdate || null,
+      gender: data.gender || null,
+      medical_conditions: data.preexistencias || null,
+      weight: data.peso || null,
+      height: data.altura || null,
+      body_fat_percentage: data.porcentajegrasa || null,
+      muscle_mass_percentage: data.porcentajemusculo || null
+    });
 
-     // Crear Estudiante actual
-    currentStudent = {
-      id: newEstudiante.id,
-      //username: newEstudiante.username,
-      //email: newEstudiante.email,
-      first_name: newEstudiante.first_name,
-      last_name: newEstudiante.last_name,
-      birth_date: newEstudiante.birth_date,
-      gender: newEstudiante.gender,
-      medical_conditions: newEstudiante.medical_conditions
-    }
-
-    // Notificar cambio
-    //BrowserWindow.getAllWindows()[0]?.webContents.send('auth:changed', { user: currentUser, isAuthenticated: true })
-
-     return { 
-       success: true, 
-       user: currentStudent,
-       message: 'Estudiant registrado exitosamente'
-     }
-
+    return {
+      success: true,
+      user: {
+        id: newEstudiante.id,
+        first_name: newEstudiante.first_name,
+        last_name: newEstudiante.last_name,
+        birth_date: newEstudiante.birth_date,
+        gender: newEstudiante.gender,
+        medical_conditions: newEstudiante.medical_conditions
+      },
+      message: 'Estudiante registrado exitosamente'
+    };
   } catch (error) {
-    console.error('Signup error:', error)
-    return { success: false, error: 'Error del servidor: ' + error.message }
+    console.error('Student create error:', error);
+    return { success: false, error: 'Error del servidor: ' + error.message };
   }
-})
+});
 
 // API handlers
 ipcMain.handle('api:request', async (event, config) => {

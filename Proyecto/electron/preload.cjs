@@ -40,5 +40,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onAuthChange: (callback) => ipcRenderer.on('auth:changed', callback),
     onStorageChange: (callback) => ipcRenderer.on('storage:changed', callback),
     removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+  },
+
+  student: {
+    create: (data) => ipcRenderer.invoke('student:create', data)
   }
 }) 
