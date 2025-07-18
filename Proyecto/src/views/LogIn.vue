@@ -152,7 +152,7 @@ async function handleLogin() {
 
 // Función para ir a crear cuenta
 function goToRegister() {
-  alert('Funcionalidad de registro no disponible. Contacta al administrador para crear una cuenta.')
+  router.push('/signup')
 }
 
 // Función para cerrar sesión
