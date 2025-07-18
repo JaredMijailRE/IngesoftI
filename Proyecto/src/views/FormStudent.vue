@@ -34,7 +34,7 @@ function handleSubmit() {
   }
   
   if (!id.value) {
-    errors.value.username = 'La identificación del estudiante es obligatoria.'
+    errors.value.id = 'La identificación del estudiante es obligatoria.'
   }
 
   if (!firstnames.value) {
@@ -46,7 +46,7 @@ function handleSubmit() {
   }
 
   if (!birthdate.value) {
-    errors.value.username = 'La fecha de nacimiento es obligatoria.'
+    errors.value.birthdate = 'La fecha de nacimiento es obligatoria.'
   } else {
     const enteredDate = new Date(birthdate.value)
     const today = new Date()
@@ -60,7 +60,7 @@ function handleSubmit() {
   }
 
   if (!gender.value) {
-    errors.value.username = 'El genero es obligatorio.'
+    errors.value.gender = 'El genero es obligatorio.'
   }
 
   // Si no hay errores, proceder con el registro
@@ -68,7 +68,7 @@ function handleSubmit() {
     isLoading.value = true
 
     // Preparar datos para el registro
-    const userData = {
+    const Estudiantedata = {
       email: email.value,
       id: id.value,
       firstnames: firstnames.value,
@@ -84,7 +84,7 @@ function handleSubmit() {
 
     // Llamar al método de registro
     window.electronAPI.auth
-      .signup(userData)
+      .signupEstudiante(Estudiantedata)
       .then(response => {
         if (response.success) {
           signupMessage.value = '¡Registro exitoso! Bienvenido a SportU'

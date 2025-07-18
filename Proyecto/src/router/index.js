@@ -18,6 +18,14 @@ const routes = [
     },
   },
   {
+    path: '/formstudent',
+    name: 'FormStudent',
+    component: () => import('@/views/FormStudent.vue'),
+    meta: {
+      title: 'Form Student',
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/',
   },

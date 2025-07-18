@@ -9,10 +9,12 @@ const isDev = !app.isPackaged
 
 let storage = {}
 let currentUser = null
+let currentStudent = null
 
 // Database connection
 let dbInstance = null
 let ProfesorModel = null
+let EstudianteModel = null
 
 // Initialize database connection using Sequelize
 const initDatabase = async () => {
@@ -23,6 +25,7 @@ const initDatabase = async () => {
     
     dbInstance = models
     ProfesorModel = models.Profesor
+    EstudianteModel = models.Estudiante
     
     console.log('Connected to database via Sequelize')
   } catch (error) {
@@ -230,6 +233,67 @@ ipcMain.handle('auth:check', async () => {
 
 ipcMain.handle('auth:getCurrentUser', async () => {
   return storage.auth_user
+})
+
+ipcMain.handle('auth:signupEstudiante', async (event, Estudiantedata) => {
+  try {
+    if (!EstudianteModel) {
+      throw new Error('Database not initialized')
+    }
+
+    // Verificar si el email o username ya existen
+    const existingUser = await EstudianteModel.findOne({
+      where: { id: Estudiantedata.id }
+    })
+
+    if (existingUser) {
+      return { success: false, error: 'El estudiante ya está registrado' }
+    }
+
+    // Hashear la contraseña
+    //const passwordHash = await bcrypt.hash(userData.password, 12)
+
+    // Crear el nuevo estudiante
+    // No usamos autoIncrement ya que el ID es el documento de identidad
+    const newEstudiante = await EstudianteModel.create({
+      //email: Estudiantedata.email,
+      id: Estudiantedata.id,
+      first_name: Estudiantedata.firstnames,
+      last_name: Estudiantedata.lastnames,
+      birth_date: Estudiantedata.birthdate || null,
+      gender: Estudiantedata.gender || null,
+      medical_conditions: Estudiantedata.preexistencias || null,
+      weight: Estudiantedata.peso || null,
+      height: Estudiantedata.altura || null,
+      body_fat_percentage: Estudiantedata.porcentajegrasa || null,
+      muscle_mass_percentage: Estudiantedata.porcentajemusculo || null
+    })
+
+     // Crear Estudiante actual
+    currentStudent = {
+      id: newEstudiante.id,
+      //username: newEstudiante.username,
+      //email: newEstudiante.email,
+      first_name: newEstudiante.first_name,
+      last_name: newEstudiante.last_name,
+      birth_date: newEstudiante.birth_date,
+      gender: newEstudiante.gender,
+      medical_conditions: newEstudiante.medical_conditions
+    }
+
+    // Notificar cambio
+    //BrowserWindow.getAllWindows()[0]?.webContents.send('auth:changed', { user: currentUser, isAuthenticated: true })
+
+     return { 
+       success: true, 
+       user: currentStudent,
+       message: 'Estudiant registrado exitosamente'
+     }
+
+  } catch (error) {
+    console.error('Signup error:', error)
+    return { success: false, error: 'Error del servidor: ' + error.message }
+  }
 })
 
 // API handlers
