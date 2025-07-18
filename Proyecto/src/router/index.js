@@ -2,13 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/main',
-    name: 'Main',
-    component: () => import('@/views/Main.vue'),
-    meta: {title: 'Main'}
+    path: '/',
+    name: 'PlanEntrenamientoManager',
+    component: () => import('@/views/PlanEntrenamientoManager.vue'),
+    meta: {title: 'Gestión de Planes y Ejercicios'}
   },
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: () => import('@/views/LogIn.vue'),
     meta: {

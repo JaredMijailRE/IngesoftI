@@ -164,31 +164,126 @@ ipcMain.handle('auth:getCurrentUser', async () => {
   return storage.auth_user
 })
 
-// API handlers
-ipcMain.handle('api:request', async (event, config) => {
+// Ejercicios handlers
+ipcMain.handle('ejercicios:getAll', async () => {
   try {
-    // Aquí puedes implementar la lógica para hacer requests HTTP desde el proceso principal
-    // Por ahora retornamos un mock
-    return { success: true, data: { message: 'API request handled via IPC' } }
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { Ejercicio } = models
+
+    console.log('GET ejercicios - Obteniendo ejercicios')
+    const ejercicios = await Ejercicio.findAll({ order: [['id', 'ASC']] })
+    console.log('Ejercicios encontrados:', ejercicios.length)
+    
+    // Limpiar datos antes de devolver
+    const cleanEjercicios = ejercicios.map(ej => ({
+      id: ej.id,
+      name: ej.name,
+      unit: ej.unit,
+      impact_area: ej.impact_area,
+      type: ej.type,
+      exigency: ej.exigency,
+      description: ej.description
+    }))
+    
+    return { success: true, data: cleanEjercicios }
   } catch (error) {
+    console.error('Error en ejercicios:getAll:', error)
     return { success: false, error: error.message }
   }
 })
 
-ipcMain.handle('api:get', async (event, url, config = {}) => {
-  return await ipcMain.handle('api:request', event, { ...config, method: 'GET', url })
+ipcMain.handle('ejercicios:create', async (event, data) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { Ejercicio } = models
+
+    console.log('POST ejercicios - Creando ejercicio:', data)
+    const nuevo = await Ejercicio.create(data)
+    console.log('Ejercicio creado:', nuevo.toJSON())
+    
+    // Limpiar datos antes de devolver
+    const cleanEjercicio = {
+      id: nuevo.id,
+      name: nuevo.name,
+      unit: nuevo.unit,
+      impact_area: nuevo.impact_area,
+      type: nuevo.type,
+      exigency: nuevo.exigency,
+      description: nuevo.description
+    }
+    
+    return { success: true, data: cleanEjercicio }
+  } catch (error) {
+    console.error('Error en ejercicios:create:', error)
+    return { success: false, error: error.message }
+  }
 })
 
-ipcMain.handle('api:post', async (event, url, data, config = {}) => {
-  return await ipcMain.handle('api:request', event, { ...config, method: 'POST', url, data })
+// Planes de entrenamiento handlers
+ipcMain.handle('planes:getAll', async () => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { PlanEntrenamiento } = models
+
+    console.log('GET planes - Obteniendo planes')
+    const planes = await PlanEntrenamiento.findAll({
+      include: [{ model: models.Ejercicio, through: { attributes: [] } }],
+      order: [['id', 'ASC']]
+    })
+    
+    // Formatear para que ejercicios sea un array simple
+    const result = planes.map(plan => ({
+      id: plan.id,
+      name: plan.name,
+      description: plan.description,
+      type: plan.type,
+      ejercicios: plan.Ejercicios?.map(ej => ({ id: ej.id, name: ej.name, unit: ej.unit })) || []
+    }))
+    
+    console.log('Planes encontrados:', result.length)
+    return { success: true, data: result }
+  } catch (error) {
+    console.error('Error en planes:getAll:', error)
+    return { success: false, error: error.message }
+  }
 })
 
-ipcMain.handle('api:put', async (event, url, data, config = {}) => {
-  return await ipcMain.handle('api:request', event, { ...config, method: 'PUT', url, data })
-})
+ipcMain.handle('planes:create', async (event, data) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { PlanEntrenamiento } = models
 
-ipcMain.handle('api:delete', async (event, url, config = {}) => {
-  return await ipcMain.handle('api:request', event, { ...config, method: 'DELETE', url })
+    console.log('POST planes - Creando plan:', data)
+    const { name, description, type, ejercicios } = data
+    const plan = await PlanEntrenamiento.create({ name, description, type })
+    
+    if (Array.isArray(ejercicios) && ejercicios.length > 0) {
+      await plan.setEjercicios(ejercicios)
+    }
+    
+    // Devolver el plan con ejercicios asociados
+    const planConEjercicios = await PlanEntrenamiento.findByPk(plan.id, {
+      include: [{ model: models.Ejercicio, through: { attributes: [] } }]
+    })
+    
+    const result = {
+      id: planConEjercicios.id,
+      name: planConEjercicios.name,
+      description: planConEjercicios.description,
+      type: planConEjercicios.type,
+      ejercicios: planConEjercicios.Ejercicios?.map(ej => ({ id: ej.id, name: ej.name, unit: ej.unit })) || []
+    }
+    
+    console.log('Plan creado:', result)
+    return { success: true, data: result }
+  } catch (error) {
+    console.error('Error en planes:create:', error)
+    return { success: false, error: error.message }
+  }
 })
 
 // Storage handlers

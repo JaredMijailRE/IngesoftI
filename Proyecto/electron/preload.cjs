@@ -10,13 +10,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getCurrentUser: () => ipcRenderer.invoke('auth:getCurrentUser')
   },
   
-  // API methods
-  api: {
-    request: (config) => ipcRenderer.invoke('api:request', config),
-    get: (url, config) => ipcRenderer.invoke('api:get', url, config),
-    post: (url, data, config) => ipcRenderer.invoke('api:post', url, data, config),
-    put: (url, data, config) => ipcRenderer.invoke('api:put', url, data, config),
-    delete: (url, config) => ipcRenderer.invoke('api:delete', url, config)
+  // Ejercicios methods
+  ejercicios: {
+    getAll: () => ipcRenderer.invoke('ejercicios:getAll'),
+    create: (data) => ipcRenderer.invoke('ejercicios:create', data)
+  },
+  
+  // Planes de entrenamiento methods
+  planes: {
+    getAll: () => ipcRenderer.invoke('planes:getAll'),
+    create: (data) => ipcRenderer.invoke('planes:create', data)
   },
   
   // LocalStorage methods
