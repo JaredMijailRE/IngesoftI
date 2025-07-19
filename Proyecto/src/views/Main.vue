@@ -24,15 +24,19 @@ onMounted(async () => {
 
     const gruposResponse = await getUserGrupos()
     user.value.grupos = gruposResponse.data || []
+    user.value.grupos = [{ id: 1, nombre: 'Grupo A' }, { id: 2, nombre: 'Grupo B' }] // Datos de ejemplo para grupos
 
     const eventosResponse = await getUserEventos()
     user.value.eventos = eventosResponse.data || []
-
-    console.log('Datos del usuario cargados:', user.value)
+    user.value.eventos = [{ id: 1, nombre: 'Evento A', fecha: '2023-10-01' }, { id: 2, nombre: 'Evento B', fecha: '2023-10-02' }] // Datos de ejemplo para eventos
+    
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
   }
 })
+
+const GruposLength = computed(() => user.value.grupos.length)
+const EventosLength = computed(() => user.value.eventos.length)
 
 const toGrupo = id => {
   // Hacer el código cuando este lo de los grupos
@@ -89,12 +93,12 @@ const toAgregarEvento = () => {
               <h3 class="text-xl font-semibold mb-4 ml-3">Grupos</h3>
             </div>
 
-            <div v-if="user.grupos.length != 0">
+            <div v-if="GruposLength != 0">
               <ul>
                 <li
-                  v-for="grupo in user.value.grupos.slice(0, 4)"
+                  v-for="grupo in user.grupos.slice(0, 4)"
                   :key="grupo.id"
-                  class="text-gray-600 mb-2"
+                  class="text-gray-600 mb-2 "
                 >
                   <button
                     class="btn-primary bg-sportu-500 w-full px-5 py-3 text-lg hover:bg-sportu-700"
@@ -132,10 +136,10 @@ const toAgregarEvento = () => {
               <h3 class="text-xl font-semibold mb-4 ml-3">Eventos</h3>
             </div>
 
-            <div v-if="user.eventos.length != 0">
+            <div v-if="EventosLength != 0">
               <ul>
                 <li
-                  v-for="evento in user.value.eventos.slice(0, 3)"
+                  v-for="evento in user.eventos.slice(0, 3)"
                   :key="evento.id"
                   class="text-gray-600 mb-2"
                 >
