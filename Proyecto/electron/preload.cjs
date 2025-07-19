@@ -13,13 +13,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Ejercicios methods
   ejercicios: {
     getAll: () => ipcRenderer.invoke('ejercicios:getAll'),
-    create: (data) => ipcRenderer.invoke('ejercicios:create', data)
+    create: (data) => ipcRenderer.invoke('ejercicios:create', data),
+    delete: (id) => ipcRenderer.invoke('ejercicios:delete', id)
   },
   
   // Planes de entrenamiento methods
   planes: {
     getAll: () => ipcRenderer.invoke('planes:getAll'),
-    create: (data) => ipcRenderer.invoke('planes:create', data)
+    create: (data) => ipcRenderer.invoke('planes:create', data),
+    delete: (id) => ipcRenderer.invoke('planes:delete', id)
   },
   
   // LocalStorage methods

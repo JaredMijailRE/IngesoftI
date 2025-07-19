@@ -221,6 +221,29 @@ ipcMain.handle('ejercicios:create', async (event, data) => {
   }
 })
 
+ipcMain.handle('ejercicios:delete', async (event, id) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { Ejercicio } = models
+
+    console.log('DELETE ejercicios - Eliminando ejercicio:', id)
+    const ejercicio = await Ejercicio.findByPk(id)
+    
+    if (!ejercicio) {
+      throw new Error('Ejercicio no encontrado')
+    }
+    
+    await ejercicio.destroy()
+    console.log('Ejercicio eliminado:', id)
+    
+    return { success: true, data: { id } }
+  } catch (error) {
+    console.error('Error en ejercicios:delete:', error)
+    return { success: false, error: error.message }
+  }
+})
+
 // Planes de entrenamiento handlers
 ipcMain.handle('planes:getAll', async () => {
   try {
@@ -282,6 +305,29 @@ ipcMain.handle('planes:create', async (event, data) => {
     return { success: true, data: result }
   } catch (error) {
     console.error('Error en planes:create:', error)
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('planes:delete', async (event, id) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { PlanEntrenamiento } = models
+
+    console.log('DELETE planes - Eliminando plan:', id)
+    const plan = await PlanEntrenamiento.findByPk(id)
+    
+    if (!plan) {
+      throw new Error('Plan no encontrado')
+    }
+    
+    await plan.destroy()
+    console.log('Plan eliminado:', id)
+    
+    return { success: true, data: { id } }
+  } catch (error) {
+    console.error('Error en planes:delete:', error)
     return { success: false, error: error.message }
   }
 })

@@ -56,6 +56,30 @@ export function useApi() {
     }
   }
 
+  const deleteEjercicio = async (id) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.ejercicios.delete(id)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al eliminar ejercicio')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Métodos específicos para planes
   const getPlanes = async () => {
     if (!isElectron) {
@@ -105,6 +129,30 @@ export function useApi() {
     }
   }
 
+  const deletePlan = async (id) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.planes.delete(id)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al eliminar plan')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Métodos genéricos (mantener para compatibilidad)
   const request = async config => {
     if (!isElectron) {
@@ -130,16 +178,6 @@ export function useApi() {
     }
   }
 
-  const get = (url, config = {}) => request({ ...config, method: 'GET', url })
-  
-  const post = (url, data, config = {}) =>
-    request({ ...config, method: 'POST', url, data })
-  
-  const put = (url, data, config = {}) =>
-    request({ ...config, method: 'PUT', url, data })
-  
-  const del = (url, config = {}) =>
-    request({ ...config, method: 'DELETE', url })
 
   return {
     loading,
@@ -147,13 +185,10 @@ export function useApi() {
     // Métodos específicos
     getEjercicios,
     createEjercicio,
+    deleteEjercicio,
     getPlanes,
     createPlan,
-    // Métodos genéricos
-    request,
-    get,
-    post,
-    put,
-    delete: del,
+    deletePlan,
+
   }
 }
