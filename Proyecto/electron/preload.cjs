@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Authentication methods
   auth: {
     login: (credentials) => ipcRenderer.invoke('auth:login', credentials),
+    signup: (userData) => ipcRenderer.invoke('auth:signup', userData),
     logout: () => ipcRenderer.invoke('auth:logout'),
     checkAuth: () => ipcRenderer.invoke('auth:check'),
     getCurrentUser: () => ipcRenderer.invoke('auth:getCurrentUser')
@@ -42,5 +43,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onAuthChange: (callback) => ipcRenderer.on('auth:changed', callback),
     onStorageChange: (callback) => ipcRenderer.on('storage:changed', callback),
     removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+  },
+
+  student: {
+    create: (data) => ipcRenderer.invoke('student:create', data)
   }
 }) 
