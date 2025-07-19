@@ -89,7 +89,7 @@ export function useApi() {
 
     try {
       const response = await window.electronAPI.ejercicios.getAll()
-      
+
       if (response.success) {
         return response.data
       } else {
@@ -103,7 +103,7 @@ export function useApi() {
     }
   }
 
-  const createEjercicio = async (data) => {
+  const createEjercicio = async data => {
     if (!isElectron) {
       throw new Error('Este composable requiere Electron para funcionar')
     }
@@ -113,7 +113,7 @@ export function useApi() {
 
     try {
       const response = await window.electronAPI.ejercicios.create(data)
-      
+
       if (response.success) {
         return response.data
       } else {
@@ -127,7 +127,7 @@ export function useApi() {
     }
   }
 
-  const deleteEjercicio = async (id) => {
+  const deleteEjercicio = async id => {
     if (!isElectron) {
       throw new Error('Este composable requiere Electron para funcionar')
     }
@@ -137,7 +137,7 @@ export function useApi() {
 
     try {
       const response = await window.electronAPI.ejercicios.delete(id)
-      
+
       if (response.success) {
         return response.data
       } else {
@@ -162,7 +162,7 @@ export function useApi() {
 
     try {
       const response = await window.electronAPI.planes.getAll()
-      
+
       if (response.success) {
         return response.data
       } else {
@@ -176,7 +176,7 @@ export function useApi() {
     }
   }
 
-  const createPlan = async (data) => {
+  const createPlan = async data => {
     if (!isElectron) {
       throw new Error('Este composable requiere Electron para funcionar')
     }
@@ -186,7 +186,7 @@ export function useApi() {
 
     try {
       const response = await window.electronAPI.planes.create(data)
-      
+
       if (response.success) {
         return response.data
       } else {
@@ -200,7 +200,7 @@ export function useApi() {
     }
   }
 
-  const deletePlan = async (id) => {
+  const deletePlan = async id => {
     if (!isElectron) {
       throw new Error('Este composable requiere Electron para funcionar')
     }
@@ -210,7 +210,7 @@ export function useApi() {
 
     try {
       const response = await window.electronAPI.planes.delete(id)
-      
+
       if (response.success) {
         return response.data
       } else {

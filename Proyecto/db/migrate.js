@@ -71,7 +71,7 @@ export async function initializeDatabase(config) {
     });
 
     // Sincronizar base de datos (crear tablas si no existen)
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     console.log('✅ Base de datos sincronizada correctamente.');
     
     return { sequelize, models: {

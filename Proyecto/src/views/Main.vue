@@ -24,12 +24,17 @@ onMounted(async () => {
 
     const gruposResponse = await getUserGrupos()
     user.value.grupos = gruposResponse.data || []
-    user.value.grupos = [{ id: 1, nombre: 'Grupo A' }, { id: 2, nombre: 'Grupo B' }] // Datos de ejemplo para grupos
+    user.value.grupos = [
+      { id: 1, nombre: 'Grupo A' },
+      { id: 2, nombre: 'Grupo B' },
+    ] // Datos de ejemplo para grupos
 
     const eventosResponse = await getUserEventos()
     user.value.eventos = eventosResponse.data || []
-    user.value.eventos = [{ id: 1, nombre: 'Evento A', fecha: '2023-10-01' }, { id: 2, nombre: 'Evento B', fecha: '2023-10-02' }] // Datos de ejemplo para eventos
-    
+    user.value.eventos = [
+      { id: 1, nombre: 'Evento A', fecha: '2023-10-01' },
+      { id: 2, nombre: 'Evento B', fecha: '2023-10-02' },
+    ] // Datos de ejemplo para eventos
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
   }
@@ -98,7 +103,7 @@ const toAgregarEvento = () => {
                 <li
                   v-for="grupo in user.grupos.slice(0, 4)"
                   :key="grupo.id"
-                  class="text-gray-600 mb-2 "
+                  class="text-gray-600 mb-2"
                 >
                   <button
                     class="btn-primary bg-sportu-500 w-full px-5 py-3 text-lg hover:bg-sportu-700"

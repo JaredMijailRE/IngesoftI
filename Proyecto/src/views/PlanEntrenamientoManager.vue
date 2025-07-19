@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-tr from-sportu-100 via-sportu-400 to-sportu-700 p-4">
+  <div
+    class="min-h-screen bg-gradient-to-tr from-sportu-100 via-sportu-400 to-sportu-700 p-4"
+  >
     <div class="container mx-auto py-8">
       <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">
         Gestión de Planes de Entrenamiento y Ejercicios
@@ -7,28 +9,42 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <BaseCard>
           <template #header>
-            <h2 class="text-xl font-semibold text-sportu-700">Añadir Ejercicio</h2>
+            <h2 class="text-xl font-semibold text-sportu-700">
+              Añadir Ejercicio
+            </h2>
           </template>
           <ExerciseForm @created="fetchEjercicios" />
         </BaseCard>
         <BaseCard>
           <template #header>
-            <h2 class="text-xl font-semibold text-sportu-700">Crear Plan de Entrenamiento</h2>
+            <h2 class="text-xl font-semibold text-sportu-700">
+              Crear Plan de Entrenamiento
+            </h2>
           </template>
-          <PlanEntrenamientoForm :ejercicios="ejercicios" @created="fetchPlanes" />
+          <PlanEntrenamientoForm
+            :ejercicios="ejercicios"
+            @created="fetchPlanes"
+          />
         </BaseCard>
       </div>
       <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
         <BaseCard>
           <template #header>
-            <h2 class="text-lg font-semibold text-sportu-700">Ejercicios Existentes</h2>
+            <h2 class="text-lg font-semibold text-sportu-700">
+              Ejercicios Existentes
+            </h2>
           </template>
           <ul>
-            <li v-for="ej in ejercicios" :key="ej.id" class="py-3 border-b last:border-b-0 flex justify-between items-center">
+            <li
+              v-for="ej in ejercicios"
+              :key="ej.id"
+              class="py-3 border-b last:border-b-0 flex justify-between items-center"
+            >
               <div>
-                <span class="font-medium">{{ ej.name }}</span> <span class="text-xs text-gray-500">({{ ej.unit }})</span>
+                <span class="font-medium">{{ ej.name }}</span>
+                <span class="text-xs text-gray-500">({{ ej.unit }})</span>
               </div>
-              <button 
+              <button
                 @click="handleDeleteEjercicio(ej.id)"
                 class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm"
                 title="Eliminar ejercicio"
@@ -40,17 +56,32 @@
         </BaseCard>
         <BaseCard>
           <template #header>
-            <h2 class="text-lg font-semibold text-sportu-700">Planes de Entrenamiento</h2>
+            <h2 class="text-lg font-semibold text-sportu-700">
+              Planes de Entrenamiento
+            </h2>
           </template>
           <ul>
-            <li v-for="plan in planes" :key="plan.id" class="py-3 border-b last:border-b-0">
+            <li
+              v-for="plan in planes"
+              :key="plan.id"
+              class="py-3 border-b last:border-b-0"
+            >
               <div class="flex justify-between items-start">
                 <div class="flex-1">
-                  <span class="font-medium">{{ plan.name }}</span> <span class="text-xs text-gray-500">({{ plan.type }})</span>
-                  <div class="text-xs text-gray-400">{{ plan.description }}</div>
-                  <div class="text-xs mt-1">Ejercicios: <span v-if="plan.ejercicios && plan.ejercicios.length">{{ plan.ejercicios.map(e => e.name).join(', ') }}</span><span v-else>Ninguno</span></div>
+                  <span class="font-medium">{{ plan.name }}</span>
+                  <span class="text-xs text-gray-500">({{ plan.type }})</span>
+                  <div class="text-xs text-gray-400">
+                    {{ plan.description }}
+                  </div>
+                  <div class="text-xs mt-1">
+                    Ejercicios:
+                    <span v-if="plan.ejercicios && plan.ejercicios.length">{{
+                      plan.ejercicios.map(e => e.name).join(', ')
+                    }}</span
+                    ><span v-else>Ninguno</span>
+                  </div>
                 </div>
-                <button 
+                <button
                   @click="handleDeletePlan(plan.id)"
                   class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm ml-3"
                   title="Eliminar plan"
@@ -63,13 +94,13 @@
         </BaseCard>
       </div>
     </div>
-          <ConfirmModal
-        :is-open="showConfirmModal"
-        :title="getConfirmTitle()"
-        :message="getConfirmMessage()"
-        @confirm="handleConfirmAction"
-        @cancel="handleCancelAction"
-      />
+    <ConfirmModal
+      :is-open="showConfirmModal"
+      :title="getConfirmTitle()"
+      :message="getConfirmMessage()"
+      @confirm="handleConfirmAction"
+      @cancel="handleCancelAction"
+    />
   </div>
 </template>
 
@@ -104,7 +135,7 @@ const fetchEjercicios = async () => {
       impact_area: ej.impact_area,
       type: ej.type,
       exigency: ej.exigency,
-      description: ej.description
+      description: ej.description,
     }))
   } catch (e) {
     console.error('Error al obtener ejercicios:', e)
@@ -128,13 +159,13 @@ onMounted(() => {
   fetchPlanes()
 })
 
-const handleDeleteEjercicio = async (id) => {
+const handleDeleteEjercicio = async id => {
   confirmAction.value = 'deleteEjercicio'
   confirmData.value = id
   showConfirmModal.value = true
 }
 
-const handleDeletePlan = async (id) => {
+const handleDeletePlan = async id => {
   confirmAction.value = 'deletePlan'
   confirmData.value = id
   showConfirmModal.value = true
@@ -148,7 +179,7 @@ const handleConfirmAction = async () => {
       appStore.addNotification({
         type: 'success',
         title: 'Ejercicio eliminado',
-        message: 'El ejercicio se ha eliminado correctamente'
+        message: 'El ejercicio se ha eliminado correctamente',
       })
       await fetchEjercicios() // Recargar la lista
     } else if (confirmAction.value === 'deletePlan') {
@@ -157,7 +188,7 @@ const handleConfirmAction = async () => {
       appStore.addNotification({
         type: 'success',
         title: 'Plan eliminado',
-        message: 'El plan de entrenamiento se ha eliminado correctamente'
+        message: 'El plan de entrenamiento se ha eliminado correctamente',
       })
       await fetchPlanes() // Recargar la lista
     }
@@ -166,7 +197,7 @@ const handleConfirmAction = async () => {
     appStore.addNotification({
       type: 'error',
       title: 'Error',
-      message: 'Error al eliminar: ' + e.message
+      message: 'Error al eliminar: ' + e.message,
     })
   } finally {
     showConfirmModal.value = false
@@ -198,4 +229,4 @@ const getConfirmTitle = () => {
   }
   return 'Confirmar Acción'
 }
-</script> 
+</script>

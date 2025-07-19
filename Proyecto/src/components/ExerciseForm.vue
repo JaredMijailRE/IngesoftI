@@ -1,11 +1,20 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-4">
-    <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+    <div
+      v-if="error"
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+    >
       {{ error }}
     </div>
     <div>
       <label class="block font-medium mb-1">Nombre</label>
-      <input v-model="form.name" type="text" class="input" required maxlength="150" />
+      <input
+        v-model="form.name"
+        type="text"
+        class="input"
+        required
+        maxlength="150"
+      />
     </div>
     <div>
       <label class="block font-medium mb-1">Unidad</label>
@@ -48,11 +57,16 @@
     </div>
     <div>
       <label class="block font-medium mb-1">Descripción</label>
-      <textarea v-model="form.description" class="input" rows="2" maxlength="500"></textarea>
+      <textarea
+        v-model="form.description"
+        class="input"
+        rows="2"
+        maxlength="500"
+      ></textarea>
     </div>
     <div class="flex justify-end">
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         :disabled="loading"
         class="bg-sportu-600 text-white px-4 py-2 rounded hover:bg-sportu-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
@@ -75,11 +89,18 @@ const form = ref({
   impact_area: '',
   type: '',
   exigency: '',
-  description: ''
+  description: '',
 })
 
 const resetForm = () => {
-  form.value = { name: '', unit: '', impact_area: '', type: '', exigency: '', description: '' }
+  form.value = {
+    name: '',
+    unit: '',
+    impact_area: '',
+    type: '',
+    exigency: '',
+    description: '',
+  }
 }
 
 const handleSubmit = async () => {
@@ -95,7 +116,7 @@ const handleSubmit = async () => {
 
   try {
     error.value = null
-    
+
     // Limpiar y preparar datos para enviar
     const cleanData = {
       name: form.value.name.trim(),
@@ -103,9 +124,9 @@ const handleSubmit = async () => {
       impact_area: form.value.impact_area || null,
       type: form.value.type || null,
       exigency: form.value.exigency || null,
-      description: form.value.description?.trim() || null
+      description: form.value.description?.trim() || null,
     }
-    
+
     console.log('Enviando datos:', cleanData)
     const result = await createEjercicio(cleanData)
     console.log('Ejercicio creado:', result)
@@ -122,4 +143,4 @@ const handleSubmit = async () => {
 .input {
   @apply w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sportu-400;
 }
-</style> 
+</style>

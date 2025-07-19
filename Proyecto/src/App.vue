@@ -11,7 +11,7 @@ import NotificationToast from '@/components/NotificationToast.vue'
         <component :is="Component" />
       </transition>
     </router-view>
-    
+
     <!-- Componente de notificaciones global -->
     <NotificationToast />
   </div>

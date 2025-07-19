@@ -34,21 +34,29 @@ declare global {
         sendMessage: (message: string) => Promise<{ success: boolean }>
       }
       events: {
-        onAuthChange: (callback: (event: any, data: any) => void) => void;
-        onStorageChange: (callback: (event: any, data: any) => void) => void;
-        removeAllListeners: (channel: string) => void;
-      };
+        onAuthChange: (callback: (event: any, data: any) => void) => void
+        onStorageChange: (callback: (event: any, data: any) => void) => void
+        removeAllListeners: (channel: string) => void
+      }
       ejercicios: {
-        getAll: () => Promise<{ success: boolean; data?: any; error?: string }>;
-        create: (data: any) => Promise<{ success: boolean; data?: any; error?: string }>;
-        delete: (id: number) => Promise<{ success: boolean; data?: any; error?: string }>;
-      };
+        getAll: () => Promise<{ success: boolean; data?: any; error?: string }>
+        create: (
+          data: any
+        ) => Promise<{ success: boolean; data?: any; error?: string }>
+        delete: (
+          id: number
+        ) => Promise<{ success: boolean; data?: any; error?: string }>
+      }
       planes: {
-        getAll: () => Promise<{ success: boolean; data?: any; error?: string }>;
-        create: (data: any) => Promise<{ success: boolean; data?: any; error?: string }>;
-        delete: (id: number) => Promise<{ success: boolean; data?: any; error?: string }>;
-      };
-    };
+        getAll: () => Promise<{ success: boolean; data?: any; error?: string }>
+        create: (
+          data: any
+        ) => Promise<{ success: boolean; data?: any; error?: string }>
+        delete: (
+          id: number
+        ) => Promise<{ success: boolean; data?: any; error?: string }>
+      }
+    }
   }
 }
 

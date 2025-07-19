@@ -32,7 +32,7 @@ async function seedDatabase() {
       gender: 'M',
       medical_conditions: null
     };
-
+    
     await Profesor.create(profesorData);
 
     console.log('✅ Datos de prueba insertados exitosamente:');
