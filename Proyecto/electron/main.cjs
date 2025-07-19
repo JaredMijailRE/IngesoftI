@@ -165,13 +165,53 @@ ipcMain.handle('auth:getCurrentUser', async () => {
 })
 
 // API handlers
-ipcMain.handle('api:request', async (event, config) => {
+ipcMain.handle('user:getGrupos', async (event, userId) => {
   try {
-    // Aquí puedes implementar la lógica para hacer requests HTTP desde el proceso principal
-    // Por ahora retornamos un mock
-    return { success: true, data: { message: 'API request handled via IPC' } }
-  } catch (error) {
-    return { success: false, error: error.message }
+    const { getModels } = await import('../db/index.js')
+    const { Profesor, Grupo } = await getModels()
+
+    const profesor = await Profesor.findByPk(userId, {
+      include: {
+        model: Grupo,
+        through: { attributes: [] } // evita retornar datos de la tabla intermedia
+      }
+    })
+
+    if (!profesor) {
+      return { success: false, error: 'Profesor no encontrado' }
+    }
+
+    return { success: true, data: profesor.Grupos }
+  } catch (err) {
+    console.error('Error en user:getGrupos:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('user:getEventos', async (event, userId) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const { Profesor, Grupo, Evento } = await getModels()
+
+    const profesor = await Profesor.findByPk(userId, {
+      include: {
+        model: Grupo,
+        include: Evento, // incluir eventos dentro de cada grupo
+        through: { attributes: [] }
+      }
+    })
+
+    if (!profesor) {
+      return { success: false, error: 'Profesor no encontrado' }
+    }
+
+    // Extraer eventos de todos los grupos
+    const eventos = profesor.Grupos.flatMap(grupo => grupo.Eventos)
+
+    return { success: true, data: eventos }
+  } catch (err) {
+    console.error('Error en user:getEventos:', err)
+    return { success: false, error: err.message }
   }
 })
 

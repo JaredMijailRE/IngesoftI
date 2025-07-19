@@ -8,7 +8,7 @@ export function useAuth() {
 
   const isElectron = typeof window !== 'undefined' && window.electronAPI
 
-  const login = async (credentials) => {
+  const login = async credentials => {
     isLoading.value = true
     error.value = ''
 
@@ -18,7 +18,7 @@ export function useAuth() {
       }
 
       const result = await window.electronAPI.auth.login(credentials)
-      
+
       if (result.success) {
         user.value = result.user
         isAuthenticated.value = true
@@ -53,7 +53,7 @@ export function useAuth() {
         return
       }
 
-      const result = await window.electronAPI.auth.check()
+      const result = await window.electronAPI.auth.checkAuth()
       if (result.isAuthenticated) {
         user.value = result.user
         isAuthenticated.value = true
@@ -71,7 +71,7 @@ export function useAuth() {
 
   onMounted(() => {
     checkAuth()
-    
+
     if (isElectron) {
       window.electronAPI.events.onAuthChange(handleAuthChange)
     }
@@ -90,6 +90,6 @@ export function useAuth() {
     error,
     login,
     logout,
-    checkAuth
+    checkAuth,
   }
-} 
+}

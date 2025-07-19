@@ -19,6 +19,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     delete: (url, config) => ipcRenderer.invoke('api:delete', url, config)
   },
   
+  user: {
+    getGrupos: (userId) => ipcRenderer.invoke('user:getGrupos', userId),
+    getEventos: (userId) => ipcRenderer.invoke('user:getEventos', userId)
+  },
+
   // LocalStorage methods
   storage: {
     get: (key) => ipcRenderer.invoke('storage:get', key),
