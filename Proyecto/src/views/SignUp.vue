@@ -64,6 +64,12 @@ function handleSubmit() {
     errors.value.password = 'La contraseña es obligatoria.'
   } else if (password.value.length < 8) {
     errors.value.password = 'La contraseña debe tener al menos 8 caracteres.'
+  } else if (!/[a-z]/.test(password.value)) {
+    errors.value.password = 'Debe contener al menos una letra minúscula.'
+  } else if (!/[A-Z]/.test(password.value)) {
+    errors.value.password = 'Debe contener al menos una letra mayúscula.'
+  } else if (!/\d/.test(password.value)) {
+    errors.value.password = 'Debe contener al menos un número.'
   }
 
   if (!verifypassword.value) {
