@@ -204,7 +204,7 @@ async function handleLogin() {
 
   if (result.success) {
     console.log('Login exitoso')
-    // Limpiar errores y mantener los datos del usuario visibles
+    // Limpiar errores y redirigir al dashboard
     error.value = ''
 
     await router.push('/Main')
