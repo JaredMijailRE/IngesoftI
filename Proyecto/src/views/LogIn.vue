@@ -105,7 +105,7 @@
             Crear Nueva Cuenta
           </button>
 
-          <router-link to="/Main">Main</router-link>
+          <router-link to="/dashboard">Dashboard</router-link>
         </div>
       </form>
     </div>
@@ -143,8 +143,9 @@ async function handleLogin() {
 
   if (result.success) {
     console.log('Login exitoso')
-    // Limpiar errores y mantener los datos del usuario visibles
+    // Limpiar errores y redirigir al dashboard
     error.value = ''
+    router.push('/dashboard')
   } else {
     error.value = result.error || authError.value
   }
