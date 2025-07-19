@@ -131,6 +131,20 @@ function handleSubmit() {
         <h1 class="text-1xl font-bold text-secondary-600 mb-2">
           Crea un nuevo estudiante
         </h1>
+      
+
+        <div class="grid grid-cols-2 gap-2">
+            <input
+                v-model="id"
+                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+                placeholder="Identificación del Estudiante"
+                :class="{ 'border-red-500': errors.id }"
+                />
+                <p v-if="errors.id" class="text-sm text-red-500 mb-2">
+                {{ errors.id }}
+                </p>
+        </div>
+
         <div class="grid grid-cols-2 gap-2">
 
             <input
@@ -152,18 +166,6 @@ function handleSubmit() {
             <p v-if="errors.lastnames" class="text-sm text-red-500 mb-2">
             {{ errors.lastnames }}
             </p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-            <input
-                v-model="id"
-                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-                placeholder="Identificación del Estudiante"
-                :class="{ 'border-red-500': errors.id }"
-                />
-                <p v-if="errors.id" class="text-sm text-red-500 mb-2">
-                {{ errors.id }}
-                </p>
         </div>
 
 
