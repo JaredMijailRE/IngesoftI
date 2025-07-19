@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { Icon } from '@iconify/vue'
 
@@ -24,17 +24,10 @@ onMounted(async () => {
 
     const gruposResponse = await getUserGrupos()
     user.value.grupos = gruposResponse.data || []
-    user.value.grupos = [
-      { id: 1, nombre: 'Grupo A' },
-      { id: 2, nombre: 'Grupo B' },
-    ] // Datos de ejemplo para grupos
 
     const eventosResponse = await getUserEventos()
     user.value.eventos = eventosResponse.data || []
-    user.value.eventos = [
-      { id: 1, nombre: 'Evento A', fecha: '2023-10-01' },
-      { id: 2, nombre: 'Evento B', fecha: '2023-10-02' },
-    ] // Datos de ejemplo para eventos
+    
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
   }
