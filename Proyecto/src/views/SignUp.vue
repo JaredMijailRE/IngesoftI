@@ -13,8 +13,6 @@ const firstnames = ref('')
 const lastnames = ref('')
 const birthdate = ref('')
 const gender = ref('')
-const birthdate = ref('')
-const gender = ref('')
 const password = ref('')
 const verifypassword = ref('')
 

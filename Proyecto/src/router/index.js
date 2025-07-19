@@ -2,14 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
+    path: '/PlanEntrenamientoManager',
     name: 'PlanEntrenamientoManager',
     component: () => import('@/views/PlanEntrenamientoManager.vue'),
     meta: { title: 'Gestión de Planes y Ejercicios' },
   },
 
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: () => import('@/views/LogIn.vue'),
     meta: {
