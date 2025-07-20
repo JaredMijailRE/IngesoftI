@@ -20,45 +20,26 @@ function handleSubmit() {
   signupMessage.value = ''
 
   // Validaciones
-  if (!id.value) {
-    errors.value.id = 'La identificación del estudiante es obligatoria.'
+  if (!title.value) {
+    errors.value.title = 'El titulo del evento es obligatorio.'
   }
-  if (!firstnames.value) {
-    errors.value.firstnames = 'El nombre es obligatorio.'
-  }
-  if (!lastnames.value) {
-    errors.value.lastnames = 'El apellido es obligatorio.'
-  }
-  if (!birthdate.value) {
-    errors.value.birthdate = 'La fecha de nacimiento es obligatoria.'
+  if (!date.value) {
+    errors.value.date = 'La fecha del evento es obligatoria.'
   } else {
     const enteredDate = new Date(birthdate.value)
     const today = new Date()
     if (isNaN(enteredDate)) {
       errors.value.birthdate = 'La fecha ingresada no es válida.'
-    } else if (enteredDate > today) {
-      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    } else if (enteredDate < today) {
+      errors.value.birthdate = 'La fecha del evento no puede ser pasada.'
     }
   }
-  if (!gender.value) {
-    errors.value.gender = 'El genero es obligatorio.'
-  } else if (!['M', 'F', 'O'].includes(gender.value)) {
-    errors.value.gender = 'El género debe ser M, F u O.'
-  }
   // Validación de números
-  if (peso.value && isNaN(Number(peso.value))) {
-    errors.value.peso = 'El peso debe ser un número válido.'
+  if (price.value && isNaN(Number(price.value))) {
+    errors.value.price = 'El precio debe ser un número válido.'
   }
-  if (altura.value && isNaN(Number(altura.value))) {
-    errors.value.altura = 'La altura debe ser un número válido.'
-  }
-  if (porcentajegrasa.value && isNaN(Number(porcentajegrasa.value))) {
-    errors.value.porcentajegrasa =
-      'El porcentaje de grasa debe ser un número válido.'
-  }
-  if (porcentajemusculo.value && isNaN(Number(porcentajemusculo.value))) {
-    errors.value.porcentajemusculo =
-      'El porcentaje de músculo debe ser un número válido.'
+  if (time.value && isNaN(Number(time.value))) {
+    errors.value.time = 'La hora debe ser un número válido.'
   }
 
   // Si no hay errores, proceder con el registro
@@ -72,7 +53,7 @@ function handleSubmit() {
       date: date.value,
       time: time.value
     }
-    window.electronAPI.student
+    window.electronAPI.sportEvent
       .create(data)
       .then(response => {
         if (response.success) {
@@ -130,8 +111,8 @@ function handleSubmit() {
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
             :class="{ 'border-red-500': errors.title }"
           />
-          <p v-if="title.id" class="text-sm text-red-500 mb-2">
-            {{ title.id }}
+          <p v-if="errors.title" class="text-sm text-red-500 mb-2">
+            {{ errors.title }}
           </p>
           </div>
           <div>

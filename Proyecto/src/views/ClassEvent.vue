@@ -111,8 +111,8 @@ function handleSubmit() {
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
             :class="{ 'border-red-500': errors.groupid }"
           />
-          <p v-if="title.groupid" class="text-sm text-red-500 mb-2">
-            {{ title.groupid }}
+          <p v-if="errors.groupid" class="text-sm text-red-500 mb-2">
+            {{ errors.groupid }}
           </p>
           </div>
 
