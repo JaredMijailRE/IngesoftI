@@ -47,7 +47,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // Student CRUD methods
   student: {
-    getAll: opts => ipcRenderer.invoke('student:getAll', opts),
+    getAll: filter => ipcRenderer.invoke('student:getAll', filter),
     create: data => ipcRenderer.invoke('student:create', data),
     update: data => ipcRenderer.invoke('student:update', data),
     delete: id => ipcRenderer.invoke('student:delete', id),

@@ -32,81 +32,60 @@
       v-else-if="studentList.length"
       class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto"
     >
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              ID
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Nombres
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Apellidos
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Fecha de nacimiento
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Género
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Peso
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Altura
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              % Grasa
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              % Músculo
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Preexistencias
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr
-            v-for="s in studentList"
-            :key="s.id"
-            class="hover:bg-gray-100 cursor-pointer"
-            @click="editStudent(s.id)"
-          >
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.id }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.firstnames }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.lastnames }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.birthdate }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.gender }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.peso }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.altura }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.porcentajegrasa }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.porcentajemusculo }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ s.preexistencias || '–' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- ─── src/views/GrupoDashboard.vue ─── -->
+<table class="min-w-full table-auto border-collapse">
+  <thead>
+    <tr class="bg-sportu-100 text-white text-left">
+      <th class="p-2">ID</th>
+      <th class="p-2">Nombres</th>
+      <th class="p-2">Apellidos</th>
+      <th class="p-2">Nacimiento</th>
+      <th class="p-2">Género</th>
+      <th class="p-2">Peso (kg)</th>
+      <th class="p-2">Altura (cm)</th>
+      <th class="p-2">% Grasa</th>
+      <th class="p-2">% Músculo</th>
+      <th class="p-2">Preexistencias</th>
+      <th class="p-2">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="student in studentList" :key="student.id" class="border-b hover:bg-gray-100">
+      <td class="p-2">{{ student.id }}</td>
+      <td class="p-2">{{ student.firstnames }}</td>
+      <td class="p-2">{{ student.lastnames }}</td>
+      <td class="p-2">{{ student.birthdate }}</td>
+      <td class="p-2">{{ student.gender }}</td>
+      <td class="p-2">{{ student.peso }}</td>
+      <td class="p-2">{{ student.altura }}</td>
+      <td class="p-2">{{ student.porcentajegrasa }}</td>
+      <td class="p-2">{{ student.porcentajemusculo }}</td>
+      <td class="p-2">{{ student.preexistencias || '–' }}</td>
+      <td class="p-2 flex space-x-2">
+        <!-- Editar -->
+        <button
+          type="button"
+          @click="editStudent(student.id)"
+          class="p-1 bg-blue-500 hover:bg-blue-600 text-white rounded"
+          aria-label="Editar estudiante"
+        >
+          <Icon icon="mdi:pencil" />
+        </button>
+        <!-- Eliminar -->
+        <button
+          type="button"
+          @click="deleteStudent(student.id)"
+          class="p-1 bg-red-500 hover:bg-red-600 text-white rounded"
+          aria-label="Eliminar estudiante"
+        >
+          <Icon icon="mdi:delete" />
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
     </div>
 
     <!-- Mensaje cuando no hay estudiantes -->
@@ -147,7 +126,7 @@ watch(() => route.fullPath, () => {
 })
 
 function goToForm() {
-  router.push({ name: 'FormStudent', params: { id: groupId } })
+  router.push({ name: 'FormStudent', query: { groupId } })
 }
 
 async function deleteStudent(id) {
@@ -155,7 +134,7 @@ async function deleteStudent(id) {
 }
 
 function editStudent(id) {
-  router.push({ name: 'FormStudent', params: { id: groupId }, query: { studentId: id } })
+  router.push({ name: 'FormStudent', query: { groupId, studentId: id } })
 }
 </script>
 

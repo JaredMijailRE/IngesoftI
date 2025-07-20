@@ -99,7 +99,7 @@ function goToNewGroup() {
 }
 
 function goToDashboard(id) {
-  router.push({ name: 'GrupoDashboard', params: { id: group.id } })
+  router.push({ name: 'GrupoDashboard', params: { id } })
 }
 </script>
 

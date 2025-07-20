@@ -95,7 +95,6 @@ function createWindow() {
 }
 
 // IPC Handlers
-
 // ─── electron/main.cjs ───
 ipcMain.handle('group:getAllWithStudents', async () => {
   try {
@@ -366,10 +365,11 @@ ipcMain.handle('student:create', async (event, data) => {
     })
 
     // Asociar estudiante al grupo
-    const { Grupo, GrupoEstudiante } = dbInstance
+
+    const { GrupoEstudiante } = dbInstance
     await GrupoEstudiante.create({
       grupo_id: data.groupId,
-      estudiante_id: data.id,
+      estudiante_id: newEstudiante.id,
     })
 
     return {

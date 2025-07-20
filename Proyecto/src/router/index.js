@@ -25,7 +25,7 @@ const routes = [
     },
   },
   {
-    path: '/grupos/:id/estudiantes/nuevo',
+    path: '/', //formstudent
     name: 'FormStudent',
     component: () => import('@/views/FormStudent.vue'),
     meta: {
@@ -37,7 +37,7 @@ const routes = [
     redirect: '/',
   },
   {
-    path: '/',
+    path: '/g',
     name: 'Grupos',
     component: () => import('@/views/Grupos.vue'),
     meta: { title: 'Grupos' },
