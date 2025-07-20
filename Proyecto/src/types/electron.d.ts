@@ -9,6 +9,21 @@ declare global {
           user?: any
           error?: string
         }>
+        signup: (userData: {
+          email: string
+          username: string
+          firstnames: string
+          lastnames: string
+          password: string
+          birth_date?: string
+          gender?: string
+          medical_conditions?: string
+        }) => Promise<{
+          success: boolean
+          user?: any
+          error?: string
+          message?: string
+        }>
         logout: () => Promise<{ success: boolean }>
         check: () => Promise<{ isAuthenticated: boolean; user?: any }>
         getCurrentUser: () => Promise<any>

@@ -17,9 +17,14 @@ const password = ref('')
 const verifypassword = ref('')
 
 const errors = ref([])
+const isLoading = ref(false)
+const signupMessage = ref('')
 
 function handleSubmit() {
   errors.value = {}
+  signupMessage.value = ''
+
+  // Validaciones
   if (!email.value) {
     errors.value.email = 'El correo es obligatorio.'
   } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.value)) {
@@ -52,12 +57,33 @@ function handleSubmit() {
     errors.value.username = 'El genero es obligatorio.'
   }
 
+  if (!birthdate.value) {
+    errors.value.username = 'La fecha de nacimiento es obligatoria.'
+  } else {
+    const enteredDate = new Date(birthdate.value)
+    const today = new Date()
+
+    if (isNaN(enteredDate)) {
+      errors.value.birthdate = 'La fecha ingresada no es válida.'
+    } else if (enteredDate > today) {
+      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    }
+  }
+
+  if (!gender.value) {
+    errors.value.username = 'El genero es obligatorio.'
+  }
+
   if (!password.value) {
     errors.value.password = 'La contraseña es obligatoria.'
   } else if (password.value.length < 8) {
     errors.value.password = 'La contraseña debe tener al menos 8 caracteres.'
-  } else if (password.value.length < 8) {
-    errors.value.password = 'La contraseña debe tener al menos 8 caracteres.'
+  } else if (!/[a-z]/.test(password.value)) {
+    errors.value.password = 'Debe contener al menos una letra minúscula.'
+  } else if (!/[A-Z]/.test(password.value)) {
+    errors.value.password = 'Debe contener al menos una letra mayúscula.'
+  } else if (!/\d/.test(password.value)) {
+    errors.value.password = 'Debe contener al menos un número.'
   }
 
   if (!verifypassword.value) {
@@ -66,8 +92,53 @@ function handleSubmit() {
     errors.value.verifypassword = 'Las contraseñas no coinciden.'
   }
 
+  // Si no hay errores, proceder con el registro
   if (Object.keys(errors.value).length === 0) {
-    alert('✅ ¡Registro válido! ✅')
+    isLoading.value = true
+
+    // Preparar datos para el registro
+    const userData = {
+      email: email.value,
+      username: username.value,
+      firstnames: firstnames.value,
+      lastnames: lastnames.value,
+      birthdate: birthdate.value,
+      gender: gender.value,
+      password: password.value,
+    }
+
+    // Llamar al método de registro
+    window.electronAPI.auth
+      .signup(userData)
+      .then(response => {
+        if (response.success) {
+          signupMessage.value = '¡Registro exitoso! Bienvenido a SportU'
+          // Limpiar formulario
+          email.value = ''
+          username.value = ''
+          firstnames.value = ''
+          lastnames.value = ''
+          birthdate.value = ''
+          gender.value = ''
+          password.value = ''
+          verifypassword.value = ''
+
+          //
+          setTimeout(() => {
+            // Aquí podrías redirigir a la página principal o dashboard
+            console.log('Usuario registrado:', response.user)
+          }, 100)
+        } else {
+          signupMessage.value = `Error: ${response.error}`
+        }
+      })
+      .catch(error => {
+        console.error('Error en el registro:', error)
+        signupMessage.value = 'Error interno del sistema'
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
   }
 }
 </script>
@@ -80,7 +151,7 @@ function handleSubmit() {
   >
     <div class="flex justify-center">
       <div
-        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 min-w-[333px] flex-col px-8 py-8"
+        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 flex-col px-8 py-8"
       >
         <img
           class="w-40 h-40 mx-auto my-5 rounded-full object-cover"
@@ -267,10 +338,34 @@ function handleSubmit() {
           <button
             type="button"
             @click="handleSubmit"
-            class="w-full bg-sportu-600 hover:bg-sportu-700 text-white font-bold py-2 px-4 rounded"
+            :disabled="isLoading"
+            class="w-full bg-sportu-600 hover:bg-sportu-700 disabled:bg-sportu-400 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
           >
-            Registrarse
+            <span v-if="isLoading">Registrando...</span>
+            <span v-else>Registrarse</span>
           </button>
+        </div>
+        <h1 class="text-xs font-bold text-secondary-600 mb-2">
+          Ya tienes cuenta?
+          <button
+            class="color-blue-600 hover:underline"
+            @click="$router.push('/login')"
+          >
+            Log In
+          </button>
+        </h1>
+
+        <!-- Mensaje de resultado del registro -->
+        <div
+          v-if="signupMessage"
+          class="mt-4 p-3 rounded-md text-center"
+          :class="
+            signupMessage.includes('exitoso')
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'
+          "
+        >
+          {{ signupMessage }}
         </div>
       </div>
     </div>
