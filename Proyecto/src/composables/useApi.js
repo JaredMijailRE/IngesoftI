@@ -90,7 +90,6 @@ export function useApi() {
     try {
       const response = await window.electronAPI.ejercicios.getAll()
 
-
       if (response.success) {
         return response.data
       } else {
