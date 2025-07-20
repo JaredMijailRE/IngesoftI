@@ -3,6 +3,8 @@
 //import { ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import { ref, computed } from 'vue'
+import { onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
 
 const groupid = ref('')
 const planid = ref('')
@@ -10,36 +12,83 @@ const date = ref('')
 const recurrence = ref('')
 const starttime = ref('')
 const finishtime = ref('')
+const recurrenceDays = ref([]) // Array de strings, ej: ['L', 'M', 'V']
+const daysOfWeek = [
+  { label: 'L', value: 'Lunes' },
+  { label: 'Ma', value: 'Martes' },
+  { label: 'Mi', value: 'Miércoles' },
+  { label: 'J', value: 'Jueves' },
+  { label: 'V', value: 'Viernes' },
+  { label: 'S', value: 'Sábado' },
+  { label: 'D', value: 'Domingo' }
+]
 
 const errors = ref({})
 const isLoading = ref(false)
 const signupMessage = ref('')
 
+const { getCurrentUser, getUserGrupos, getUserPlanes } = useApi()
+
+const user = ref({
+  username: '',
+  grupos: [],
+  planes: [],
+  gruposIds: [],   // Aquí se guardan las PK de grupos
+  planesIds: []   // Aquí se guardan las PK de eventos
+})
+
+onMounted(async () => {
+  try {
+    const userResponse = await getCurrentUser()
+
+    if (!userResponse) {
+      console.warn('No se encontró usuario')
+      return
+    }
+
+    user.value.username = userResponse.username || ''
+
+    const gruposResponse = await getUserGrupos()
+    user.value.grupos = gruposResponse.data || []
+    user.value.gruposIds = user.value.grupos.map(g => g.id)  // ← Extraer PKs
+
+    const planesResponse = await getUserPlanes()
+    user.value.planes = planesResponse.data || []
+    user.value.planesIds = user.value.planes.map(e => e.id)  // ← Extraer PKs
+  } catch (err) {
+    console.error('Error cargando datos del usuario:', err)
+  }
+})
+
+function toggleDay(dia) {
+  const idx = recurrenceDays.value.indexOf(dia)
+  if (idx === -1) {
+    recurrenceDays.value.push(dia)
+  } else {
+    recurrenceDays.value.splice(idx, 1)
+  }
+}
 function handleSubmit() {
   errors.value = {}
   signupMessage.value = ''
 
   // Validaciones
-  if (!title.value) {
-    errors.value.title = 'El titulo del evento es obligatorio.'
+  if (!groupid.value) {
+    errors.value.groupid = 'El titulo del evento es obligatorio.'
   }
-  if (!date.value) {
-    errors.value.date = 'La fecha del evento es obligatoria.'
+  if (!planid.value) {
+    errors.value.planid = 'La fecha del evento es obligatoria.'
   } else {
-    const enteredDate = new Date(birthdate.value)
+    const enteredDate = new Date(date.value)
     const today = new Date()
     if (isNaN(enteredDate)) {
-      errors.value.birthdate = 'La fecha ingresada no es válida.'
+      errors.value.date = 'La fecha ingresada no es válida.'
     } else if (enteredDate < today) {
-      errors.value.birthdate = 'La fecha del evento no puede ser pasada.'
+      errors.value.date = 'La fecha del evento no puede ser pasada.'
     }
   }
-  // Validación de números
-  if (price.value && isNaN(Number(price.value))) {
-    errors.value.price = 'El precio debe ser un número válido.'
-  }
-  if (time.value && isNaN(Number(time.value))) {
-    errors.value.time = 'La hora debe ser un número válido.'
+  if (!starttime.value) {
+    errors.value.starttime = 'El inicio del evento es obligatorio.'
   }
 
   // Si no hay errores, proceder con el registro
@@ -49,7 +98,7 @@ function handleSubmit() {
       groupid: groupid.value,
       planid: planid.value,
       date: date.value,
-      recurrence: recurrence.value,
+      recurrence: recurrenceDays.value.join(' '),
       starttime: starttime.value,
       finishtime: finishtime.value
     }
@@ -59,12 +108,13 @@ function handleSubmit() {
         if (response.success) {
           signupMessage.value = '¡Registro exitoso! Clase creada correctamente.'
           // Limpiar formulario
-          title.value = ''
-          description.value = ''
-          localization.value = ''
-          price.value = ''
+          groupid.value = ''
+          planid.value = ''
           date.value = ''
-          time.value = ''
+          recurrence.value = ''
+          recurrenceDays.value = []
+          starttime.value = ''
+          finishtime.value = ''
           setTimeout(() => {
             console.log('Evento registrado:', response.user)
           }, 100)
@@ -106,11 +156,15 @@ function handleSubmit() {
         <div class="grid grid-cols-2 gap-2">
           <div>
           <label class="block mb-1 text-sm font-medium text-gray-700">Id del Grupo</label>
-          <input
+          <select 
             v-model="groupid"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.groupid }"
-          />
+            :class="{ 'border-red-500': errors.groupid }">
+            <option value="">Selecciona un grupo</option>
+            <option v-for="g in grupos" :key="g.id" :value="g.id">
+              {{ g.name }}
+            </option>
+          </select>
           <p v-if="errors.groupid" class="text-sm text-red-500 mb-2">
             {{ errors.groupid }}
           </p>
@@ -118,11 +172,16 @@ function handleSubmit() {
 
           <div>
           <label class="block mb-1 text-sm font-medium text-gray-700">Id Plan</label>
-          <input
-            v-model="planid"
+
+        <select 
+        v-model="planid"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.planid }"
-          />
+            :class="{ 'border-red-500': errors.planid }">
+          <option value="">Selecciona un plan</option>
+          <option v-for="p in planes" :key="p.id" :value="p.id">
+            {{ p.name }}
+          </option>
+        </select>
           <p v-if="errors.planid" class="text-sm text-red-500 mb-2">
             {{ errors.planid }}
           </p>
@@ -146,16 +205,40 @@ function handleSubmit() {
           
           <div>
           <label class="block mb-1 text-sm font-medium text-gray-700">Se repite?</label>
-          <input
+          <select
             v-model="recurrence"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
             :class="{ 'border-red-500': errors.recurrence }"
-          />
+          >
+          <option value="">Seleccionar</option>
+          <option value="y">Sí</option>
+          <option value="n">No</option>
+          </select>
 
           <p v-if="errors.recurrence" class="text-sm text-red-500 mb-2">
             {{ errors.recurrence }}
           </p>
           </div>
+        </div>
+        <!-- Selección de días de la semana en la cual se repite -->
+        <div v-if="recurrence === 'y'" class="flex justify-center gap-2 my-2">
+        <label class="block mb-1 text-sm font-medium text-gray-700">Selecciona los días que se repite</label>
+        </div>
+        <div v-if="recurrence === 'y'" class="flex justify-center gap-2 my-2">
+        <button
+          v-for="dia in daysOfWeek"
+          :key="dia.label"
+          type="button"
+          :class="[
+            'px-3 py-1 rounded border',
+            recurrenceDays.includes(dia.label)
+              ? 'bg-sportu-600 text-white'
+              : 'bg-white text-sportu-600 border-sportu-600'
+          ]"
+          @click="toggleDay(dia.label)"
+        >
+          {{ dia.label }}
+        </button>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
@@ -163,6 +246,7 @@ function handleSubmit() {
           <label class="block mb-1 text-sm font-medium text-gray-700">Hora Inicio</label>
           <input
             v-model="starttime"
+            type="time"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
             :class="{ 'border-red-500': errors.starttime }"
           />
@@ -175,6 +259,7 @@ function handleSubmit() {
           <label class="block mb-1 text-sm font-medium text-gray-700">Hora fin</label>  
            <input
             v-model="finishtime"
+            type="time"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
             :class="{ 'border-red-500': errors.finishtime }"
           />

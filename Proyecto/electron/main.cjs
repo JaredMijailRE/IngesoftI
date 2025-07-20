@@ -285,6 +285,56 @@ ipcMain.handle('sportEvent:create', async (event, data) => {
   }
 });
 
+ipcMain.handle('classEvent:create', async (event, data) => {
+  try {
+    if (!ClassEventModel) throw new Error('Database not initialized');
+
+    // Validación de campos requeridos
+    const errors = {};
+    if (!data.groupid) errors.groupid = 'El id del Grupo es obligatorio.';
+    if (!data.planid) errors.planid = 'El id del plan es obligatorio.';
+    if (!data.starttime) errors.starttime = 'Se debe definir el inicio de la clase.';
+    //if (!data.date) errors.date = 'La fecha es obligatoria.';
+
+    // Validación de números
+    ['precio'].forEach(field => {
+      if (data[field] && isNaN(Number(data[field]))) {
+        errors[field] = `El campo ${field} debe ser un número válido.`;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      return { success: false, error: errors };
+    }
+
+        // Crear Evento tipo Deportivo
+    const newClassEvent = await ClassEventModel.create({
+      grupo_id: data.groupid,
+      plan_id: data.planid,
+      class_date: data.date && data.date.trim() !== '' ? data.date : null,
+      recurrence_rule: data.recurrence || null,
+      start_time: data.starttime,
+      end_time: data.finishtime || null
+    });
+
+    return {
+      success: true,
+      user: {
+        grupo_id: newClassEvent.grupo_id,
+        plan_id: newClassEvent.plan_id,
+        class_date: newClassEvent.class_date,
+        recurrence_rule: newClassEvent.recurrence_rule,
+        start_time: newClassEvent.start_time,
+        end_time: newClassEvent.end_time
+      },
+      message: 'Evento registrado exitosamente'
+    };
+  } catch (error) {
+    console.error('Event create error:', error);
+    return { success: false, error: 'Error del servidor: ' + error.message };
+  }
+});
+
 
 // API handlers
 ipcMain.handle('api:request', async (event, config) => {
@@ -360,6 +410,38 @@ ipcMain.handle('app:openExternal', async (event, url) => {
 ipcMain.handle('app:sendMessage', async (event, message) => {
   console.log('Message from renderer:', message)
   return { success: true }
+})
+
+ipcMain.handle('user:getGrupos', async (event, userId) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { Grupo } = models
+
+    const grupos = await Grupo.findAll({
+      order: [['id', 'ASC']]
+    })
+    const result = grupos.map(g => ({ id: g.id, name: g.name }))
+    return { success: true, data: result }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('user:getPlanes', async (event, userId) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { PlanEntrenamiento } = models
+
+    const planes = await PlanEntrenamiento.findAll({
+      order: [['id', 'ASC']]
+    })
+    const result = planes.map(p => ({ id: p.id, name: p.name }))
+    return { success: true, data: result }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
 })
 
 // This method will be called when Electron has finished initialization

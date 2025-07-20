@@ -34,12 +34,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
     openExternal: (url) => ipcRenderer.invoke('app:openExternal'),
     sendMessage: (message) => ipcRenderer.invoke('app:sendMessage', message)
   },
-  
+  // Metodos para obtener datos del usuario
+  user: {
+    getGrupos: (userId) => ipcRenderer.invoke('user:getGrupos', userId),
+    getPlanes: (userId) => ipcRenderer.invoke('user:getPlanes', userId)
+  },
   // Event listeners
   events: {
     onAuthChange: (callback) => ipcRenderer.on('auth:changed', callback),
     onStorageChange: (callback) => ipcRenderer.on('storage:changed', callback),
     removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+  },
+  classEvent: {
+    create: (data) => ipcRenderer.invoke('classEvent:create', data)
   },
   sportEvent: {
     create: (data) => ipcRenderer.invoke('sportEvent:create', data)
