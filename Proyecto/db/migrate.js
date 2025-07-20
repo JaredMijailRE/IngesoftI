@@ -21,7 +21,7 @@ import {
 export async function initializeDatabase(config) {
   const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: config?.storage || './database.sqlite',
+    storage: config?.storage || './db/database.sqlite',
     logging: false,
   });
 
