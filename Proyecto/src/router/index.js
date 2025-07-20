@@ -17,6 +17,30 @@ const routes = [
       title: 'Sign Up',
     },
   },
+    {
+    path: '/selecteventtype',
+    name: 'SelectEventType',
+    component: () => import('@/views/SelectEventType.vue'),
+    meta: {
+      title: 'Select Event Type',
+    },
+  },
+  {
+    path: '/sportevent',
+    name: 'SportEvent',
+    component: () => import('@/views/SportEvent.vue'),
+    meta: {
+      title: 'Sport Event',
+    },
+  },
+    {
+    path: '/classevent',
+    name: 'ClassEvent',
+    component: () => import('@/views/ClassEvent.vue'),
+    meta: {
+      title: 'Class Event',
+    },
+  },
   {
     path: '/:pathMatch(.*)*',
     redirect: '/',
