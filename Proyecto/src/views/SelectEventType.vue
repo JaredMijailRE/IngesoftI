@@ -46,7 +46,7 @@ function goToClassType() {
           </button>
         </div>
         <!-- Boton para crear un evento de tipo clase -->
-        <div class="flex justify-center p-2 pt-2 gap-2">
+        <div class="flex justify-center p-2 pt-2 gap-8 py-2">
           <button
             type="button"
             @click="goToClassType"
