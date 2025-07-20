@@ -7,6 +7,153 @@ export function useApi() {
   // Verificar si estamos en un entorno Electron
   const isElectron = typeof window !== 'undefined' && window.electronAPI
 
+  // Métodos específicos para ejercicios
+  const getEjercicios = async () => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.ejercicios.getAll()
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al obtener ejercicios')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const createEjercicio = async (data) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.ejercicios.create(data)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al crear ejercicio')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deleteEjercicio = async (id) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.ejercicios.delete(id)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al eliminar ejercicio')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Métodos específicos para planes
+  const getPlanes = async () => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.planes.getAll()
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al obtener planes')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const createPlan = async (data) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.planes.create(data)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al crear plan')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deletePlan = async (id) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.planes.delete(id)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al eliminar plan')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Métodos genéricos (mantener para compatibilidad)
   const request = async config => {
     if (!isElectron) {
       throw new Error('Este composable requiere Electron para funcionar')
@@ -45,10 +192,13 @@ export function useApi() {
   return {
     loading,
     error,
-    request,
-    get,
-    post,
-    put,
-    delete: del,
+    // Métodos específicos
+    getEjercicios,
+    createEjercicio,
+    deleteEjercicio,
+    getPlanes,
+    createPlan,
+    deletePlan,
+
   }
 }
