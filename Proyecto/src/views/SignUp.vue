@@ -3,6 +3,9 @@
 //import { ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const showPassword = ref(false)
 const showPassword2 = ref(false)
@@ -19,6 +22,11 @@ const verifypassword = ref('')
 const errors = ref([])
 const isLoading = ref(false)
 const signupMessage = ref('')
+
+// Función para ir a LogIn
+function goToLogin() {
+  router.push('/')
+}
 
 function handleSubmit() {
   errors.value = {}
@@ -349,7 +357,7 @@ function handleSubmit() {
           Ya tienes cuenta?
           <button
             class="color-blue-600 hover:underline"
-            @click="$router.push('/login')"
+            @click="goToLogin"
           >
             Log In
           </button>
