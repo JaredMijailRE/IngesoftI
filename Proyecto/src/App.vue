@@ -29,7 +29,7 @@ onMounted(async () => {
 
 watch(
   () => route.path,
-  async (newPath) => {
+  async newPath => {
     if (newPath === '/') {
       user.value = null
     } else {
@@ -48,11 +48,17 @@ watch(
   <div id="app">
     <NotificationToast />
 
-    <div v-if="isLoading" class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div
+      v-if="isLoading"
+      class="min-h-screen flex items-center justify-center bg-gray-100"
+    >
       <span class="text-gray-500 text-lg">Cargando...</span>
     </div>
 
-    <div v-else-if="!isLoggedIn" class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div
+      v-else-if="!isLoggedIn"
+      class="flex items-center justify-center min-h-screen bg-gray-100"
+    >
       <main class="flex-1 min-h-screen">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">

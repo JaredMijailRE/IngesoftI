@@ -58,7 +58,7 @@ const toAgregarEvento = () => {
 
 <template>
   <div
-    class="min-h-screen bg-gradient-to-tr from-sportu-100 from-10% via-sportu-400 via-60% to-sportu-700 p-1  flex items-center justify-center"
+    class="min-h-screen bg-gradient-to-tr from-sportu-100 from-10% via-sportu-400 via-60% to-sportu-700 p-1 flex items-center justify-center"
   >
     <div
       class="bg-white shadow-md rounded-lg my-10 mx-10 p-2 flex items-center justify-center w-full max-w-6xl"
