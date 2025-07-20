@@ -162,6 +162,8 @@
           >
             Crear Nueva Cuenta
           </button>
+
+          <router-link to="/Main">Main</router-link>
         </div>
       </form>
     </div>

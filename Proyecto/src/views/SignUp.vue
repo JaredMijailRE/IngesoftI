@@ -41,6 +41,21 @@ function handleSubmit() {
   if (!lastnames.value) {
     errors.value.lastnames = 'El apellido es obligatorio.'
   }
+  if (!birthdate.value) {
+    errors.value.username = 'La fecha de nacimiento es obligatoria.'
+  } else {
+    const enteredDate = new Date(birthdate.value)
+    const today = new Date()
+
+    if (isNaN(enteredDate)) {
+      errors.value.birthdate = 'La fecha ingresada no es válida.'
+    } else if (enteredDate > today) {
+      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    }
+  }
+  if (!gender.value) {
+    errors.value.username = 'El genero es obligatorio.'
+  }
 
   if (!birthdate.value) {
     errors.value.username = 'La fecha de nacimiento es obligatoria.'
@@ -50,10 +65,9 @@ function handleSubmit() {
 
     if (isNaN(enteredDate)) {
       errors.value.birthdate = 'La fecha ingresada no es válida.'
-    }else if (enteredDate > today) {
-    errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    } else if (enteredDate > today) {
+      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
     }
-
   }
 
   if (!gender.value) {
@@ -132,9 +146,13 @@ function handleSubmit() {
 <template>
   <!-- html -->
 
-  <div class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9">
+  <div
+    class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9"
+  >
     <div class="flex justify-center">
-      <div class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 flex-col px-8 py-8">
+      <div
+        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 flex-col px-8 py-8"
+      >
         <img
           class="w-40 h-40 mx-auto my-5 rounded-full object-cover"
           src="/src/assets/patin_logo.jpg"
@@ -187,19 +205,90 @@ function handleSubmit() {
           {{ errors.lastnames }}
         </p>
 
-         <input 
-          v-model="birthdate" 
-          type="date" 
-          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Fecha de Nacimiento":class="{'border-red-500':errors.birthdate}">
-            
+        <input
+          v-model="birthdate"
+          type="date"
+          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+          placeholder="Fecha de Nacimiento"
+          :class="{ 'border-red-500': errors.birthdate }"
+        />
         <p v-if="errors.birthdate" class="text-sm text-red-500 mb-2">
           {{ errors.birthdate }}
         </p>
 
-          <input 
-          v-model="gender" 
-          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Genero":class="{'border-red-500':errors.gender}">
-          <p v-if="errors.gender" class="text-sm text-red-500 mb-2">{{ errors.gender }}</p>
+        <input
+          v-model="gender"
+          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+          placeholder="Genero"
+          :class="{ 'border-red-500': errors.gender }"
+        />
+        <p v-if="errors.gender" class="text-sm text-red-500 mb-2">
+          {{ errors.gender }}
+        </p>
+
+        <div class="relative">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            id="contraseña"
+            v-model="password"
+            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+            placeholder="Contraseña"
+            :class="{ 'border-red-500': errors.password }"
+          />
+          <p v-if="errors.password" class="text-sm text-red-500 mb-2">
+            {{ errors.password }}
+          </p>
+          <button
+            type="button"
+            @click="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-blue-600 hover:underline"
+          >
+            <svg
+              v-if="showPassword"
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+            <svg
+              v-else
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L15 15M3 3l18 18"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <input
+          v-model="gender"
+          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+          placeholder="Genero"
+          :class="{ 'border-red-500': errors.gender }"
+        />
+        <p v-if="errors.gender" class="text-sm text-red-500 mb-2">
+          {{ errors.gender }}
+        </p>
 
         <div class="relative">
           <input
@@ -322,10 +411,12 @@ function handleSubmit() {
         </div>
         <h1 class="text-xs font-bold text-secondary-600 mb-2">
           Ya tienes cuenta?
-          <button class ='color-blue-600 hover:underline'
-            @click="$router.push('/login')">
-          Log In
-        </button>
+          <button
+            class="color-blue-600 hover:underline"
+            @click="$router.push('/login')"
+          >
+            Log In
+          </button>
         </h1>
 
         <!-- Mensaje de resultado del registro -->
