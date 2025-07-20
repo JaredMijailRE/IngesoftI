@@ -1,78 +1,194 @@
 import { ref } from 'vue'
-import axios from 'axios'
-
-// Create axios instance with default config
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
-
-// Request interceptor
-api.interceptors.request.use(
-  config => {
-    // Add auth token if available
-    const token = localStorage.getItem('auth_token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  error => {
-    return Promise.reject(error)
-  }
-)
-
-// Response interceptor
-api.interceptors.response.use(
-  response => response,
-  error => {
-    // Handle common errors
-    if (error.response?.status === 401) {
-      // Handle unauthorized
-      localStorage.removeItem('auth_token')
-      window.location.href = '/login'
-    }
-    return Promise.reject(error)
-  }
-)
 
 export function useApi() {
   const loading = ref(false)
   const error = ref(null)
 
-  const request = async config => {
+  // Verificar si estamos en un entorno Electron
+  const isElectron = typeof window !== 'undefined' && window.electronAPI
+
+  // Métodos específicos para ejercicios
+  const getEjercicios = async () => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
     loading.value = true
     error.value = null
 
     try {
-      const response = await api(config)
-      return response.data
+      const response = await window.electronAPI.ejercicios.getAll()
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al obtener ejercicios')
+      }
     } catch (err) {
-      error.value = err.response?.data?.message || err.message
+      error.value = err.message
       throw err
     } finally {
       loading.value = false
     }
   }
 
-  const get = (url, config = {}) => request({ ...config, method: 'GET', url })
-  const post = (url, data, config = {}) =>
-    request({ ...config, method: 'POST', url, data })
-  const put = (url, data, config = {}) =>
-    request({ ...config, method: 'PUT', url, data })
-  const del = (url, config = {}) =>
-    request({ ...config, method: 'DELETE', url })
+  const createEjercicio = async (data) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.ejercicios.create(data)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al crear ejercicio')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deleteEjercicio = async (id) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.ejercicios.delete(id)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al eliminar ejercicio')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Métodos específicos para planes
+  const getPlanes = async () => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.planes.getAll()
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al obtener planes')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const createPlan = async (data) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.planes.create(data)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al crear plan')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deletePlan = async (id) => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.planes.delete(id)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error al eliminar plan')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Métodos genéricos (mantener para compatibilidad)
+  const request = async config => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await window.electronAPI.api.request(config)
+      
+      if (response.success) {
+        return response.data
+      } else {
+        throw new Error(response.error || 'Error en la petición')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
 
   return {
     loading,
     error,
-    request,
-    get,
-    post,
-    put,
-    delete: del,
+    // Métodos específicos
+    getEjercicios,
+    createEjercicio,
+    deleteEjercicio,
+    getPlanes,
+    createPlan,
+    deletePlan,
+
   }
 }

@@ -1,5 +1,6 @@
 <script setup>
 // App principal - solo muestra el login
+import NotificationToast from '@/components/NotificationToast.vue'
 </script>
 
 <template>
@@ -10,6 +11,9 @@
         <component :is="Component" />
       </transition>
     </router-view>
+    
+    <!-- Componente de notificaciones global -->
+    <NotificationToast />
   </div>
 </template>
 

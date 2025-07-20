@@ -10,6 +10,20 @@ const routes = [
     },
   },
   {
+    path: '/dashboard',
+    name: 'PlanEntrenamientoManager',
+    component: () => import('@/views/PlanEntrenamientoManager.vue'),
+    meta: {title: 'Gestión de Planes y Ejercicios'}
+  },
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: () => import('@/views/SignUp.vue'),
+    meta: {
+      title: 'Sign Up',
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/',
   },
@@ -31,7 +45,20 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // Update document title
   document.title = to.meta.title || 'USport'
-  next()
+  
+  // Proteger rutas que requieren autenticación
+  if (to.path === '/dashboard' && !isAuthenticated()) {
+    next('/')
+  } else {
+    next()
+  }
 })
+
+// Función para verificar si el usuario está autenticado
+function isAuthenticated() {
+  // Aquí puedes implementar la lógica para verificar si el usuario está autenticado
+  // Por ahora, permitimos acceso al dashboard
+  return true
+}
 
 export default router

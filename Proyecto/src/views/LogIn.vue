@@ -104,6 +104,8 @@
           >
             Crear Nueva Cuenta
           </button>
+
+          <router-link to="/dashboard">Dashboard</router-link>
         </div>
       </form>
     </div>
@@ -141,8 +143,9 @@ async function handleLogin() {
 
   if (result.success) {
     console.log('Login exitoso')
-    // Limpiar errores y mantener los datos del usuario visibles
+    // Limpiar errores y redirigir al dashboard
     error.value = ''
+    router.push('/dashboard')
   } else {
     error.value = result.error || authError.value
   }
@@ -150,7 +153,7 @@ async function handleLogin() {
 
 // Función para ir a crear cuenta
 function goToRegister() {
-  alert('Funcionalidad de registro no disponible. Contacta al administrador para crear una cuenta.')
+  router.push('/signup')
 }
 
 // Función para cerrar sesión

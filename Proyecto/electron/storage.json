@@ -1,0 +1,10 @@
+{
+  "auth_user": {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@usport.com",
+    "first_name": "Administrador",
+    "last_name": "USport"
+  },
+  "auth_token": "token_1752284267412"
+}

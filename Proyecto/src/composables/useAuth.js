@@ -1,50 +1,4 @@
-import { ref, reactive } from 'vue'
-
-// Simulación de la API de autenticación hasta que implementemos el IPC de Electron
-const authAPI = {
-  async login(credentials) {
-    // Por ahora simularemos la validación
-    // En una implementación real, esto se comunicaría con el proceso principal de Electron
-    // o con una API backend
-    
-    try {
-      // Simulación: validar credenciales básicas
-      if (credentials.login === 'admin' && credentials.password === 'admin123') {
-        return {
-          success: true,
-          user: {
-            id: 1,
-            username: 'admin',
-            email: 'admin@usport.com',
-            first_name: 'Administrador',
-            last_name: 'USport'
-          }
-        }
-      } else if (credentials.login === 'admin@usport.com' && credentials.password === 'admin123') {
-        return {
-          success: true,
-          user: {
-            id: 1,
-            username: 'admin',
-            email: 'admin@usport.com',
-            first_name: 'Administrador',
-            last_name: 'USport'
-          }
-        }
-      } else {
-        return {
-          success: false,
-          error: 'Credenciales incorrectas'
-        }
-      }
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Error del servidor'
-      }
-    }
-  }
-}
+import { ref, onMounted, onUnmounted } from 'vue'
 
 export function useAuth() {
   const isAuthenticated = ref(false)
@@ -52,21 +6,22 @@ export function useAuth() {
   const isLoading = ref(false)
   const error = ref('')
 
+  const isElectron = typeof window !== 'undefined' && window.electronAPI
+
   const login = async (credentials) => {
     isLoading.value = true
     error.value = ''
 
     try {
-      const result = await authAPI.login(credentials)
+      if (!isElectron) {
+        throw new Error('Este composable requiere Electron para funcionar')
+      }
+
+      const result = await window.electronAPI.auth.login(credentials)
       
       if (result.success) {
         user.value = result.user
         isAuthenticated.value = true
-        
-        // Guardar en localStorage para persistencia
-        localStorage.setItem('auth_user', JSON.stringify(result.user))
-        localStorage.setItem('auth_token', 'dummy_token')
-        
         return { success: true }
       } else {
         error.value = result.error
@@ -80,22 +35,53 @@ export function useAuth() {
     }
   }
 
-  const logout = () => {
-    user.value = null
-    isAuthenticated.value = false
-    localStorage.removeItem('auth_user')
-    localStorage.removeItem('auth_token')
-  }
-
-  const checkAuth = () => {
-    const savedUser = localStorage.getItem('auth_user')
-    const savedToken = localStorage.getItem('auth_token')
-    
-    if (savedUser && savedToken) {
-      user.value = JSON.parse(savedUser)
-      isAuthenticated.value = true
+  const logout = async () => {
+    try {
+      if (isElectron) {
+        await window.electronAPI.auth.logout()
+      }
+      user.value = null
+      isAuthenticated.value = false
+    } catch (err) {
+      console.error('Error during logout:', err)
     }
   }
+
+  const checkAuth = async () => {
+    try {
+      if (!isElectron) {
+        return
+      }
+
+      const result = await window.electronAPI.auth.check()
+      if (result.isAuthenticated) {
+        user.value = result.user
+        isAuthenticated.value = true
+      }
+    } catch (err) {
+      console.error('Error checking auth:', err)
+    }
+  }
+
+  // Event listeners para cambios de autenticación
+  const handleAuthChange = (event, data) => {
+    user.value = data.user
+    isAuthenticated.value = data.isAuthenticated
+  }
+
+  onMounted(() => {
+    checkAuth()
+    
+    if (isElectron) {
+      window.electronAPI.events.onAuthChange(handleAuthChange)
+    }
+  })
+
+  onUnmounted(() => {
+    if (isElectron) {
+      window.electronAPI.events.removeAllListeners('auth:changed')
+    }
+  })
 
   return {
     isAuthenticated,

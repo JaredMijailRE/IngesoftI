@@ -3,15 +3,26 @@ import { DataTypes } from 'sequelize';
 // Tabla de unión PlanEntrenamiento_Ejercicio
 export function definePlanEntrenamientoEjercicioModel(sequelize) {
   return sequelize.define('PlanEntrenamientoEjercicio', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     plan_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
+      references: {
+        model: 'planes_entrenamiento',
+        key: 'id'
+      }
     },
     ejercicio_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
+      references: {
+        model: 'ejercicios',
+        key: 'id'
+      }
     },
     repetitions: {
       type: DataTypes.INTEGER,
@@ -30,6 +41,12 @@ export function definePlanEntrenamientoEjercicioModel(sequelize) {
   }, {
     tableName: 'plan_entrenamiento_ejercicios',
     timestamps: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['plan_id', 'ejercicio_id']
+      }
+    ]
   });
 }
 
