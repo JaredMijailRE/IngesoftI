@@ -40,5 +40,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onAuthChange: (callback) => ipcRenderer.on('auth:changed', callback),
     onStorageChange: (callback) => ipcRenderer.on('storage:changed', callback),
     removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+  },
+  sportEvent: {
+    create: (data) => ipcRenderer.invoke('sportEvent:create', data)
   }
 }) 

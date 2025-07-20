@@ -9,7 +9,7 @@ const description = ref('')
 const localization = ref('')
 const price = ref('')
 const date = ref('')
-const time = ref('')
+const link = ref('')
 
 const errors = ref({})
 const isLoading = ref(false)
@@ -26,20 +26,17 @@ function handleSubmit() {
   if (!date.value) {
     errors.value.date = 'La fecha del evento es obligatoria.'
   } else {
-    const enteredDate = new Date(birthdate.value)
+    const enteredDate = new Date(date.value)
     const today = new Date()
     if (isNaN(enteredDate)) {
-      errors.value.birthdate = 'La fecha ingresada no es válida.'
+      errors.value.date = 'La fecha ingresada no es válida.'
     } else if (enteredDate < today) {
-      errors.value.birthdate = 'La fecha del evento no puede ser pasada.'
+      errors.value.date = 'La fecha del evento no puede ser pasada.'
     }
   }
   // Validación de números
   if (price.value && isNaN(Number(price.value))) {
     errors.value.price = 'El precio debe ser un número válido.'
-  }
-  if (time.value && isNaN(Number(time.value))) {
-    errors.value.time = 'La hora debe ser un número válido.'
   }
 
   // Si no hay errores, proceder con el registro
@@ -51,7 +48,7 @@ function handleSubmit() {
       localization: localization.value,
       price: price.value,
       date: date.value,
-      time: time.value
+      link: link.value
     }
     window.electronAPI.sportEvent
       .create(data)
@@ -64,7 +61,7 @@ function handleSubmit() {
           localization.value = ''
           price.value = ''
           date.value = ''
-          time.value = ''
+          link.value = ''
           setTimeout(() => {
             console.log('Evento registrado:', response.user)
           }, 100)
@@ -171,14 +168,14 @@ function handleSubmit() {
           </p>
           </div>
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Hora</label>  
+          <label class="block mb-1 text-sm font-medium text-gray-700">Link</label>  
            <input
-            v-model="time"
+            v-model="link"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.time }"
+            :class="{ 'border-red-500': errors.link }"
           />
-          <p v-if="errors.time" class="text-sm text-red-500 mb-2">
-            {{ errors.time }}
+          <p v-if="errors.link" class="text-sm text-red-500 mb-2">
+            {{ errors.link }}
           </p>
           </div>
         </div>

@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const { Op } = require('sequelize')
+const { title } = require('process')
 
 // Check if we're in development mode
 const isDev = !app.isPackaged
@@ -13,6 +14,8 @@ let currentUser = null
 // Database connection
 let dbInstance = null
 let ProfesorModel = null
+let SportEventModel = null
+let ClassEventModel = null
 
 // Initialize database connection using Sequelize
 const initDatabase = async () => {
@@ -23,6 +26,8 @@ const initDatabase = async () => {
     
     dbInstance = models
     ProfesorModel = models.Profesor
+    SportEventModel = models.Evento
+    ClassEventModel = models.Clase
     
     console.log('Connected to database via Sequelize')
   } catch (error) {
@@ -231,6 +236,55 @@ ipcMain.handle('auth:check', async () => {
 ipcMain.handle('auth:getCurrentUser', async () => {
   return storage.auth_user
 })
+
+ipcMain.handle('sportEvent:create', async (event, data) => {
+  try {
+    if (!SportEventModel) throw new Error('Database not initialized');
+
+    // Validación de campos requeridos
+    const errors = {};
+    if (!data.title) errors.title = 'El titulo es obligatorio.';
+    //if (!data.date) errors.date = 'La fecha es obligatoria.';
+
+    // Validación de números
+    ['precio'].forEach(field => {
+      if (data[field] && isNaN(Number(data[field]))) {
+        errors[field] = `El campo ${field} debe ser un número válido.`;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      return { success: false, error: errors };
+    }
+
+    // Crear Evento tipo Deportivo
+    const newSportEvent = await SportEventModel.create({
+      title: data.title,
+      description: data.description || null,
+      location: data.localization || null,
+      price: data.price || null,
+      event_date: data.date && data.date.trim() !== '' ? data.date : null,
+      link: data.link || null
+    });
+
+    return {
+      success: true,
+      user: {
+        title: newSportEvent.title,
+        description: newSportEvent.description,
+        location: newSportEvent.location,
+        price: newSportEvent.price,
+        event_date: newSportEvent.event_date,
+        link: newSportEvent.link
+      },
+      message: 'Evento registrado exitosamente'
+    };
+  } catch (error) {
+    console.error('Event create error:', error);
+    return { success: false, error: 'Error del servidor: ' + error.message };
+  }
+});
+
 
 // API handlers
 ipcMain.handle('api:request', async (event, config) => {
