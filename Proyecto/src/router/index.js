@@ -2,6 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
+    path: '/main',
+    name: 'Main',
+    component: () => import('@/views/Main.vue'),
+    meta: { title: 'Main' },
+  },
+  {
     path: '/',
     name: 'Login',
     component: () => import('@/views/LogIn.vue'),
@@ -13,7 +19,7 @@ const routes = [
     path: '/dashboard',
     name: 'PlanEntrenamientoManager',
     component: () => import('@/views/PlanEntrenamientoManager.vue'),
-    meta: {title: 'Gestión de Planes y Ejercicios'}
+    meta: { title: 'Gestión de Planes y Ejercicios' },
   },
   {
     path: '/signup',
@@ -45,7 +51,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // Update document title
   document.title = to.meta.title || 'USport'
-  
+
   // Proteger rutas que requieren autenticación
   if (to.path === '/dashboard' && !isAuthenticated()) {
     next('/')

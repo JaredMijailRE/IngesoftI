@@ -24,6 +24,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     delete: (id) => ipcRenderer.invoke('planes:delete', id)
   },
   
+  user: {
+    getGrupos: (userId) => ipcRenderer.invoke('user:getGrupos', userId),
+    getEventos: (userId) => ipcRenderer.invoke('user:getEventos', userId)
+  },
+
   // LocalStorage methods
   storage: {
     get: (key) => ipcRenderer.invoke('storage:get', key),
