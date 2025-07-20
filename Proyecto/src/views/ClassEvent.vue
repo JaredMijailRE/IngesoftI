@@ -4,16 +4,12 @@
 import { Icon } from '@iconify/vue'
 import { ref, computed } from 'vue'
 
-const preexistencias = ref('')
-const firstnames = ref('')
-const lastnames = ref('')
-const birthdate = ref('')
-const gender = ref('')
-const altura = ref('')
-const id = ref('')
-const peso = ref('')
-const porcentajegrasa = ref('')
-const porcentajemusculo = ref('')
+const groupid = ref('')
+const planid = ref('')
+const date = ref('')
+const recurrence = ref('')
+const starttime = ref('')
+const finishtime = ref('')
 
 const errors = ref({})
 const isLoading = ref(false)
@@ -24,80 +20,53 @@ function handleSubmit() {
   signupMessage.value = ''
 
   // Validaciones
-  if (!id.value) {
-    errors.value.id = 'La identificación del estudiante es obligatoria.'
+  if (!title.value) {
+    errors.value.title = 'El titulo del evento es obligatorio.'
   }
-  if (!firstnames.value) {
-    errors.value.firstnames = 'El nombre es obligatorio.'
-  }
-  if (!lastnames.value) {
-    errors.value.lastnames = 'El apellido es obligatorio.'
-  }
-  if (!birthdate.value) {
-    errors.value.birthdate = 'La fecha de nacimiento es obligatoria.'
+  if (!date.value) {
+    errors.value.date = 'La fecha del evento es obligatoria.'
   } else {
     const enteredDate = new Date(birthdate.value)
     const today = new Date()
     if (isNaN(enteredDate)) {
       errors.value.birthdate = 'La fecha ingresada no es válida.'
-    } else if (enteredDate > today) {
-      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
+    } else if (enteredDate < today) {
+      errors.value.birthdate = 'La fecha del evento no puede ser pasada.'
     }
   }
-  if (!gender.value) {
-    errors.value.gender = 'El genero es obligatorio.'
-  } else if (!['M', 'F', 'O'].includes(gender.value)) {
-    errors.value.gender = 'El género debe ser M, F u O.'
-  }
   // Validación de números
-  if (peso.value && isNaN(Number(peso.value))) {
-    errors.value.peso = 'El peso debe ser un número válido.'
+  if (price.value && isNaN(Number(price.value))) {
+    errors.value.price = 'El precio debe ser un número válido.'
   }
-  if (altura.value && isNaN(Number(altura.value))) {
-    errors.value.altura = 'La altura debe ser un número válido.'
-  }
-  if (porcentajegrasa.value && isNaN(Number(porcentajegrasa.value))) {
-    errors.value.porcentajegrasa =
-      'El porcentaje de grasa debe ser un número válido.'
-  }
-  if (porcentajemusculo.value && isNaN(Number(porcentajemusculo.value))) {
-    errors.value.porcentajemusculo =
-      'El porcentaje de músculo debe ser un número válido.'
+  if (time.value && isNaN(Number(time.value))) {
+    errors.value.time = 'La hora debe ser un número válido.'
   }
 
   // Si no hay errores, proceder con el registro
   if (Object.keys(errors.value).length === 0) {
     isLoading.value = true
-    const Estudiantedata = {
-      id: id.value,
-      firstnames: firstnames.value,
-      lastnames: lastnames.value,
-      birthdate: birthdate.value,
-      gender: gender.value,
-      preexistencias: preexistencias.value,
-      altura: altura.value,
-      peso: peso.value,
-      porcentajegrasa: porcentajegrasa.value,
-      porcentajemusculo: porcentajemusculo.value,
+    const data = {
+      groupid: groupid.value,
+      planid: planid.value,
+      date: date.value,
+      recurrence: recurrence.value,
+      starttime: starttime.value,
+      finishtime: finishtime.value
     }
-    window.electronAPI.student
-      .create(Estudiantedata)
+    window.electronAPI.classEvent
+      .create(data)
       .then(response => {
         if (response.success) {
-          signupMessage.value = '¡Registro exitoso! Bienvenido a SportU'
+          signupMessage.value = '¡Registro exitoso! Clase creada correctamente.'
           // Limpiar formulario
-          id.value = ''
-          firstnames.value = ''
-          lastnames.value = ''
-          birthdate.value = ''
-          gender.value = ''
-          peso.value = ''
-          altura.value = ''
-          porcentajegrasa.value = ''
-          porcentajemusculo.value = ''
-          preexistencias.value = ''
+          title.value = ''
+          description.value = ''
+          localization.value = ''
+          price.value = ''
+          date.value = ''
+          time.value = ''
           setTimeout(() => {
-            console.log('Usuario registrado:', response.user)
+            console.log('Evento registrado:', response.user)
           }, 100)
         } else {
           if (typeof response.error === 'object') {
@@ -131,125 +100,89 @@ function handleSubmit() {
         class="card hover:shadow-lg bg-blue-50 transition-shadow w flex-col mx-8 px-8 py-8"
       >
         <h1 class="text-2xl text-center font-bold text-gray-700 mb-4">
-          Registro de Estudiante
-        </h1>
-        <h1 class="text-1xl font-bold text-secondary-600 mb-2">
-          Crea un nuevo estudiante
+          Evento Clase
         </h1>
 
         <div class="grid grid-cols-2 gap-2">
+          <div>
+          <label class="block mb-1 text-sm font-medium text-gray-700">Id del Grupo</label>
           <input
-            v-model="id"
+            v-model="groupid"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Identificación del Estudiante"
-            :class="{ 'border-red-500': errors.id }"
+            :class="{ 'border-red-500': errors.groupid }"
           />
-          <p v-if="errors.id" class="text-sm text-red-500 mb-2">
-            {{ errors.id }}
+          <p v-if="title.groupid" class="text-sm text-red-500 mb-2">
+            {{ title.groupid }}
           </p>
+          </div>
+
+          <div>
+          <label class="block mb-1 text-sm font-medium text-gray-700">Id Plan</label>
+          <input
+            v-model="planid"
+            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+            :class="{ 'border-red-500': errors.planid }"
+          />
+          <p v-if="errors.planid" class="text-sm text-red-500 mb-2">
+            {{ errors.planid }}
+          </p>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-          <input
-            v-model="firstnames"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Nombres"
-            :class="{ 'border-red-500': errors.firstnames }"
-          />
-          <p v-if="errors.firstnames" class="text-sm text-red-500 mb-2">
-            {{ errors.firstnames }}
-          </p>
 
+          <div>
+          <label class="block mb-1 text-sm font-medium text-gray-700">Fecha</label>
           <input
-            v-model="lastnames"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Apellidos"
-            :class="{ 'border-red-500': errors.lastnames }"
-          />
-          <p v-if="errors.lastnames" class="text-sm text-red-500 mb-2">
-            {{ errors.lastnames }}
-          </p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <input
-            v-model="gender"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Genero"
-            :class="{ 'border-red-500': errors.gender }"
-          />
-
-          <p v-if="errors.gender" class="text-sm text-red-500 mb-2">
-            {{ errors.gender }}
-          </p>
-
-          <input
-            v-model="birthdate"
+            v-model="date"
             type="date"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Fecha de Nacimiento"
-            :class="{ 'border-red-500': errors.birthdate }"
+            :class="{ 'border-red-500': errors.date }"
+          />
+          <p v-if="errors.date" class="text-sm text-red-500 mb-2">
+            {{ errors.date }}
+          </p>
+          </div>
+          
+          <div>
+          <label class="block mb-1 text-sm font-medium text-gray-700">Se repite?</label>
+          <input
+            v-model="recurrence"
+            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+            :class="{ 'border-red-500': errors.recurrence }"
           />
 
-          <p v-if="errors.birthdate" class="text-sm text-red-500 mb-2">
-            {{ errors.birthdate }}
+          <p v-if="errors.recurrence" class="text-sm text-red-500 mb-2">
+            {{ errors.recurrence }}
           </p>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
+          <div>
+          <label class="block mb-1 text-sm font-medium text-gray-700">Hora Inicio</label>
           <input
-            v-model="peso"
+            v-model="starttime"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Peso (Kg)"
-            :class="{ 'border-red-500': errors.peso }"
+            :class="{ 'border-red-500': errors.starttime }"
           />
-          <p v-if="errors.peso" class="text-sm text-red-500 mb-2">
-            {{ errors.peso }}
-          </p>
 
-          <input
-            v-model="altura"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Altura (cm)"
-            :class="{ 'border-red-500': errors.altura }"
-          />
-          <p v-if="errors.altura" class="text-sm text-red-500 mb-2">
-            {{ errors.altura }}
+          <p v-if="errors.starttime" class="text-sm text-red-500 mb-2">
+            {{ errors.starttime }}
           </p>
+          </div>
+          <div>
+          <label class="block mb-1 text-sm font-medium text-gray-700">Hora fin</label>  
+           <input
+            v-model="finishtime"
+            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+            :class="{ 'border-red-500': errors.finishtime }"
+          />
+          <p v-if="errors.finishtime" class="text-sm text-red-500 mb-2">
+            {{ errors.finishtime }}
+          </p>
+          </div>
         </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <input
-            v-model="porcentajegrasa"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Porcentaje Grasa Corporal"
-            :class="{ 'border-red-500': errors.porcentajegrasa }"
-          />
-
-          <p v-if="errors.porcentajegrasa" class="text-sm text-red-500 mb-2">
-            {{ errors.porcentajegrasa }}
-          </p>
-
-          <input
-            v-model="porcentajemusculo"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Porcentaje Masa Muscular"
-            :class="{ 'border-red-500': errors.porcentajemusculo }"
-          />
-
-          <p v-if="errors.porcentajemusculo" class="text-sm text-red-500 mb-2">
-            {{ errors.porcentajemusculo }}
-          </p>
-        </div>
-        <input
-          v-model="preexistencias"
-          class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-          placeholder="Preexistencias Médicas"
-          :class="{ 'border-red-500': errors.preexistencias }"
-        />
-        <p v-if="errors.preexistencias" class="text-sm text-red-500 mb-2">
-          {{ errors.preexistencias }}
-        </p>
 
         <div class="flex justify-center p-10 pt-2 gap-7">
           <button
@@ -265,7 +198,7 @@ function handleSubmit() {
         <h1 class="text-xs font-bold text-secondary-600 mb-2">
           <button
             class="color-blue-600 hover:underline flex"
-            @click="$router.push('/login')"
+            @click="$router.push('/selecteventtype')"
           >
             Regresar
           </button>
