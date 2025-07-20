@@ -165,6 +165,14 @@
           >
             Crear Nueva Cuenta
           </button>
+          <button
+            type="button"
+            @click="goToEventType"
+            :disabled="isLoading"
+            class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            Seleccionar tipo de evento
+          </button>
         </div>
       </form>
     </div>
@@ -217,6 +225,11 @@ async function handleLogin() {
 // Función para ir a crear cuenta
 function goToRegister() {
   router.push('/signup')
+}
+
+// Función para ir a seleccionar tipo de evento
+function goToEventType() {
+  router.push('/selecteventtype')
 }
 
 // Función para cerrar sesión

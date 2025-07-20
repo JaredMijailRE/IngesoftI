@@ -249,6 +249,69 @@ export function useApi() {
     }
   }
 
+  const getUserPlanes = async () => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const result = await window.electronAPI.auth.getCurrentUser()
+
+      if (!result?.id) {
+        throw new Error('Usuario no autenticado o ID no disponible')
+      }
+
+      const userId = result.id
+      const response = await window.electronAPI.user.getPlanes(userId)
+
+      if (response.success) {
+        return response
+      } else {
+        throw new Error(response.error || 'Error al obtener grupos del usuario')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const getUserGrupos2 = async () => {
+    if (!isElectron) {
+      throw new Error('Este composable requiere Electron para funcionar')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const result = await window.electronAPI.auth.getCurrentUser()
+
+      if (!result?.id) {
+        throw new Error('Usuario no autenticado o ID no disponible')
+      }
+
+      const userId = result.id
+      const response = await window.electronAPI.user.getGrupos(userId)
+
+      if (response.success) {
+        return response
+      } else {
+        throw new Error(response.error || 'Error al obtener grupos del usuario')
+      }
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+
   const get = (url, config = {}) => request({ ...config, method: 'GET', url })
 
   const post = (url, data, config = {}) =>
@@ -263,9 +326,10 @@ export function useApi() {
   return {
     loading,
     error,
-
     getCurrentUser,
     getUserGrupos,
+    getUserGrupos2,
+    getUserPlanes,
     getUserEventos,
 
     // Métodos específicos
