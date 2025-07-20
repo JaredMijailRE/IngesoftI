@@ -179,7 +179,8 @@ import { useAuth } from '../composables/useAuth.js'
 const router = useRouter()
 const { login, logout, isLoading, error: authError, user } = useAuth()
 
-const isLoggedIn = computed(() => !user.value)
+const isLoggedIn = computed(() => user.value)
+console.log(user.value)
 
 // Estado reactivo
 const form = reactive({

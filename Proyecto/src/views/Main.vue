@@ -27,7 +27,6 @@ onMounted(async () => {
 
     const eventosResponse = await getUserEventos()
     user.value.eventos = eventosResponse.data || []
-    
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
   }

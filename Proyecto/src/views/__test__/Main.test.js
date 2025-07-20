@@ -2,20 +2,18 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import MainPage from '../Main.vue'
 
-
-
 describe('MainPage', () => {
   it('debe renderizar el componente correctamente', () => {
     const wrapper = mount(MainPage, {
       global: {
         mocks: {
-          user: { 
+          user: {
             username: 'admin',
             grupos: [],
-            eventos: []
-           }
-        }
-      }
+            eventos: [],
+          },
+        },
+      },
     })
 
     expect(wrapper.text()).toContain('Welcome, admin')
@@ -27,13 +25,13 @@ describe('MainPage', () => {
     const wrapper = mount(MainPage, {
       global: {
         mocks: {
-          user: { 
+          user: {
             username: 'admin',
             grupos: [],
-            eventos: []
-           }
-        }
-      }
+            eventos: [],
+          },
+        },
+      },
     })
 
     expect(wrapper.text()).toContain('No tienes grupos asignados')
@@ -43,13 +41,13 @@ describe('MainPage', () => {
     const wrapper = mount(MainPage, {
       global: {
         mocks: {
-          user: { 
+          user: {
             username: 'admin',
             grupos: [],
-            eventos: []
-           }
-        }
-      }
+            eventos: [],
+          },
+        },
+      },
     })
 
     expect(wrapper.text()).toContain('No tienes eventos programados')
