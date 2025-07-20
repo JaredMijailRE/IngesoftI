@@ -126,7 +126,7 @@ ipcMain.handle('auth:signup', async (event, userData) => {
       password_hash: passwordHash,
       first_name: userData.firstnames,
       last_name: userData.lastnames,
-      birth_date: userData.birth_date || null,
+      birth_date: userData.birthdate && userData.birthdate.trim() !== '' ? userData.birthdate : null,
       gender: userData.gender || null,
       medical_conditions: userData.medical_conditions || null
     })
