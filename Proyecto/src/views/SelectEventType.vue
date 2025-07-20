@@ -23,7 +23,7 @@ function goToClassType() {
   <!-- html -->
 
   <div
-    class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9"
+    class="min-h-screen bg-gradient-to-t flex items-center justify-center from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9"
   >
     <div class="flex justify-center">
       <div

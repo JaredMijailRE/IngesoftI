@@ -5,6 +5,7 @@ import { Icon } from '@iconify/vue'
 import { ref, computed } from 'vue'
 import { onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
+import { useRouter } from 'vue-router'
 
 const groupid = ref('')
 const planid = ref('')
@@ -13,6 +14,7 @@ const recurrence = ref('')
 const starttime = ref('')
 const finishtime = ref('')
 const recurrenceDays = ref([]) // Array de strings, ej: ['L', 'M', 'V']
+
 const daysOfWeek = [
   { label: 'L', value: 'Lunes' },
   { label: 'Ma', value: 'Martes' },
@@ -37,10 +39,19 @@ const user = ref({
   planesIds: []   // Aquí se guardan las PK de eventos
 })
 
+const grupos = ref([])
+const planes = ref([])
+
+const router = useRouter()
+
+// Función para ir a seleccionar tipo de evento
+function goToEventType() {
+  router.push('/selecteventtype')
+}
+
 onMounted(async () => {
   try {
     const userResponse = await getCurrentUser()
-
     if (!userResponse) {
       console.warn('No se encontró usuario')
       return
@@ -55,6 +66,10 @@ onMounted(async () => {
     const planesResponse = await getUserPlanes()
     user.value.planes = planesResponse.data || []
     user.value.planesIds = user.value.planes.map(e => e.id)  // ← Extraer PKs
+    
+    grupos.value = gruposResponse.data || []
+    planes.value = planesResponse.data || []
+
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
   }
@@ -147,7 +162,7 @@ function handleSubmit() {
   >
     <div class="flex justify-center">
       <div
-        class="card hover:shadow-lg bg-blue-50 transition-shadow w flex-col mx-8 px-8 py-8"
+        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/2 flex-col mx-8 px-8 py-8"
       >
         <h1 class="text-2xl text-center font-bold text-gray-700 mb-4">
           Evento Clase
@@ -160,7 +175,7 @@ function handleSubmit() {
             v-model="groupid"
             class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
             :class="{ 'border-red-500': errors.groupid }">
-            <option value="">Selecciona un grupo</option>
+            <option value="">Seleccionar un Grupo</option>
             <option v-for="g in grupos" :key="g.id" :value="g.id">
               {{ g.name }}
             </option>
@@ -283,7 +298,7 @@ function handleSubmit() {
         <h1 class="text-xs font-bold text-secondary-600 mb-2">
           <button
             class="color-blue-600 hover:underline flex"
-            @click="$router.push('/selecteventtype')"
+            @click="goToEventType"
           >
             Regresar
           </button>
