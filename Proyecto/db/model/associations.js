@@ -80,7 +80,7 @@ export function defineAsistenciaModel(sequelize) {
     estudiante_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
+                                                                                                     primaryKey: true,
     },
     attended: {
       type: DataTypes.BOOLEAN,

@@ -1,101 +1,164 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import dayjs from 'dayjs'
-import Breadcrumb from '@/components/ui/Breadcrumb.vue'
-
-const route = useRoute()
-const grupoId = route.params.id
-
-const nombreGrupo = ref('') // ✅ Asegúrate de declarar esto
-
-const gruposMock = [
-  { id: 1, nombre: 'Grupo Ciclismo Avanzado' },
-  { id: 2, nombre: 'Grupo Ciclismo Base' },
-  { id: 3, nombre: 'Grupo de Resistencia' }
-]
-
-const grupo = gruposMock.find(g => g.id === Number(grupoId))
-nombreGrupo.value = grupo ? grupo.nombre : `Grupo ${grupoId}`
-
-const estudiantes = ref([])
-
-const cargarEstudiantes = () => {
-  estudiantes.value = [
-    {
-      id: 1,
-      first_name: 'Ana',
-      last_name: 'Martínez',
-      birth_date: '2005-06-15',
-      gender: 'F',
-      weight: 60.5,
-      height: 165.3,
-      body_fat_percentage: 22.5,
-      muscle_mass_percentage: 38.2
-    },
-    {
-      id: 2,
-      first_name: 'Carlos',
-      last_name: 'Ramírez',
-      birth_date: '2003-09-20',
-      gender: 'M',
-      weight: 72.4,
-      height: 178.6,
-      body_fat_percentage: 18.9,
-      muscle_mass_percentage: 42.1
-    }
-  ]
-}
-
-const calcularEdad = (fechaNacimiento) => {
-  return dayjs().diff(dayjs(fechaNacimiento), 'year')
-}
-
-onMounted(() => {
-  cargarEstudiantes()
-})
-</script>
-
-
 <template>
   <div class="min-h-screen bg-sportu-400 py-10 px-6">
-    <Breadcrumb :items="[
-    { label: 'Inicio', to: '/' },
-    { label: 'Grupos', to: '/grupos' },
-    { label: nombreGrupo }
-    ]" />
+    <!-- Breadcrumb -->
+    <Breadcrumb
+      :items="[
+        { label: 'Inicio', to: '/' },
+        { label: 'Grupos', to: '/' },
+        { label: `Grupo ${groupId}`, to: `/grupos/${groupId}/dashboard` }
+      ]"
+    />
 
-    <h1 class="text-3xl font-bold text-white mb-6">{{ nombreGrupo }}</h1>
+    <!-- Título y botón Nuevo estudiante -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-white">
+        Estudiantes — Grupo {{ groupId }}
+      </h1>
+      <button
+        @click="goToForm"
+        class="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded"
+      >
+        <Icon icon="mdi:account-plus-outline" class="mr-2" />
+        Nuevo estudiante
+      </button>
+    </div>
 
-    <div class="bg-white rounded-lg shadow-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">Listado de Estudiantes</h2>
-      <div v-if="estudiantes.length > 0" class="overflow-x-auto">
-        <table class="min-w-full table-auto border-collapse">
-          <thead>
-            <tr class="bg-sportu-100 text-white text-left">
-              <th class="p-2">Nombre</th>
-              <th class="p-2">Edad</th>
-              <th class="p-2">Género</th>
-              <th class="p-2">Peso (kg)</th>
-              <th class="p-2">Altura (cm)</th>
-              <th class="p-2">% Grasa</th>
-              <th class="p-2">% Músculo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="est in estudiantes" :key="est.id" class="border-b hover:bg-gray-100">
-              <td class="p-2">{{ est.first_name }} {{ est.last_name }}</td>
-              <td class="p-2">{{ calcularEdad(est.birth_date) }}</td>
-              <td class="p-2">{{ est.gender }}</td>
-              <td class="p-2">{{ est.weight }}</td>
-              <td class="p-2">{{ est.height }}</td>
-              <td class="p-2">{{ est.body_fat_percentage }}%</td>
-              <td class="p-2">{{ est.muscle_mass_percentage }}%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div v-else class="text-gray-500 text-center py-10">No hay estudiantes registrados en este grupo.</div>
+    <!-- Estado de carga / error -->
+    <div v-if="isLoading" class="text-white">Cargando estudiantes…</div>
+    <div v-else-if="loadError" class="text-red-200">{{ loadError }}</div>
+
+    <!-- Tabla de estudiantes -->
+    <div
+      v-else-if="studentList.length"
+      class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto"
+    >
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              ID
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Nombres
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Apellidos
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Fecha de nacimiento
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Género
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Peso
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Altura
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              % Grasa
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              % Músculo
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Preexistencias
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr
+            v-for="s in studentList"
+            :key="s.id"
+            class="hover:bg-gray-100 cursor-pointer"
+            @click="editStudent(s.id)"
+          >
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.id }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.firstnames }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.lastnames }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.birthdate }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.gender }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.peso }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.altura }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.porcentajegrasa }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.porcentajemusculo }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ s.preexistencias || '–' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mensaje cuando no hay estudiantes -->
+    <div
+      v-else
+      class="text-gray-500 text-center py-10 bg-white rounded-lg shadow-lg"
+    >
+      No hay estudiantes registrados en este grupo.
     </div>
   </div>
 </template>
+
+<script setup>
+import { onMounted, watch }    from 'vue'
+import { useRoute, useRouter }  from 'vue-router'
+import { Icon }                 from '@iconify/vue'
+import Breadcrumb               from '@/components/ui/Breadcrumb.vue'
+import { useStudents }          from '@/composables/useStudents'
+
+const router   = useRouter()
+const route    = useRoute()
+const groupId  = Number(route.params.id)
+
+const {
+  studentList,
+  isLoading,
+  loadError,
+  fetchStudents,
+  deleteStudentById
+} = useStudents()
+
+// Carga inicial
+onMounted(() => fetchStudents(groupId))
+
+// Si vuelves del form, recarga
+watch(() => route.fullPath, () => {
+  if (!route.query.studentId) fetchStudents(groupId)
+})
+
+function goToForm() {
+  router.push({ name: 'FormStudent', params: { id: groupId } })
+}
+
+async function deleteStudent(id) {
+  await deleteStudentById(id)
+}
+
+function editStudent(id) {
+  router.push({ name: 'FormStudent', params: { id: groupId }, query: { studentId: id } })
+}
+</script>
+
+<style scoped>
+/* Ajustes si los necesitas */
+</style>

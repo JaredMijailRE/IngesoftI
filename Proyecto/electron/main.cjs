@@ -2,7 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
-const { Op } = require('sequelize')
+const { Op, where } = require('sequelize')
 
 // Check if we're in development mode
 const isDev = !app.isPackaged
@@ -15,6 +15,7 @@ let currentStudent = null
 let dbInstance = null
 let ProfesorModel = null
 let EstudianteModel = null
+let GrupoModel = null
 
 // Initialize database connection using Sequelize
 const initDatabase = async () => {
@@ -26,6 +27,7 @@ const initDatabase = async () => {
     dbInstance = models
     ProfesorModel = models.Profesor
     EstudianteModel = models.Estudiante
+    GrupoModel = models.Grupo
 
     console.log('Connected to database via Sequelize')
   } catch (error) {
@@ -93,6 +95,72 @@ function createWindow() {
 }
 
 // IPC Handlers
+
+// ─── electron/main.cjs ───
+ipcMain.handle('group:getAllWithStudents', async () => {
+  try {
+    if (!dbInstance) throw new Error('DB not initialized')
+    const { Grupo, Estudiante } = dbInstance
+
+    // obtenemos cada Grupo con su lista de Estudiante
+    const grupos = await Grupo.findAll({
+      order: [['id', 'ASC']],
+      include: [{ model: Estudiante, through: { attributes: [] } }],
+    })
+
+    // formateamos de salida con las claves que espera el frontend
+    const result = grupos.map(g => ({
+      id: g.id,
+      name: g.name,
+      objectives: g.objectives,
+      specific_objectives: g.specific_objectives,
+      created_at: g.created_at,
+      students: (g.Estudiantes || []).map(e => ({
+        id: e.id,
+        firstnames: e.first_name,
+        lastnames: e.last_name,
+        birthdate: e.birth_date,
+        gender: e.gender,
+        preexistencias: e.medical_conditions,
+        peso: e.weight,
+        altura: e.height,
+        porcentajegrasa: e.body_fat_percentage,
+        porcentajemusculo: e.muscle_mass_percentage,
+      })),
+    }))
+
+    return { success: true, groups: result }
+  } catch (err) {
+    console.error('Error fetching groups with students:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+// Crear grupo
+ipcMain.handle('group:create', async (_evt, data) => {
+  try {
+    if (!dbInstance) throw new Error('DB not initialized')
+    const { Grupo } = dbInstance
+    const nuevo = await Grupo.create({
+      name: data.name,
+      objectives: data.objectives,
+      specific_objectives: data.specific_objectives,
+    })
+    return {
+      success: true,
+      group: {
+        id: nuevo.id,
+        name: nuevo.name,
+        objectives: nuevo.objectives,
+        specific_objectives: nuevo.specific_objectives,
+        created_at: nuevo.created_at,
+      },
+    }
+  } catch (err) {
+    console.error('Error creating group:', err)
+    return { success: false, error: err.message }
+  }
+})
 
 // Authentication handlers
 ipcMain.handle('auth:signup', async (event, userData) => {
@@ -247,14 +315,17 @@ ipcMain.handle('auth:getCurrentUser', async () => {
 })
 
 ipcMain.handle('student:create', async (event, data) => {
+  console.log('student:create called', data)
   try {
-    if (!EstudianteModel) throw new Error('Database not initialized')
+    if (!EstudianteModel || !dbInstance)
+      throw new Error('Database not initialized')
 
     // Validación de campos requeridos
     const errors = {}
-    if (!data.id) errors.id = 'La identificación es obligatoria.'
+    if (!data.id) errors.id = 'La identificación debe ser numérica.'
     if (!data.firstnames) errors.firstnames = 'El nombre es obligatorio.'
     if (!data.lastnames) errors.lastnames = 'El apellido es obligatorio.'
+    if (!data.groupId) errors.groupId = 'El grupo es obligatorio.'
 
     // Validación de género
     if (data.gender && !['M', 'F', 'O'].includes(data.gender)) {
@@ -292,6 +363,13 @@ ipcMain.handle('student:create', async (event, data) => {
       height: data.altura || null,
       body_fat_percentage: data.porcentajegrasa || null,
       muscle_mass_percentage: data.porcentajemusculo || null,
+    })
+
+    // Asociar estudiante al grupo
+    const { Grupo, GrupoEstudiante } = dbInstance
+    await GrupoEstudiante.create({
+      grupo_id: data.groupId,
+      estudiante_id: data.id,
     })
 
     return {
@@ -401,6 +479,79 @@ ipcMain.handle('planes:getAll', async () => {
   } catch (error) {
     console.error('Error en planes:getAll:', error)
     return { success: false, error: error.message }
+  }
+})
+
+// electron/main.cjs
+ipcMain.handle('student:getAll', async (_evt, { groupId } = {}) => {
+  try {
+    if (!EstudianteModel) throw new Error('DB not initialized')
+
+    const records = await EstudianteModel.findAll({
+      include: [
+        {
+          model: GrupoModel,
+          where: { id: groupId },
+          through: { attributes: [] },
+        },
+      ],
+      order: [['last_name', 'ASC']],
+    })
+
+    const students = records.map(r => ({
+      id: r.id,
+      firstnames: r.first_name,
+      lastnames: r.last_name,
+      birthdate: r.birth_date,
+      gender: r.gender,
+      medicalConditions: r.medical_conditions,
+      weight: r.weight,
+      height: r.height,
+      bodyFatPercentage: r.body_fat_percentage,
+      muscleMassPercentage: r.muscle_mass_percentage,
+    }))
+
+    return { success: true, students }
+  } catch (err) {
+    console.error('Error fetching students:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('student:update', async (_evt, studentData) => {
+  try {
+    if (!EstudianteModel) throw new Error('DB not initialized')
+    const student = await EstudianteModel.findByPk(studentData.id)
+    if (!student) return { success: false, error: 'Estudiante no encontrado.' }
+
+    await student.update({
+      first_name: studentData.firstnames,
+      last_name: studentData.lastnames,
+      birth_date: studentData.birthdate || null,
+      gender: studentData.gender || null,
+      medical_conditions: studentData.medicalConditions || null,
+      weight: studentData.weight || null,
+      height: studentData.height || null,
+      body_fat_percentage: studentData.bodyFatPercentage || null,
+      muscle_mass_percentage: studentData.muscleMassPercentage || null,
+    })
+
+    return { success: true, message: 'Estudiante actualizado correctamente' }
+  } catch (err) {
+    console.error('Error updating student:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('student:delete', async (_evt, studentId) => {
+  try {
+    if (!EstudianteModel) throw new Error('DB not initialized')
+    const count = await EstudianteModel.destroy({ where: { id: studentId } })
+    if (!count) return { success: false, error: 'Estudiante no encontrado.' }
+    return { success: true, message: 'Estudiante eliminado correctamente' }
+  } catch (err) {
+    console.error('Error deleting student:', err)
+    return { success: false, error: err.message }
   }
 })
 

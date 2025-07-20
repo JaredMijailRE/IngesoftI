@@ -220,7 +220,7 @@ function goToRegister() {
 
 // Función para ir al formulario de estudiante
 function gotoFormStudent() {
-  router.push('/formstudent')
+  router.push({ name: 'FormStudent', params: { id: 1 } }) // Ajusta el id según corresponda
 }
 
 // Función para cerrar sesión

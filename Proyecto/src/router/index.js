@@ -2,14 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/PlanEntrenamientoManager',
+    path: '/p',
     name: 'PlanEntrenamientoManager',
     component: () => import('@/views/PlanEntrenamientoManager.vue'),
     meta: { title: 'Gestión de Planes y Ejercicios' },
   },
 
   {
-    path: '/',
+    path: '/l',
     name: 'Login',
     component: () => import('@/views/LogIn.vue'),
     meta: {
@@ -25,7 +25,7 @@ const routes = [
     },
   },
   {
-    path: '/formstudent',
+    path: '/grupos/:id/estudiantes/nuevo',
     name: 'FormStudent',
     component: () => import('@/views/FormStudent.vue'),
     meta: {
@@ -37,7 +37,7 @@ const routes = [
     redirect: '/',
   },
   {
-    path: '/grupos',
+    path: '/',
     name: 'Grupos',
     component: () => import('@/views/Grupos.vue'),
     meta: { title: 'Grupos' },
@@ -47,6 +47,12 @@ const routes = [
     name: 'GrupoDashboard',
     component: () => import('@/views/GrupoDashboard.vue'),
     meta: { title: 'Dashboard del Grupo' },
+  },
+  {
+    path: '/grupos/new',
+    name: 'FormGroup',
+    component: () => import('@/views/FormGroup.vue'),
+    meta: { title: 'Crear Nuevo Grupo' },
   },
 ]
 

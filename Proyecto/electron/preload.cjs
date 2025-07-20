@@ -4,48 +4,59 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('electronAPI', {
   // Authentication methods
   auth: {
-    login: (credentials) => ipcRenderer.invoke('auth:login', credentials),
-    signup: (userData) => ipcRenderer.invoke('auth:signup', userData),
+    login: credentials => ipcRenderer.invoke('auth:login', credentials),
+    signup: userData => ipcRenderer.invoke('auth:signup', userData),
     logout: () => ipcRenderer.invoke('auth:logout'),
     checkAuth: () => ipcRenderer.invoke('auth:check'),
-    getCurrentUser: () => ipcRenderer.invoke('auth:getCurrentUser')
+    getCurrentUser: () => ipcRenderer.invoke('auth:getCurrentUser'),
   },
-  
+
   // Ejercicios methods
   ejercicios: {
     getAll: () => ipcRenderer.invoke('ejercicios:getAll'),
-    create: (data) => ipcRenderer.invoke('ejercicios:create', data)
+    create: data => ipcRenderer.invoke('ejercicios:create', data),
   },
-  
+
   // Planes de entrenamiento methods
   planes: {
     getAll: () => ipcRenderer.invoke('planes:getAll'),
-    create: (data) => ipcRenderer.invoke('planes:create', data)
+    create: data => ipcRenderer.invoke('planes:create', data),
   },
-  
+
   // LocalStorage methods
   storage: {
-    get: (key) => ipcRenderer.invoke('storage:get', key),
+    get: key => ipcRenderer.invoke('storage:get', key),
     set: (key, value) => ipcRenderer.invoke('storage:set', key, value),
-    remove: (key) => ipcRenderer.invoke('storage:remove', key),
-    clear: () => ipcRenderer.invoke('storage:clear')
+    remove: key => ipcRenderer.invoke('storage:remove', key),
+    clear: () => ipcRenderer.invoke('storage:clear'),
   },
-  
+
   // General app methods
   app: {
     getVersion: () => ipcRenderer.invoke('app:getVersion'),
-    openExternal: (url) => ipcRenderer.invoke('app:openExternal'),
-    sendMessage: (message) => ipcRenderer.invoke('app:sendMessage', message)
-  },
-  
-  // Event listeners
-  events: {
-    onAuthChange: (callback) => ipcRenderer.on('auth:changed', callback),
-    onStorageChange: (callback) => ipcRenderer.on('storage:changed', callback),
-    removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+    openExternal: url => ipcRenderer.invoke('app:openExternal'),
+    sendMessage: message => ipcRenderer.invoke('app:sendMessage', message),
   },
 
+  // Event listeners
+  events: {
+    onAuthChange: callback => ipcRenderer.on('auth:changed', callback),
+    onStorageChange: callback => ipcRenderer.on('storage:changed', callback),
+    removeAllListeners: channel => ipcRenderer.removeAllListeners(channel),
+  },
+
+  // Student CRUD methods
   student: {
-    create: (data) => ipcRenderer.invoke('student:create', data)
-  }
-}) 
+    getAll: opts => ipcRenderer.invoke('student:getAll', opts),
+    create: data => ipcRenderer.invoke('student:create', data),
+    update: data => ipcRenderer.invoke('student:update', data),
+    delete: id => ipcRenderer.invoke('student:delete', id),
+  },
+
+  group: {
+    getAllWithStudents: () => ipcRenderer.invoke('group:getAllWithStudents'),
+    create: data => ipcRenderer.invoke('group:create', data),
+    // update: data => ipcRenderer.invoke('group:update', data),
+    // delete: id => ipcRenderer.invoke('group:delete', id),
+  },
+})
