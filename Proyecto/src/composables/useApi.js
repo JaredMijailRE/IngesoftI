@@ -311,7 +311,6 @@ export function useApi() {
     }
   }
 
-
   const get = (url, config = {}) => request({ ...config, method: 'GET', url })
 
   const post = (url, data, config = {}) =>

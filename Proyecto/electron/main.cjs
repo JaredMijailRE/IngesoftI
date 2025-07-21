@@ -603,7 +603,7 @@ ipcMain.handle('app:sendMessage', async (event, message) => {
   return { success: true }
 })
 
-ipcMain.handle('user:getGrupos', async (event, userId) => {
+ipcMain.handle('user:getGrupos2', async (event, userId) => {
   try {
     const { getModels } = await import('../db/index.js')
     const models = await getModels()

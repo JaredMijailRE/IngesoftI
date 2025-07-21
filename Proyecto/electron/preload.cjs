@@ -27,7 +27,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   user: {
     getGrupos: (userId) => ipcRenderer.invoke('user:getGrupos', userId),
-    getEventos: (userId) => ipcRenderer.invoke('user:getEventos', userId)
+    getEventos: (userId) => ipcRenderer.invoke('user:getEventos', userId),
+    getGrupos2: (userId) => ipcRenderer.invoke('user:getGrupos2', userId),
+    getPlanes: (userId) => ipcRenderer.invoke('user:getPlanes', userId),
   },
 
   // LocalStorage methods
@@ -43,11 +45,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getVersion: () => ipcRenderer.invoke('app:getVersion'),
     openExternal: (url) => ipcRenderer.invoke('app:openExternal'),
     sendMessage: (message) => ipcRenderer.invoke('app:sendMessage', message)
-  },
-  // Metodos para obtener datos del usuario
-  user: {
-    getGrupos: (userId) => ipcRenderer.invoke('user:getGrupos', userId),
-    getPlanes: (userId) => ipcRenderer.invoke('user:getPlanes', userId)
   },
   // Event listeners
   events: {

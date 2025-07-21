@@ -22,7 +22,7 @@ const daysOfWeek = [
   { label: 'J', value: 'Jueves' },
   { label: 'V', value: 'Viernes' },
   { label: 'S', value: 'Sábado' },
-  { label: 'D', value: 'Domingo' }
+  { label: 'D', value: 'Domingo' },
 ]
 
 const errors = ref({})
@@ -35,8 +35,8 @@ const user = ref({
   username: '',
   grupos: [],
   planes: [],
-  gruposIds: [],   // Aquí se guardan las PK de grupos
-  planesIds: []   // Aquí se guardan las PK de eventos
+  gruposIds: [], // Aquí se guardan las PK de grupos
+  planesIds: [], // Aquí se guardan las PK de eventos
 })
 
 const grupos = ref([])
@@ -61,15 +61,14 @@ onMounted(async () => {
 
     const gruposResponse = await getUserGrupos()
     user.value.grupos = gruposResponse.data || []
-    user.value.gruposIds = user.value.grupos.map(g => g.id)  // ← Extraer PKs
+    user.value.gruposIds = user.value.grupos.map(g => g.id) // ← Extraer PKs
 
     const planesResponse = await getUserPlanes()
     user.value.planes = planesResponse.data || []
-    user.value.planesIds = user.value.planes.map(e => e.id)  // ← Extraer PKs
-    
+    user.value.planesIds = user.value.planes.map(e => e.id) // ← Extraer PKs
+
     grupos.value = gruposResponse.data || []
     planes.value = planesResponse.data || []
-
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
   }
@@ -115,7 +114,7 @@ function handleSubmit() {
       date: date.value,
       recurrence: recurrenceDays.value.join(' '),
       starttime: starttime.value,
-      finishtime: finishtime.value
+      finishtime: finishtime.value,
     }
     window.electronAPI.classEvent
       .create(data)
@@ -170,117 +169,132 @@ function handleSubmit() {
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Id del Grupo</label>
-          <select 
-            v-model="groupid"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.groupid }">
-            <option value="">Seleccionar un Grupo</option>
-            <option v-for="g in grupos" :key="g.id" :value="g.id">
-              {{ g.name }}
-            </option>
-          </select>
-          <p v-if="errors.groupid" class="text-sm text-red-500 mb-2">
-            {{ errors.groupid }}
-          </p>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Id del Grupo</label
+            >
+            <select
+              v-model="groupid"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.groupid }"
+            >
+              <option value="">Seleccionar un Grupo</option>
+              <option v-for="g in grupos" :key="g.id" :value="g.id">
+                {{ g.name }}
+              </option>
+            </select>
+            <p v-if="errors.groupid" class="text-sm text-red-500 mb-2">
+              {{ errors.groupid }}
+            </p>
           </div>
 
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Id Plan</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Id Plan</label
+            >
 
-        <select 
-        v-model="planid"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.planid }">
-          <option value="">Selecciona un plan</option>
-          <option v-for="p in planes" :key="p.id" :value="p.id">
-            {{ p.name }}
-          </option>
-        </select>
-          <p v-if="errors.planid" class="text-sm text-red-500 mb-2">
-            {{ errors.planid }}
-          </p>
+            <select
+              v-model="planid"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.planid }"
+            >
+              <option value="">Selecciona un plan</option>
+              <option v-for="p in planes" :key="p.id" :value="p.id">
+                {{ p.name }}
+              </option>
+            </select>
+            <p v-if="errors.planid" class="text-sm text-red-500 mb-2">
+              {{ errors.planid }}
+            </p>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Fecha</label>
-          <input
-            v-model="date"
-            type="date"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.date }"
-          />
-          <p v-if="errors.date" class="text-sm text-red-500 mb-2">
-            {{ errors.date }}
-          </p>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Fecha</label
+            >
+            <input
+              v-model="date"
+              type="date"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.date }"
+            />
+            <p v-if="errors.date" class="text-sm text-red-500 mb-2">
+              {{ errors.date }}
+            </p>
           </div>
-          
-          <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Se repite?</label>
-          <select
-            v-model="recurrence"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.recurrence }"
-          >
-          <option value="">Seleccionar</option>
-          <option value="y">Sí</option>
-          <option value="n">No</option>
-          </select>
 
-          <p v-if="errors.recurrence" class="text-sm text-red-500 mb-2">
-            {{ errors.recurrence }}
-          </p>
+          <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Se repite?</label
+            >
+            <select
+              v-model="recurrence"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.recurrence }"
+            >
+              <option value="">Seleccionar</option>
+              <option value="y">Sí</option>
+              <option value="n">No</option>
+            </select>
+
+            <p v-if="errors.recurrence" class="text-sm text-red-500 mb-2">
+              {{ errors.recurrence }}
+            </p>
           </div>
         </div>
         <!-- Selección de días de la semana en la cual se repite -->
         <div v-if="recurrence === 'y'" class="flex justify-center gap-2 my-2">
-        <label class="block mb-1 text-sm font-medium text-gray-700">Selecciona los días que se repite</label>
+          <label class="block mb-1 text-sm font-medium text-gray-700"
+            >Selecciona los días que se repite</label
+          >
         </div>
         <div v-if="recurrence === 'y'" class="flex justify-center gap-2 my-2">
-        <button
-          v-for="dia in daysOfWeek"
-          :key="dia.label"
-          type="button"
-          :class="[
-            'px-3 py-1 rounded border',
-            recurrenceDays.includes(dia.label)
-              ? 'bg-sportu-600 text-white'
-              : 'bg-white text-sportu-600 border-sportu-600'
-          ]"
-          @click="toggleDay(dia.label)"
-        >
-          {{ dia.label }}
-        </button>
+          <button
+            v-for="dia in daysOfWeek"
+            :key="dia.label"
+            type="button"
+            :class="[
+              'px-3 py-1 rounded border',
+              recurrenceDays.includes(dia.label)
+                ? 'bg-sportu-600 text-white'
+                : 'bg-white text-sportu-600 border-sportu-600',
+            ]"
+            @click="toggleDay(dia.label)"
+          >
+            {{ dia.label }}
+          </button>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Hora Inicio</label>
-          <input
-            v-model="starttime"
-            type="time"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.starttime }"
-          />
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Hora Inicio</label
+            >
+            <input
+              v-model="starttime"
+              type="time"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.starttime }"
+            />
 
-          <p v-if="errors.starttime" class="text-sm text-red-500 mb-2">
-            {{ errors.starttime }}
-          </p>
+            <p v-if="errors.starttime" class="text-sm text-red-500 mb-2">
+              {{ errors.starttime }}
+            </p>
           </div>
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Hora fin</label>  
-           <input
-            v-model="finishtime"
-            type="time"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.finishtime }"
-          />
-          <p v-if="errors.finishtime" class="text-sm text-red-500 mb-2">
-            {{ errors.finishtime }}
-          </p>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Hora fin</label
+            >
+            <input
+              v-model="finishtime"
+              type="time"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.finishtime }"
+            />
+            <p v-if="errors.finishtime" class="text-sm text-red-500 mb-2">
+              {{ errors.finishtime }}
+            </p>
           </div>
         </div>
 

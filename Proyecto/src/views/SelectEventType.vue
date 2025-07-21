@@ -16,7 +16,6 @@ function goToSportType() {
 function goToClassType() {
   router.push('/classevent')
 }
-
 </script>
 
 <template>
@@ -54,12 +53,12 @@ function goToClassType() {
           >
             <span>Clase</span>
           </button>
-          </div>
+        </div>
         <!-- Boton para regresar a la página de inicio de sesión -->
         <h1 class="text-xs font-bold text-secondary-600 mb-2">
           <button
             class="color-blue-600 hover:underline flex"
-            @click="$router.push('/login')"
+            @click="$router.push('/main')"
           >
             Regresar
           </button>

@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { Icon } from '@iconify/vue'
+import { useRouter } from 'vue-router'
 
 const user = ref({
   username: '',
@@ -10,6 +11,7 @@ const user = ref({
 })
 
 const { getCurrentUser, getUserGrupos, getUserEventos } = useApi()
+const router = useRouter()
 
 onMounted(async () => {
   try {
@@ -51,7 +53,7 @@ const toCrearGrupo = () => {
 }
 
 const toAgregarEvento = () => {
-  // Hacer el código cuando este lo de agregar evento
+  router.push('/selecteventtype')
   console.log('Navegando a agregar un nuevo evento')
 }
 </script>

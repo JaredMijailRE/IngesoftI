@@ -355,10 +355,7 @@ function handleSubmit() {
         </div>
         <h1 class="text-xs font-bold text-secondary-600 mb-2">
           Ya tienes cuenta?
-          <button
-            class="color-blue-600 hover:underline"
-            @click="goToLogin"
-          >
+          <button class="color-blue-600 hover:underline" @click="goToLogin">
             Log In
           </button>
         </h1>

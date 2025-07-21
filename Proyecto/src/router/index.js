@@ -29,7 +29,7 @@ const routes = [
       title: 'Sign Up',
     },
   },
-    {
+  {
     path: '/selecteventtype',
     name: 'SelectEventType',
     component: () => import('@/views/SelectEventType.vue'),
@@ -45,7 +45,7 @@ const routes = [
       title: 'Sport Event',
     },
   },
-    {
+  {
     path: '/classevent',
     name: 'ClassEvent',
     component: () => import('@/views/ClassEvent.vue'),

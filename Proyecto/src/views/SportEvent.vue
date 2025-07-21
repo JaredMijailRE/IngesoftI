@@ -48,13 +48,14 @@ function handleSubmit() {
       localization: localization.value,
       price: price.value,
       date: date.value,
-      link: link.value
+      link: link.value,
     }
     window.electronAPI.sportEvent
       .create(data)
       .then(response => {
         if (response.success) {
-          signupMessage.value = '¡Registro exitoso! Evento creado correctamente.'
+          signupMessage.value =
+            '¡Registro exitoso! Evento creado correctamente.'
           // Limpiar formulario
           title.value = ''
           description.value = ''
@@ -102,81 +103,92 @@ function handleSubmit() {
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Titulo del evento</label>
-          <input
-            v-model="title"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.title }"
-          />
-          <p v-if="errors.title" class="text-sm text-red-500 mb-2">
-            {{ errors.title }}
-          </p>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Titulo del evento</label
+            >
+            <input
+              v-model="title"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.title }"
+            />
+            <p v-if="errors.title" class="text-sm text-red-500 mb-2">
+              {{ errors.title }}
+            </p>
           </div>
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Descripción</label>
-          <input
-            v-model="description"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.description }"
-          />
-          <p v-if="errors.description" class="text-sm text-red-500 mb-2">
-            {{ errors.description }}
-          </p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-
-          <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Ubicación</label>
-          <input
-            v-model="localization"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.localization }"
-          />
-          <p v-if="errors.localization" class="text-sm text-red-500 mb-2">
-            {{ errors.localization }}
-          </p>
-          </div>
-          
-          <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Precio</label>
-          <input
-            v-model="price"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.price }"
-          />
-
-          <p v-if="errors.price" class="text-sm text-red-500 mb-2">
-            {{ errors.price }}
-          </p>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Descripción</label
+            >
+            <input
+              v-model="description"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.description }"
+            />
+            <p v-if="errors.description" class="text-sm text-red-500 mb-2">
+              {{ errors.description }}
+            </p>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Fecha</label>
-          <input
-            v-model="date"
-            type="date"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.date }"
-          />
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Ubicación</label
+            >
+            <input
+              v-model="localization"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.localization }"
+            />
+            <p v-if="errors.localization" class="text-sm text-red-500 mb-2">
+              {{ errors.localization }}
+            </p>
+          </div>
 
-          <p v-if="errors.date" class="text-sm text-red-500 mb-2">
-            {{ errors.date }}
-          </p>
+          <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Precio</label
+            >
+            <input
+              v-model="price"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.price }"
+            />
+
+            <p v-if="errors.price" class="text-sm text-red-500 mb-2">
+              {{ errors.price }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Fecha</label
+            >
+            <input
+              v-model="date"
+              type="date"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.date }"
+            />
+
+            <p v-if="errors.date" class="text-sm text-red-500 mb-2">
+              {{ errors.date }}
+            </p>
           </div>
           <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Link</label>  
-           <input
-            v-model="link"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            :class="{ 'border-red-500': errors.link }"
-          />
-          <p v-if="errors.link" class="text-sm text-red-500 mb-2">
-            {{ errors.link }}
-          </p>
+            <label class="block mb-1 text-sm font-medium text-gray-700"
+              >Link</label
+            >
+            <input
+              v-model="link"
+              class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
+              :class="{ 'border-red-500': errors.link }"
+            />
+            <p v-if="errors.link" class="text-sm text-red-500 mb-2">
+              {{ errors.link }}
+            </p>
           </div>
         </div>
         <div class="flex justify-center p-10 pt-2 gap-7">
