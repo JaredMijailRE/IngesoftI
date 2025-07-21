@@ -72,5 +72,4 @@ const handleLogout = async () => {
   await logout()
   router.push('/')
 }
-
 </script>
