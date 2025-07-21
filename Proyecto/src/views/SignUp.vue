@@ -67,7 +67,7 @@ function handleSubmit() {
   }
 
   if (!gender.value) {
-    errors.value.username = 'El genero es obligatorio.'
+    errors.value.genero = 'El genero es obligatorio.'
   }
 
   if (!password.value) {
