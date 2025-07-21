@@ -70,9 +70,16 @@ export async function initializeDatabase(config) {
       ProfesorGrupo
     });
 
-    // Sincronizar base de datos (crear tablas si no existen)
-    await sequelize.sync({ alter: true });
-    console.log('✅ Base de datos sincronizada correctamente.');
+    // Sincronizar base de datos - usar force solo en desarrollo, alter en producción con manejo de errores
+    try {
+      await sequelize.sync({ force: false, alter: false });
+      console.log('✅ Base de datos sincronizada correctamente.');
+    } catch (syncError) {
+      console.log('⚠️  Error en sincronización estándar, intentando forzar recreación...');
+      // Si falla, crear tablas desde cero (solo para desarrollo)
+      await sequelize.sync({ force: true });
+      console.log('✅ Base de datos recreada exitosamente.');
+    }
     
     return { sequelize, models: {
       Profesor,

@@ -41,6 +41,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     clear: () => ipcRenderer.invoke('storage:clear'),
   },
 
+  // Database methods
+  db: {
+    status: () => ipcRenderer.invoke('db:status'),
+    retry: () => ipcRenderer.invoke('db:retry'),
+  },
+
   // General app methods
   app: {
     getVersion: () => ipcRenderer.invoke('app:getVersion'),
