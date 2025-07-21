@@ -54,7 +54,7 @@ function handleSubmit() {
   }
 
   if (!birthdate.value) {
-    errors.value.username = 'La fecha de nacimiento es obligatoria.'
+    errors.value.birthdate = 'La fecha de nacimiento es obligatoria.'
   } else {
     const enteredDate = new Date(birthdate.value)
     const today = new Date()
