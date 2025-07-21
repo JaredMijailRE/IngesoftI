@@ -14,7 +14,7 @@ const routes = [
     component: () => import('@/views/LogIn.vue'),
     meta: {
       title: 'USport - Iniciar Sesión',
-      requiresAuth: false
+      requiresAuth: false,
     },
   },
   {
@@ -29,7 +29,7 @@ const routes = [
     component: () => import('@/views/SignUp.vue'),
     meta: {
       title: 'Sign Up',
-      requiresAuth: false
+      requiresAuth: false,
     },
   },
   {
@@ -38,7 +38,7 @@ const routes = [
     component: () => import('@/views/FormStudent.vue'),
     meta: {
       title: 'Form Student',
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -47,7 +47,7 @@ const routes = [
     component: () => import('@/views/SelectEventType.vue'),
     meta: {
       title: 'Select Event Type',
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -56,7 +56,7 @@ const routes = [
     component: () => import('@/views/SportEvent.vue'),
     meta: {
       title: 'Sport Event',
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -65,7 +65,7 @@ const routes = [
     component: () => import('@/views/ClassEvent.vue'),
     meta: {
       title: 'Class Event',
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {

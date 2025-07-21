@@ -24,7 +24,7 @@ onMounted(async () => {
 })
 
 // Observar cambios en la autenticación
-watch(isLoggedIn, (newValue) => {
+watch(isLoggedIn, newValue => {
   if (!newValue && route.path !== '/' && route.path !== '/signup') {
     // Si pierde la autenticación, redirigir al login
     router.push('/')
@@ -34,7 +34,7 @@ watch(isLoggedIn, (newValue) => {
 // Observar cambios en la ruta
 watch(
   () => route.path,
-  (newPath) => {
+  newPath => {
     // Si intenta acceder a una ruta protegida sin estar logueado
     if (!isLoggedIn.value && newPath !== '/' && newPath !== '/signup') {
       router.push('/')
@@ -53,16 +53,15 @@ watch(
       class="min-h-screen flex items-center justify-center bg-gray-100"
     >
       <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"
+        ></div>
         <span class="text-gray-500 text-lg">Cargando...</span>
       </div>
     </div>
 
     <!-- Usuario no autenticado - Mostrar solo login/signup -->
-    <div
-      v-else-if="!isLoggedIn"
-      class="min-h-screen bg-gray-100"
-    >
+    <div v-else-if="!isLoggedIn" class="min-h-screen bg-gray-100">
       <main class="flex-1 min-h-screen">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">

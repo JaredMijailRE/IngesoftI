@@ -65,12 +65,12 @@ import { Icon } from '@iconify/vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 
-const { user } = useAuth()
 const { logout } = useAuth()
 const router = useRouter()
 
-function handleLogout() {
-  logout()
+const handleLogout = async () => {
+  await logout()
   router.push('/')
 }
+
 </script>
