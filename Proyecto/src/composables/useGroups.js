@@ -38,16 +38,10 @@ export function useGroups() {
    * Crea un nuevo grupo y, al éxito, refresca la lista
    */
   async function createGroup({ name, objectives, specific_objectives }) {
-    const storageFile = path.join(__dirname, 'storage.json')
-    storage = JSON.parse(fs.readFileSync(storageFile, 'utf8'))
-
-    const userId = storage.auth_user.id
-
     const { success, group, error } = await window.electronAPI.group.create({
       name,
       objectives,
       specific_objectives,
-      userId,
     })
 
     if (!success) {
