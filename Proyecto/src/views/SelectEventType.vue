@@ -58,7 +58,7 @@ function goToClassType() {
         <h1 class="text-xs font-bold text-secondary-600 mb-2">
           <button
             class="color-blue-600 hover:underline flex"
-            @click="$router.push('/main')"
+            @click="$router.back()"
           >
             Regresar
           </button>
