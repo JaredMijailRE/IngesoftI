@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import SignUp from '/SignUp.vue'
+import SignUp from '../SignUp.vue'
 
 describe('SignUp.vue', () => {
   it('debe renderizar el componente correctamente', () => {
