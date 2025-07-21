@@ -38,7 +38,7 @@ const GruposLength = computed(() => user.value.grupos.length)
 const EventosLength = computed(() => user.value.eventos.length)
 
 const toGrupo = id => {
-  // Hacer el código cuando este lo de los grupos
+  router.push({ name: 'GrupoDashboard', params: { id } })
   console.log('Navegando al grupo con ID: ', id)
 }
 
@@ -48,7 +48,7 @@ const toEvento = id => {
 }
 
 const toCrearGrupo = () => {
-  // Hacer el código cuando este lo de crear grupo
+  router.push({ name: 'FormGroup' })
   console.log('Navegando a crear un nuevo grupo')
 }
 

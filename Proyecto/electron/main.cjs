@@ -481,10 +481,6 @@ ipcMain.handle('user:getGrupos', async (event) => {
       }
     })
 
-    if (!profesor || !profesor.Grupos || profesor.Grupos.length === 0) {
-      return { success: false, error: 'No se encontraron grupos asignados' }
-    }
-
     const grupos = profesor.Grupos.map(grupo => {
       const plain = grupo.get({ plain: true })
       return {
@@ -506,7 +502,7 @@ ipcMain.handle('user:getGrupos', async (event) => {
 ipcMain.handle('user:getEventos', async (event) => {
   try {
     const { getModels } = await import('../db/index.js')
-    const { Profesor, Grupo, Evento } = await getModels()
+    const { Profesor, Grupo, Clase } = await getModels()
 
     const storageFile = path.join(__dirname, 'storage.json')
     const storage = JSON.parse(fs.readFileSync(storageFile, 'utf8'))
@@ -516,24 +512,29 @@ ipcMain.handle('user:getEventos', async (event) => {
     const profesor = await Profesor.findByPk(userId, {
       include: {
         model: Grupo,
-        through: { attributes: [] },
+        through: { attributes: [] }, 
         include: {
-          model: Evento,
-          through: { attributes: [] } // si usas tabla intermedia EventoGrupo
+          model: Clase 
         }
       }
     })
 
     if (!profesor || !profesor.Grupos || profesor.Grupos.length === 0) {
-      return { success: false, error: 'No se encontraron grupos o profesor' }
+      return { success: false, error: 'No se encontraron grupos o clases' }
     }
 
-    // Extraer y aplanar eventos
-    const eventos = profesor.Grupos.flatMap(grupo =>
-      (grupo.Eventos || []).map(evento => evento.get({ plain: true }))
-    )
+    const clases = profesor.Grupos.flatMap(grupo => {
+      return (grupo.Clases || []).map(clase => {
+        const c = clase.get({ plain: true })
+        return {
+          id: c.id,
+          nombre: `evento ${c.id}`,
+          fecha: c.class_date
+        }
+      })
+    })
 
-    return { success: true, data: eventos }
+    return { success: true, data: clases }
 
   } catch (err) {
     console.error('Error en user:getEventos:', err)
