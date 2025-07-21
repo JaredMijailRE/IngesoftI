@@ -35,7 +35,9 @@ export function useGroups() {
         // Una vez que la DB se reinicializa, intentar cargar los grupos
         await fetchGroups()
       } else {
-        throw new Error(result.error || 'Error al reinicializar la base de datos')
+        throw new Error(
+          result.error || 'Error al reinicializar la base de datos'
+        )
       }
     } catch (err) {
       loadError.value = err.message
@@ -64,7 +66,9 @@ export function useGroups() {
         // Si el error es de base de datos no inicializada, verificar el estado
         if (error && error.includes('DB not initialized')) {
           dbInitialized.value = false
-          throw new Error('La base de datos no está inicializada. Presiona "Reintentar" para solucionarlo.')
+          throw new Error(
+            'La base de datos no está inicializada. Presiona "Reintentar" para solucionarlo.'
+          )
         }
         throw new Error(error || 'Error al cargar grupos')
       }

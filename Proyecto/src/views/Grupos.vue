@@ -101,7 +101,8 @@ import BaseCard from '@/components/BaseCard.vue'
 import { useGroups } from '@/composables/useGroups'
 
 const router = useRouter()
-const { groups, isLoading, loadError, dbInitialized, retryDatabaseInit } = useGroups()
+const { groups, isLoading, loadError, dbInitialized, retryDatabaseInit } =
+  useGroups()
 const expandedId = ref(null)
 
 function toggle(id) {
