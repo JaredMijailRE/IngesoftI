@@ -1,46 +1,3 @@
-<script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { Icon } from '@iconify/vue'
-import Breadcrumb from '@/components/ui/Breadcrumb.vue'
-
-const router = useRouter()
-
-const grupos = ref([
-  {
-    id: 1,
-    nombre: 'Grupo 1',
-    curso: 'Curso de ciclismo avanzado',
-    listado: ['Ana', 'Luis', 'Carlos', 'Valeria'],
-    planes: ['Fondo largo', 'Intervalos', 'Rodaje suave']
-  },
-  {
-    id: 2,
-    nombre: 'Grupo 2',
-    curso: 'Ciclismo base y técnica',
-    listado: ['Pedro', 'Marta', 'Raúl'],
-    planes: ['Técnica', 'Subidas', 'Descanso activo']
-  },
-  {
-    id: 3,
-    nombre: 'Grupo 3',
-    curso: 'Resistencia y fuerza',
-    listado: ['Lucía', 'Andrés', 'Sofía'],
-    planes: ['Fuerza en cuestas', 'Rodaje largo']
-  }
-])
-
-const grupoExpandido = ref(null)
-
-const toggleGrupo = (id) => {
-  grupoExpandido.value = grupoExpandido.value === id ? null : id
-}
-
-const irAGrupo = (id) => {
-  router.push({ name: 'GrupoDashboard', params: { id } })
-}
-</script>
-
 <template>
   <div class="min-h-screen bg-sportu-400 py-10 px-6">
     <!-- Breadcrumb -->
@@ -50,13 +7,11 @@ const irAGrupo = (id) => {
     <!-- Botón Nuevo Grupo -->
     <div class="flex justify-end mb-4">
       <button
-        @click="toggleGrupo(grupo.id)"
-        class="bg-white text-left w-full px-6 py-4 text-xl font-semibold shadow-md rounded-lg flex justify-between items-center"
+        @click="goToNewGroup"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
       >
-        {{ grupo.nombre }}
-        <span class="text-gray-400 text-2xl">
-          <Icon :icon="grupoExpandido === grupo.id ? 'mdi:chevron-up' : 'mdi:chevron-down'" />
-        </span>
+        <Icon icon="mdi:plus-circle-outline" class="mr-2" />
+        Nuevo Grupo
       </button>
     </div>
 
@@ -117,23 +72,13 @@ const irAGrupo = (id) => {
               >
                 {{ stu.firstName }} {{ stu.lastName }}
               </li>
-            </ul>
-          </div>
-
-          <!-- Planes -->
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="font-medium">Planes de entreno ({{ grupo.planes.length }})</h3>
-              <button class="text-xl text-gray-500 hover:text-sportu-600">+</button>
-            </div>
-            <ul class="space-y-2">
-              <li v-for="(plan, i) in grupo.planes" :key="i" class="bg-gray-100 p-2 rounded">
-                {{ plan }}
+              <li v-if="!group.students.length" class="text-gray-500">
+                No hay estudiantes en este grupo.
               </li>
             </ul>
           </div>
-        </div>
-      </div>
+        </template>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -170,7 +115,7 @@ function goToDashboard(id) {
 
 
 <style scoped>
-/* Si tienes colores personalizados como sportu-600, asegúrate que están definidos en tailwind.config.js */
+/* Ajustes de estilo si los necesitas */
 </style>
 
 

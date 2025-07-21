@@ -1,280 +1,347 @@
-<script setup>
-// js
-//import { ref } from 'vue'
-import { Icon } from '@iconify/vue'
-import { ref, computed } from 'vue'
-
-
-
-const preexistencias = ref('')
-const firstnames = ref('')
-const lastnames = ref('')
-const birthdate = ref('')
-const gender = ref('')
-const altura = ref('')
-const id = ref('')
-const peso = ref('')
-const porcentajegrasa = ref('')
-const porcentajemusculo = ref('')
-
-const errors = ref({})
-const isLoading = ref(false)
-const signupMessage = ref('')
-
-function handleSubmit() {
-  errors.value = {}
-  signupMessage.value = ''
-
-  // Validaciones
-  if (!id.value) {
-    errors.value.id = 'La identificación del estudiante es obligatoria.'
-  }
-  if (!firstnames.value) {
-    errors.value.firstnames = 'El nombre es obligatorio.'
-  }
-  if (!lastnames.value) {
-    errors.value.lastnames = 'El apellido es obligatorio.'
-  }
-  if (!birthdate.value) {
-    errors.value.birthdate = 'La fecha de nacimiento es obligatoria.'
-  } else {
-    const enteredDate = new Date(birthdate.value)
-    const today = new Date()
-    if (isNaN(enteredDate)) {
-      errors.value.birthdate = 'La fecha ingresada no es válida.'
-    } else if (enteredDate > today) {
-      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
-    }
-  }
-  if (!gender.value) {
-    errors.value.gender = 'El genero es obligatorio.'
-  } else if (!['M', 'F', 'O'].includes(gender.value)) {
-    errors.value.gender = 'El género debe ser M, F u O.'
-  }
-  // Validación de números
-  if (peso.value && isNaN(Number(peso.value))) {
-    errors.value.peso = 'El peso debe ser un número válido.'
-  }
-  if (altura.value && isNaN(Number(altura.value))) {
-    errors.value.altura = 'La altura debe ser un número válido.'
-  }
-  if (porcentajegrasa.value && isNaN(Number(porcentajegrasa.value))) {
-    errors.value.porcentajegrasa = 'El porcentaje de grasa debe ser un número válido.'
-  }
-  if (porcentajemusculo.value && isNaN(Number(porcentajemusculo.value))) {
-    errors.value.porcentajemusculo = 'El porcentaje de músculo debe ser un número válido.'
-  }
-
-  // Si no hay errores, proceder con el registro
-  if (Object.keys(errors.value).length === 0) {
-    isLoading.value = true
-    const Estudiantedata = {
-      id: id.value,
-      firstnames: firstnames.value,
-      lastnames: lastnames.value,
-      birthdate: birthdate.value,
-      gender: gender.value,
-      preexistencias: preexistencias.value,
-      altura: altura.value,
-      peso: peso.value,
-      porcentajegrasa: porcentajegrasa.value,
-      porcentajemusculo: porcentajemusculo.value
-    }
-    window.electronAPI.student.create(Estudiantedata)
-      .then(response => {
-        if (response.success) {
-          signupMessage.value = '¡Registro exitoso! Bienvenido a SportU'
-          // Limpiar formulario
-          id.value = ''
-          firstnames.value = ''
-          lastnames.value = ''
-          birthdate.value = ''
-          gender.value = ''
-          peso.value = ''
-          altura.value = ''
-          porcentajegrasa.value = ''
-          porcentajemusculo.value = ''
-          preexistencias.value = ''
-          setTimeout(() => {
-            console.log('Usuario registrado:', response.user)
-          }, 100)
-        } else {
-          if (typeof response.error === 'object') {
-            // Errores de validación
-            errors.value = response.error
-            signupMessage.value = 'Corrige los errores en el formulario.'
-          } else {
-            signupMessage.value = `Error: ${response.error}`
-          }
-        }
-      })
-      .catch(error => {
-        console.error('Error en el registro:', error)
-        signupMessage.value = 'Error interno del sistema'
-      })
-      .finally(() => {
-        isLoading.value = false
-      })
-  }
-}
-</script>
-
 <template>
-  <!-- html -->
-
-  <div class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9">
+  <div class="min-h-screen bg-gradient-to-t from-sportu-200 via-sportu-300 to-sportu-600 py-9">
     <div class="flex justify-center">
-      <div class="card hover:shadow-lg bg-blue-50 transition-shadow w flex-col mx-8 px-8 py-8">
-        <h1 class="text-2xl text-center font-bold text-gray-700 mb-4">
-          Registro de Estudiante
+      <div class="card hover:shadow-lg bg-blue-50 transition-shadow w-full max-w-xl mx-8 px-8 py-8 space-y-6">
+
+        <!-- Título -->
+        <h1 class="text-2xl text-center font-bold text-gray-700">
+          {{ isEditMode ? 'Editar Estudiante' : 'Registro de Estudiante' }}
         </h1>
-        <h1 class="text-1xl font-bold text-secondary-600 mb-2">
-          Crea un nuevo estudiante
-        </h1>
-        <div class="grid grid-cols-2 gap-2">
+        <h2 class="text-1xl font-bold text-secondary-600 mb-4">
+          {{ isEditMode ? 'Modifica los datos' : 'Crea un nuevo estudiante' }}
+        </h2>
 
-            <input
-            v-model="firstnames"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Nombres"
-            :class="{ 'border-red-500': errors.firstnames }"
-            />
-            <p v-if="errors.firstnames" class="text-sm text-red-500 mb-2">
-            {{ errors.firstnames }}
-            </p>
-
-            <input
-            v-model="lastnames"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Apellidos"
-            :class="{ 'border-red-500': errors.lastnames }"
-            />
-            <p v-if="errors.lastnames" class="text-sm text-red-500 mb-2">
-            {{ errors.lastnames }}
-            </p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-            <input
-                v-model="id"
-                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-                placeholder="Identificación del Estudiante"
-                :class="{ 'border-red-500': errors.id }"
-                />
-                <p v-if="errors.id" class="text-sm text-red-500 mb-2">
-                {{ errors.id }}
-                </p>
-        </div>
-
-
-        <div class='grid grid-cols-2 gap-2'>
-            <input 
-            v-model="gender" 
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" placeholder="Genero":class="{'border-red-500':errors.gender}">
-            
-            <p v-if="errors.gender" class="text-sm text-red-500 mb-2">{{ errors.gender }}</p>
-
-            <input 
-            v-model="birthdate" 
-            type="date" 
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" 
-            placeholder="Fecha de Nacimiento"
-            :class="{'border-red-500':errors.birthdate}">
-                
-            <p v-if="errors.birthdate" class="text-sm text-red-500 mb-2">
-            {{ errors.birthdate }}
-            </p>
-        </div>
-
-        <div class='grid grid-cols-2 gap-2'>
-            <input
-            v-model="peso"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Peso (Kg)"
-            :class="{ 'border-red-500': errors.peso }"
-            />
-            <p v-if="errors.peso" class="text-sm text-red-500 mb-2">
-                {{ errors.peso }}
-            </p>
-            
-            <input
-            v-model="altura"
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-            placeholder="Altura (cm)"
-            :class="{ 'border-red-500': errors.altura }"
+        <!-- Identificación -->
+        <div>
+          <label for="student-id" class="block text-sm font-medium text-gray-700 mb-1">
+            Identificación del Estudiante
+          </label>
+          <input
+            id="student-id"
+            v-model="form.id"
+            type="text"
+            required
+            class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+            :class="{ 'border-red-500': errors.id }"
           />
-          <p v-if="errors.altura" class="text-sm text-red-500 mb-2">
-            {{ errors.altura }}
-          </p>
-
+          <p v-if="errors.id" class="mt-1 text-sm text-red-500">{{ errors.id }}</p>
         </div>
 
-        <div class='grid grid-cols-2 gap-2'>
-            <input 
-            v-model="porcentajegrasa" 
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" 
-            placeholder="Porcentaje Grasa Corporal"
-            :class="{'border-red-500':errors.porcentajegrasa}">
-            
-            <p v-if="errors.porcentajegrasa" class="text-sm text-red-500 mb-2">{{ errors.porcentajegrasa }}</p>
-
-            <input 
-            v-model="porcentajemusculo" 
-            
-            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2" 
-            placeholder="Porcentaje Masa Muscular"
-            :class="{'border-red-500':errors.porcentajemusculo}">
-                
-            <p v-if="errors.porcentajemusculo" class="text-sm text-red-500 mb-2">
-            {{ errors.porcentajemusculo }}
-            </p>
+        <!-- Nombres / Apellidos -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="firstnames" class="block text-sm font-medium text-gray-700 mb-1">
+              Nombres
+            </label>
+            <input
+              id="firstnames"
+              v-model="form.firstnames"
+              type="text"
+              required
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.firstnames }"
+            />
+            <p v-if="errors.firstnames" class="mt-1 text-sm text-red-500">{{ errors.firstnames }}</p>
+          </div>
+          <div>
+            <label for="lastnames" class="block text-sm font-medium text-gray-700 mb-1">
+              Apellidos
+            </label>
+            <input
+              id="lastnames"
+              v-model="form.lastnames"
+              type="text"
+              required
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.lastnames }"
+            />
+            <p v-if="errors.lastnames" class="mt-1 text-sm text-red-500">{{ errors.lastnames }}</p>
+          </div>
         </div>
-        <input
-                v-model="preexistencias"
-                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-sportu-400 hover:border-slate-300 shadow-sm focus:shadow mb-2"
-                placeholder="Preexistencias Médicas"
-                :class="{ 'border-red-500': errors.preexistencias }"
-                />
-                <p v-if="errors.preexistencias" class="text-sm text-red-500 mb-2">
-                {{ errors.preexistencias }}
-                </p>
 
+        <!-- Género / Fecha de nacimiento -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">
+              Género
+            </label>
+            <select
+              id="gender"
+              v-model="form.gender"
+              required
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.gender }"
+            >
+              <option value="" disabled>Selecciona</option>
+              <option value="M">M</option>
+              <option value="F">F</option>
+              <option value="O">O</option>
+            </select>
+            <p v-if="errors.gender" class="mt-1 text-sm text-red-500">{{ errors.gender }}</p>
+          </div>
+          <div>
+            <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">
+              Fecha de Nacimiento
+            </label>
+            <input
+              id="birthdate"
+              v-model="form.birthdate"
+              type="date"
+              required
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.birthdate }"
+            />
+            <p v-if="errors.birthdate" class="mt-1 text-sm text-red-500">{{ errors.birthdate }}</p>
+          </div>
+        </div>
 
-        <div class="flex justify-center p-10 pt-2 gap-7">
+        <!-- Peso / Altura -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="peso" class="block text-sm font-medium text-gray-700 mb-1">
+              Peso (kg)
+            </label>
+            <input
+              id="peso"
+              v-model="form.peso"
+              type="number"
+              step="0.1"
+              min="0"
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.peso }"
+            />
+            <p v-if="errors.peso" class="mt-1 text-sm text-red-500">{{ errors.peso }}</p>
+          </div>
+          <div>
+            <label for="altura" class="block text-sm font-medium text-gray-700 mb-1">
+              Altura (cm)
+            </label>
+            <input
+              id="altura"
+              v-model="form.altura"
+              type="number"
+              step="0.1"
+              min="0"
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.altura }"
+            />
+            <p v-if="errors.altura" class="mt-1 text-sm text-red-500">{{ errors.altura }}</p>
+          </div>
+        </div>
+
+        <!-- % Grasa / % Músculo -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="porcentajegrasa" class="block text-sm font-medium text-gray-700 mb-1">
+              % Grasa
+            </label>
+            <input
+              id="porcentajegrasa"
+              v-model="form.porcentajegrasa"
+              type="number"
+              step="0.1"
+              min="0"
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.porcentajegrasa }"
+            />
+            <p v-if="errors.porcentajegrasa" class="mt-1 text-sm text-red-500">{{ errors.porcentajegrasa }}</p>
+          </div>
+          <div>
+            <label for="porcentajemusculo" class="block text-sm font-medium text-gray-700 mb-1">
+              % Músculo
+            </label>
+            <input
+              id="porcentajemusculo"
+              v-model="form.porcentajemusculo"
+              type="number"
+              step="0.1"
+              min="0"
+              class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+              :class="{ 'border-red-500': errors.porcentajemusculo }"
+            />
+            <p v-if="errors.porcentajemusculo" class="mt-1 text-sm text-red-500">{{ errors.porcentajemusculo }}</p>
+          </div>
+        </div>
+
+        <!-- Preexistencias -->
+        <div>
+          <label for="preexistencias" class="block text-sm font-medium text-gray-700 mb-1">
+            Preexistencias Médicas
+          </label>
+          <input
+            id="preexistencias"
+            v-model="form.preexistencias"
+            type="text"
+            class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
+            :class="{ 'border-red-500': errors.preexistencias }"
+          />
+          <p v-if="errors.preexistencias" class="mt-1 text-sm text-red-500">{{ errors.preexistencias }}</p>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex justify-between items-center mt-6">
+          <button
+            type="button"
+            @click="goBack"
+            class="px-4 py-2 border rounded hover:bg-gray-100"
+          >
+            Regresar
+          </button>
           <button
             type="button"
             @click="handleSubmit"
             :disabled="isLoading"
-            class="w-full bg-sportu-600 hover:bg-sportu-700 disabled:bg-sportu-400 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
+            class="px-6 py-2 bg-sportu-600 text-white rounded disabled:opacity-50"
           >
-            <span v-if="isLoading">Registrando...</span>
-            <span v-else>Registrar</span>
+            <span v-if="isLoading">Procesando…</span>
+            <span v-else>{{ isEditMode ? 'Actualizar' : 'Registrar' }}</span>
           </button>
         </div>
-        <h1 class="text-xs font-bold text-secondary-600 mb-2">
-          <button class ='color-blue-600 hover:underline flex'
-            @click="$router.push('/login')">
-          Regresar
-        </button>
-        </h1>
 
-        <!-- Mensaje de resultado del registro -->
+        <!-- Mensaje -->
         <div
           v-if="signupMessage"
           class="mt-4 p-3 rounded-md text-center"
-          :class="
-            signupMessage.includes('exitoso')
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
-          "
+          :class="signupMessage.includes('exitoso')
+            ? 'bg-green-100 text-green-700'
+            : 'bg-red-100 text-red-700'"
         >
           {{ signupMessage }}
         </div>
+
       </div>
     </div>
   </div>
 </template>
 
-<style>
-/* css */
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStudents } from '@/composables/useStudents'
+
+const router = useRouter()
+const route  = useRoute()
+const { updateStudent } = useStudents()
+const groupId = Number(route.query.groupId)
+const studentIdParam = route.query.studentId
+const isEditMode = Boolean(studentIdParam)
+
+if (!groupId) router.replace({ name: 'Grupos' })
+
+const form = ref({
+  id: '',
+  firstnames: '',
+  lastnames: '',
+  birthdate: '',
+  gender: '',
+  peso: '',
+  altura: '',
+  porcentajegrasa: '',
+  porcentajemusculo: '',
+  preexistencias: ''
+})
+
+const errors = ref({})
+const isLoading = ref(false)
+const signupMessage = ref('')
+
+// Carga datos en modo edición
+onMounted(async () => {
+  if (isEditMode) {
+    const { success, students } = await window.electronAPI.student.getAll({ groupId })
+    if (success) {
+      const record = students.find(s => s.id.toString() === studentIdParam)
+      if (record) {
+        Object.assign(form.value, {
+          id:                String(record.id),
+          firstnames:        record.firstnames,
+          lastnames:         record.lastnames,
+          birthdate:         record.birthdate,
+          gender:            record.gender,
+          peso:              record.peso,
+          altura:            record.altura,
+          porcentajegrasa:   record.porcentajegrasa,
+          porcentajemusculo: record.porcentajemusculo,
+          preexistencias:    record.preexistencias
+        })
+      }
+    }
+  }
+})
+
+function goBack() {
+  router.push({ name: 'GrupoDashboard', params: { id: groupId } })
+}
+
+function validateForm() {
+  errors.value = {}
+  if (!form.value.id)           errors.value.id           = 'La identificación es obligatoria.'
+  if (!form.value.firstnames)   errors.value.firstnames   = 'El nombre es obligatorio.'
+  if (!form.value.lastnames)    errors.value.lastnames    = 'El apellido es obligatorio.'
+  if (!form.value.birthdate)    errors.value.birthdate    = 'La fecha de nacimiento es obligatoria.'  
+  if (!form.value.gender)       errors.value.gender       = 'El género es obligatorio.'
+
+  ['peso','altura','porcentajegrasa','porcentajemusculo'].forEach(field => {
+    const val = form.value[field]
+    if (val === '') {
+      form.value[field] = null
+    } else if (isNaN(Number(val))) {
+      errors.value[field] = 'Debe ser un número válido.'
+    }
+  })
+
+  return Object.keys(errors.value).length === 0
+}
+
+async function handleSubmit() {
+  if (!validateForm()) {
+    signupMessage.value = 'Corrige los errores en el formulario.'
+    return
+  }
+
+  isLoading.value = true
+  signupMessage.value = ''
+
+  const payload = {
+    id:                 Number(form.value.id),
+    groupId,
+    firstnames:         form.value.firstnames,
+    lastnames:          form.value.lastnames,
+    birthdate:          form.value.birthdate,
+    gender:             form.value.gender,
+    peso:               form.value.peso != null ? Number(form.value.peso) : null,
+    altura:             form.value.altura != null ? Number(form.value.altura) : null,
+    porcentajegrasa:    form.value.porcentajegrasa != null ? Number(form.value.porcentajegrasa) : null,
+    porcentajemusculo:  form.value.porcentajemusculo != null ? Number(form.value.porcentajemusculo) : null,
+    preexistencias:     form.value.preexistencias || null
+  }
+
+  try {
+    const response = isEditMode
+      ? await updateStudent(payload)
+      : await window.electronAPI.student.create(payload)
+
+    if (!response.success) {
+      if (typeof response.error === 'object') {
+        errors.value = response.error
+        signupMessage.value = 'Corrige los errores en el formulario.'
+      } else {
+        signupMessage.value = response.error
+      }
+      return
+    }
+
+    signupMessage.value = isEditMode ? '¡Actualizado exitosamente!' : '¡Registro exitoso!'
+    setTimeout(goBack, 800)
+  } catch (e) {
+    console.error(e)
+    signupMessage.value = 'Error interno del sistema.'
+  } finally {
+    isLoading.value = false
+  }
+}
+</script>
+
+<style scoped>
+/* Ajustes adicionales si los necesites */
 </style>
