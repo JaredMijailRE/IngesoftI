@@ -43,11 +43,12 @@ const irAGrupo = (id) => {
 
 <template>
   <div class="min-h-screen bg-sportu-400 py-10 px-6">
-    <Breadcrumb :items="[
-        { label: 'Inicio', to: '/' },
-        { label: 'Grupos' }
-        ]" />
-    <div v-for="grupo in grupos" :key="grupo.id" class="mb-6">
+    <!-- Breadcrumb -->
+    <Breadcrumb :items="[{ label: 'Inicio', to: '/' }, { label: 'Grupos' }]" />
+
+
+    <!-- Botón Nuevo Grupo -->
+    <div class="flex justify-end mb-4">
       <button
         @click="toggleGrupo(grupo.id)"
         class="bg-white text-left w-full px-6 py-4 text-xl font-semibold shadow-md rounded-lg flex justify-between items-center"
@@ -57,31 +58,64 @@ const irAGrupo = (id) => {
           <Icon :icon="grupoExpandido === grupo.id ? 'mdi:chevron-up' : 'mdi:chevron-down'" />
         </span>
       </button>
+    </div>
 
-      <div
-        v-if="grupoExpandido === grupo.id"
-        class="bg-white mt-2 p-6 rounded-lg shadow-inner flex flex-col"
+
+    <!-- Cargando / Error -->
+    <div v-if="isLoading" class="text-white">Cargando grupos…</div>
+    <div v-else-if="loadError" class="text-red-200">{{ loadError }}</div>
+
+
+    <!-- Lista de Grupos -->
+    <div v-else class="space-y-4 mt-6">
+      <BaseCard
+        v-for="group in groups"
+        :key="group.id"
+        class="transition-shadow"
       >
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold">{{ grupo.curso }}</h2>
-          <button
-            @click="irAGrupo(grupo.id)"
-            class="bg-emerald-600 text-white font-semibold px-4 py-1.5 rounded hover:bg-emerald-700"
-          >
-            Ir a Grupo
-          </button>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6">
-          <!-- Listado -->
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="font-medium">Listado ({{ grupo.listado.length }})</h3>
-              <a href="#" class="text-sm text-sportu-600 hover:underline">Ver stats</a>
+        <!-- Header clickeable + botón Ir a Grupo -->
+        <template #header>
+          <div class="w-full flex justify-between items-center px-4 py-3">
+            <button
+              @click="toggle(group.id)"
+              class="flex-1 text-left"
+            >
+              <span class="text-lg font-semibold text-gray-800">
+                {{ group.name }}
+              </span>
+            </button>
+            <div class="flex items-center space-x-2">
+              <button
+                @click.stop="goToDashboard(group.id)"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-3 py-1 rounded"
+              >
+                Ir a Grupo
+              </button>
+              <Icon
+                @click="toggle(group.id)"
+                :icon="expandedId === group.id ? 'mdi:chevron-up' : 'mdi:chevron-down'"
+                class="text-2xl text-gray-600 cursor-pointer"
+              />
             </div>
-            <ul class="space-y-2">
-              <li v-for="(nombre, i) in grupo.listado" :key="i" class="bg-gray-100 p-2 rounded">
-                {{ nombre }}
+          </div>
+        </template>
+
+
+        <!-- Body con preview de estudiantes -->
+        <template #body v-if="expandedId === group.id">
+          <div class="p-4 bg-white rounded-b-lg">
+            <h2 class="text-xl font-bold text-gray-700 mb-3">
+              {{ group.objectives || 'Sin objetivos definidos' }}
+            </h2>
+
+
+            <ul class="space-y-2 mb-4">
+              <li
+                v-for="stu in group.students"
+                :key="stu.id"
+                class="border p-2 rounded"
+              >
+                {{ stu.firstName }} {{ stu.lastName }}
               </li>
             </ul>
           </div>
@@ -104,6 +138,40 @@ const irAGrupo = (id) => {
   </div>
 </template>
 
+
+<script setup>
+import { ref }               from 'vue'
+import { useRouter }         from 'vue-router'
+import { Icon }              from '@iconify/vue'
+import Breadcrumb            from '@/components/ui/Breadcrumb.vue'
+import BaseCard              from '@/components/BaseCard.vue'
+import { useGroups }         from '@/composables/useGroups'
+
+
+const router = useRouter()
+const { groups, isLoading, loadError } = useGroups()
+const expandedId = ref(null)
+
+
+function toggle(id) {
+  expandedId.value = expandedId.value === id ? null : id
+}
+
+
+function goToNewGroup() {
+  router.push({ name: 'FormGroup' })
+}
+
+
+function goToDashboard(id) {
+  router.push({ name: 'GrupoDashboard', params: { id } })
+}
+</script>
+
+
 <style scoped>
 /* Si tienes colores personalizados como sportu-600, asegúrate que están definidos en tailwind.config.js */
 </style>
+
+
+
