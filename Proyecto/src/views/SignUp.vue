@@ -52,21 +52,6 @@ function handleSubmit() {
   if (!lastnames.value) {
     errors.value.lastnames = 'El apellido es obligatorio.'
   }
-  if (!birthdate.value) {
-    errors.value.username = 'La fecha de nacimiento es obligatoria.'
-  } else {
-    const enteredDate = new Date(birthdate.value)
-    const today = new Date()
-
-    if (isNaN(enteredDate)) {
-      errors.value.birthdate = 'La fecha ingresada no es válida.'
-    } else if (enteredDate > today) {
-      errors.value.birthdate = 'La fecha de nacimiento no puede ser futura.'
-    }
-  }
-  if (!gender.value) {
-    errors.value.username = 'El genero es obligatorio.'
-  }
 
   if (!birthdate.value) {
     errors.value.username = 'La fecha de nacimiento es obligatoria.'
