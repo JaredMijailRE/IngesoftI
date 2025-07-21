@@ -16,7 +16,20 @@
 
     <!-- Cargando / Error -->
     <div v-if="isLoading" class="text-white">Cargando grupos…</div>
-    <div v-else-if="loadError" class="text-red-200">{{ loadError }}</div>
+    <div v-else-if="loadError" class="space-y-4">
+      <div class="text-red-200">{{ loadError }}</div>
+      <!-- Botón de reintento si hay problema con la base de datos -->
+      <div v-if="!dbInitialized" class="flex justify-center">
+        <button
+          @click="retryDatabaseInit"
+          class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2 rounded flex items-center space-x-2"
+          :disabled="isLoading"
+        >
+          <Icon icon="mdi:refresh" class="text-lg" />
+          <span>Reintentar Conexión</span>
+        </button>
+      </div>
+    </div>
 
     <!-- Lista de Grupos -->
     <div v-else class="space-y-4 mt-6">
@@ -88,7 +101,7 @@ import BaseCard from '@/components/BaseCard.vue'
 import { useGroups } from '@/composables/useGroups'
 
 const router = useRouter()
-const { groups, isLoading, loadError } = useGroups()
+const { groups, isLoading, loadError, dbInitialized, retryDatabaseInit } = useGroups()
 const expandedId = ref(null)
 
 function toggle(id) {

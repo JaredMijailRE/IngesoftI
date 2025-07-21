@@ -155,10 +155,26 @@ ipcMain.handle('group:create', async (_evt, data) => {
 
     const userId = storage.auth_user.id
 
-    await dbInstance.ProfesorGrupo.create({
-      profesor_id: userId,
-      grupo_id: nuevo.id,
-    })
+    // Verificar si la relación profesor-grupo ya existe antes de crearla
+    try {
+      const existingRelation = await dbInstance.ProfesorGrupo.findOne({
+        where: {
+          profesor_id: userId,
+          grupo_id: nuevo.id,
+        }
+      })
+
+      if (!existingRelation) {
+        await dbInstance.ProfesorGrupo.create({
+          profesor_id: userId,
+          grupo_id: nuevo.id,
+        })
+      }
+    } catch (relationError) {
+      console.error('Error creating profesor-grupo relation:', relationError.message)
+      // Continuar sin fallar, ya que el grupo se creó exitosamente
+      // La relación se puede crear manualmente más tarde si es necesario
+    }
 
     return {
       success: true,
@@ -173,6 +189,26 @@ ipcMain.handle('group:create', async (_evt, data) => {
   } catch (err) {
     console.error('Error creating group:', err)
     return { success: false, error: err.message }
+  }
+})
+
+// Database status and retry handlers
+ipcMain.handle('db:status', async () => {
+  return { 
+    initialized: dbInstance !== null,
+    models: dbInstance ? Object.keys(dbInstance) : []
+  }
+})
+
+ipcMain.handle('db:retry', async () => {
+  try {
+    console.log('🔄 Retrying database initialization...')
+    await initDatabase()
+    console.log('✅ Database reinitialized successfully')
+    return { success: true, message: 'Database initialized successfully' }
+  } catch (error) {
+    console.error('❌ Database retry failed:', error)
+    return { success: false, error: error.message }
   }
 })
 
@@ -882,14 +918,35 @@ ipcMain.handle('user:getPlanes', async (event, userId) => {
 
 // This method will be called when Electron has finished initialization
 app.whenReady().then(async () => {
-  try {
-    // Initialize database first
-    await initDatabase()
-    console.log('Database initialized successfully')
-  } catch (error) {
-    console.error('Failed to initialize database:', error)
+  let dbInitialized = false
+  let retryCount = 0
+  const maxRetries = 3
+
+  // Función para reintentar la inicialización de la base de datos
+  const retryDatabaseInit = async () => {
+    while (!dbInitialized && retryCount < maxRetries) {
+      try {
+        retryCount++
+        console.log(`Attempting database initialization (attempt ${retryCount}/${maxRetries})...`)
+        await initDatabase()
+        console.log('✅ Database initialized successfully')
+        dbInitialized = true
+      } catch (error) {
+        console.error(`❌ Failed to initialize database (attempt ${retryCount}/${maxRetries}):`, error.message)
+        
+        if (retryCount >= maxRetries) {
+          console.error('💥 Maximum retry attempts reached. Application will show error state.')
+          // Marcar como inicializado con error para permitir que la UI maneje el estado
+          dbInitialized = true
+        } else {
+          // Esperar 2 segundos antes del siguiente intento
+          await new Promise(resolve => setTimeout(resolve, 2000))
+        }
+      }
+    }
   }
 
+  await retryDatabaseInit()
   createWindow()
 
   app.on('activate', () => {
