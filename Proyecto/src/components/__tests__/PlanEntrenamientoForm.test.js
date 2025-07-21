@@ -11,14 +11,14 @@ vi.mock('@/composables/useApi', () => ({
   useApi: () => ({
     createPlan: mockCreatePlan,
     loading: mockLoading,
-    error: mockError
-  })
+    error: mockError,
+  }),
 }))
 
 describe('PlanEntrenamientoForm', () => {
   const mockEjercicios = [
     { id: 1, name: 'Flexiones' },
-    { id: 2, name: 'Sentadillas' }
+    { id: 2, name: 'Sentadillas' },
   ]
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('PlanEntrenamientoForm', () => {
 
   it('debe renderizar el formulario correctamente', () => {
     const wrapper = mount(PlanEntrenamientoForm, {
-      props: { ejercicios: mockEjercicios }
+      props: { ejercicios: mockEjercicios },
     })
 
     expect(wrapper.find('input[type="text"]').exists()).toBe(true)
@@ -41,7 +41,7 @@ describe('PlanEntrenamientoForm', () => {
 
   it('debe validar campos requeridos', async () => {
     const wrapper = mount(PlanEntrenamientoForm, {
-      props: { ejercicios: mockEjercicios }
+      props: { ejercicios: mockEjercicios },
     })
 
     // Intentar enviar sin datos
@@ -58,14 +58,14 @@ describe('PlanEntrenamientoForm', () => {
     mockCreatePlan.mockResolvedValue({ id: 1 })
 
     const wrapper = mount(PlanEntrenamientoForm, {
-      props: { ejercicios: mockEjercicios }
+      props: { ejercicios: mockEjercicios },
     })
 
     // Llenar formulario
     await wrapper.find('input[type="text"]').setValue('Plan de prueba')
     await wrapper.find('select').setValue('Fuerza')
     await wrapper.find('textarea').setValue('Descripción del plan')
-    
+
     // Seleccionar ejercicio
     await wrapper.findAll('input[type="checkbox"]')[0].setChecked()
 
@@ -77,7 +77,7 @@ describe('PlanEntrenamientoForm', () => {
       name: 'Plan de prueba',
       type: 'Fuerza',
       description: 'Descripción del plan',
-      ejercicios: [1]
+      ejercicios: [1],
     })
   })
 
@@ -85,7 +85,7 @@ describe('PlanEntrenamientoForm', () => {
     mockCreatePlan.mockResolvedValue({ id: 1 })
 
     const wrapper = mount(PlanEntrenamientoForm, {
-      props: { ejercicios: mockEjercicios }
+      props: { ejercicios: mockEjercicios },
     })
 
     // Llenar y enviar formulario
@@ -95,7 +95,7 @@ describe('PlanEntrenamientoForm', () => {
 
     // Verificar evento emitido
     expect(wrapper.emitted('created')).toBeTruthy()
-    
+
     // Verificar que se reseteó el formulario
     expect(wrapper.find('input[type="text"]').element.value).toBe('')
     expect(wrapper.find('select').element.value).toBe('')
@@ -105,11 +105,11 @@ describe('PlanEntrenamientoForm', () => {
     mockLoading.value = true
 
     const wrapper = mount(PlanEntrenamientoForm, {
-      props: { ejercicios: mockEjercicios }
+      props: { ejercicios: mockEjercicios },
     })
 
     const submitButton = wrapper.find('button[type="submit"]')
     expect(submitButton.text()).toBe('Creando...')
     expect(submitButton.attributes('disabled')).toBeDefined()
   })
-}) 
+})

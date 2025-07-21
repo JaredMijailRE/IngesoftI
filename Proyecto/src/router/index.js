@@ -2,6 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
+    path: '/main',
+    name: 'Main',
+    component: () => import('@/views/Main.vue'),
+    meta: { title: 'Main' },
+  },
+  {
     path: '/',
     name: 'Login',
     component: () => import('@/views/LogIn.vue'),
@@ -13,7 +19,7 @@ const routes = [
     path: '/dashboard',
     name: 'PlanEntrenamientoManager',
     component: () => import('@/views/PlanEntrenamientoManager.vue'),
-    meta: {title: 'Gestión de Planes y Ejercicios'}
+    meta: { title: 'Gestión de Planes y Ejercicios' },
   },
   {
     path: '/signup',
@@ -21,6 +27,30 @@ const routes = [
     component: () => import('@/views/SignUp.vue'),
     meta: {
       title: 'Sign Up',
+    },
+  },
+  {
+    path: '/selecteventtype',
+    name: 'SelectEventType',
+    component: () => import('@/views/SelectEventType.vue'),
+    meta: {
+      title: 'Select Event Type',
+    },
+  },
+  {
+    path: '/sportevent',
+    name: 'SportEvent',
+    component: () => import('@/views/SportEvent.vue'),
+    meta: {
+      title: 'Sport Event',
+    },
+  },
+  {
+    path: '/classevent',
+    name: 'ClassEvent',
+    component: () => import('@/views/ClassEvent.vue'),
+    meta: {
+      title: 'Class Event',
     },
   },
   {
@@ -45,7 +75,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // Update document title
   document.title = to.meta.title || 'USport'
-  
+
   // Proteger rutas que requieren autenticación
   if (to.path === '/dashboard' && !isAuthenticated()) {
     next('/')

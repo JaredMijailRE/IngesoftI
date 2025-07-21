@@ -6,7 +6,7 @@
         :key="notification.id"
         :class="[
           'max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden',
-          notification.type === 'error' ? 'ring-red-500' : 'ring-green-500'
+          notification.type === 'error' ? 'ring-red-500' : 'ring-green-500',
         ]"
       >
         <div class="p-4">
@@ -15,12 +15,14 @@
               <div
                 :class="[
                   'w-6 h-6 rounded-full flex items-center justify-center',
-                  notification.type === 'error' 
-                    ? 'bg-red-100 text-red-600' 
-                    : 'bg-green-100 text-green-600'
+                  notification.type === 'error'
+                    ? 'bg-red-100 text-red-600'
+                    : 'bg-green-100 text-green-600',
                 ]"
               >
-                <span v-if="notification.type === 'error'" class="text-sm">✕</span>
+                <span v-if="notification.type === 'error'" class="text-sm"
+                  >✕</span
+                >
                 <span v-else class="text-sm">✓</span>
               </div>
             </div>
@@ -56,7 +58,7 @@ const appStore = useAppStore()
 
 const notifications = computed(() => appStore.notifications)
 
-const removeNotification = (id) => {
+const removeNotification = id => {
   appStore.removeNotification(id)
 }
 </script>
@@ -80,4 +82,4 @@ const removeNotification = (id) => {
 .notification-move {
   transition: transform 0.3s ease;
 }
-</style> 
+</style>

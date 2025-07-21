@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Authentication methods
   auth: {
     login: (credentials) => ipcRenderer.invoke('auth:login', credentials),
+    signup: (userData) => ipcRenderer.invoke('auth:signup', userData),
     logout: () => ipcRenderer.invoke('auth:logout'),
     checkAuth: () => ipcRenderer.invoke('auth:check'),
     getCurrentUser: () => ipcRenderer.invoke('auth:getCurrentUser')
@@ -24,6 +25,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
     delete: (id) => ipcRenderer.invoke('planes:delete', id)
   },
   
+  user: {
+    getGrupos: (userId) => ipcRenderer.invoke('user:getGrupos', userId),
+    getEventos: (userId) => ipcRenderer.invoke('user:getEventos', userId),
+    getGrupos2: (userId) => ipcRenderer.invoke('user:getGrupos2', userId),
+    getPlanes: (userId) => ipcRenderer.invoke('user:getPlanes', userId),
+  },
+
   // LocalStorage methods
   storage: {
     get: (key) => ipcRenderer.invoke('storage:get', key),
@@ -38,11 +46,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
     openExternal: (url) => ipcRenderer.invoke('app:openExternal'),
     sendMessage: (message) => ipcRenderer.invoke('app:sendMessage', message)
   },
-  
   // Event listeners
   events: {
     onAuthChange: (callback) => ipcRenderer.on('auth:changed', callback),
     onStorageChange: (callback) => ipcRenderer.on('storage:changed', callback),
     removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
+  },
+  classEvent: {
+    create: (data) => ipcRenderer.invoke('classEvent:create', data)
+  },
+  sportEvent: {
+    create: (data) => ipcRenderer.invoke('sportEvent:create', data)
   }
 }) 

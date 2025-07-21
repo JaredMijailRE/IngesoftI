@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const { Op } = require('sequelize')
+const { title } = require('process')
 
 // Check if we're in development mode
 const isDev = !app.isPackaged
@@ -13,6 +14,8 @@ let currentUser = null
 // Database connection
 let dbInstance = null
 let ProfesorModel = null
+let SportEventModel = null
+let ClassEventModel = null
 
 // Initialize database connection using Sequelize
 const initDatabase = async () => {
@@ -23,6 +26,8 @@ const initDatabase = async () => {
     
     dbInstance = models
     ProfesorModel = models.Profesor
+    SportEventModel = models.Evento
+    ClassEventModel = models.Clase
     
     console.log('Connected to database via Sequelize')
   } catch (error) {
@@ -92,6 +97,74 @@ function createWindow() {
 // IPC Handlers
 
 // Authentication handlers
+ipcMain.handle('auth:signup', async (event, userData) => {
+  try {
+    if (!ProfesorModel) {
+      throw new Error('Database not initialized')
+    }
+
+    // Verificar si el email o username ya existen
+    const existingUser = await ProfesorModel.findOne({
+      where: {
+        [Op.or]: [
+          { email: userData.email },
+          { username: userData.username }
+        ]
+      }
+    })
+
+    if (existingUser) {
+      if (existingUser.email === userData.email) {
+        return { success: false, error: 'El correo electrónico ya está registrado' }
+      } else {
+        return { success: false, error: 'El nombre de usuario ya está en uso' }
+      }
+    }
+
+    // Hashear la contraseña
+    const passwordHash = await bcrypt.hash(userData.password, 12)
+
+    // Crear el nuevo profesor
+    const newProfesor = await ProfesorModel.create({
+      email: userData.email,
+      username: userData.username,
+      password_hash: passwordHash,
+      first_name: userData.firstnames,
+      last_name: userData.lastnames,
+      birth_date: userData.birthdate && userData.birthdate.trim() !== '' ? userData.birthdate : null,
+      gender: userData.gender || null,
+      medical_conditions: userData.medical_conditions || null
+    })
+
+    // Crear usuario actual
+    currentUser = {
+      id: newProfesor.id,
+      username: newProfesor.username,
+      email: newProfesor.email,
+      first_name: newProfesor.first_name,
+      last_name: newProfesor.last_name
+    }
+
+    // Guardar en storage
+    storage.auth_user = currentUser
+    storage.auth_token = 'token_' + Date.now()
+    saveStorage()
+
+    // Notificar cambio
+    BrowserWindow.getAllWindows()[0]?.webContents.send('auth:changed', { user: currentUser, isAuthenticated: true })
+
+    return { 
+      success: true, 
+      user: currentUser,
+      message: 'Profesor registrado exitosamente'
+    }
+
+  } catch (error) {
+    console.error('Signup error:', error)
+    return { success: false, error: 'Error del servidor: ' + error.message }
+  }
+})
+
 ipcMain.handle('auth:login', async (event, credentials) => {
   try {
     if (!ProfesorModel) {
@@ -164,7 +237,156 @@ ipcMain.handle('auth:getCurrentUser', async () => {
   return storage.auth_user
 })
 
-// Ejercicios handlers
+ipcMain.handle('sportEvent:create', async (event, data) => {
+  try {
+    if (!SportEventModel) throw new Error('Database not initialized');
+
+    // Validación de campos requeridos
+    const errors = {};
+    if (!data.title) errors.title = 'El titulo es obligatorio.';
+    //if (!data.date) errors.date = 'La fecha es obligatoria.';
+
+    // Validación de números
+    ['precio'].forEach(field => {
+      if (data[field] && isNaN(Number(data[field]))) {
+        errors[field] = `El campo ${field} debe ser un número válido.`;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      return { success: false, error: errors };
+    }
+
+    // Crear Evento tipo Deportivo
+    const newSportEvent = await SportEventModel.create({
+      title: data.title,
+      description: data.description || null,
+      location: data.localization || null,
+      price: data.price || null,
+      event_date: data.date && data.date.trim() !== '' ? data.date : null,
+      link: data.link || null
+    });
+
+    return {
+      success: true,
+      user: {
+        title: newSportEvent.title,
+        description: newSportEvent.description,
+        location: newSportEvent.location,
+        price: newSportEvent.price,
+        event_date: newSportEvent.event_date,
+        link: newSportEvent.link
+      },
+      message: 'Evento registrado exitosamente'
+    };
+  } catch (error) {
+    console.error('Event create error:', error);
+    return { success: false, error: 'Error del servidor: ' + error.message };
+  }
+});
+
+ipcMain.handle('classEvent:create', async (event, data) => {
+  try {
+    if (!ClassEventModel) throw new Error('Database not initialized');
+
+    // Validación de campos requeridos
+    const errors = {};
+    if (!data.groupid) errors.groupid = 'El id del Grupo es obligatorio.';
+    if (!data.planid) errors.planid = 'El id del plan es obligatorio.';
+    if (!data.starttime) errors.starttime = 'Se debe definir el inicio de la clase.';
+    //if (!data.date) errors.date = 'La fecha es obligatoria.';
+
+    // Validación de números
+    ['precio'].forEach(field => {
+      if (data[field] && isNaN(Number(data[field]))) {
+        errors[field] = `El campo ${field} debe ser un número válido.`;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      return { success: false, error: errors };
+    }
+
+        // Crear Evento tipo Deportivo
+    const newClassEvent = await ClassEventModel.create({
+      grupo_id: data.groupid,
+      plan_id: data.planid,
+      class_date: data.date && data.date.trim() !== '' ? data.date : null,
+      recurrence_rule: data.recurrence || null,
+      start_time: data.starttime,
+      end_time: data.finishtime || null
+    });
+
+    return {
+      success: true,
+      user: {
+        grupo_id: newClassEvent.grupo_id,
+        plan_id: newClassEvent.plan_id,
+        class_date: newClassEvent.class_date,
+        recurrence_rule: newClassEvent.recurrence_rule,
+        start_time: newClassEvent.start_time,
+        end_time: newClassEvent.end_time
+      },
+      message: 'Evento registrado exitosamente'
+    };
+  } catch (error) {
+    console.error('Event create error:', error);
+    return { success: false, error: 'Error del servidor: ' + error.message };
+  }
+});
+
+
+// API handlers
+ipcMain.handle('user:getGrupos', async (event, userId) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const { Profesor, Grupo } = await getModels()
+
+    const profesor = await Profesor.findByPk(userId, {
+      include: {
+        model: Grupo,
+        through: { attributes: [] } // evita retornar datos de la tabla intermedia
+      }
+    })
+
+    if (!profesor) {
+      return { success: false, error: 'Profesor no encontrado' }
+    }
+
+    return { success: true, data: profesor.Grupos }
+  } catch (err) {
+    console.error('Error en user:getGrupos:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('user:getEventos', async (event, userId) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const { Profesor, Grupo, Evento } = await getModels()
+
+    const profesor = await Profesor.findByPk(userId, {
+      include: {
+        model: Grupo,
+        include: Evento, // incluir eventos dentro de cada grupo
+        through: { attributes: [] }
+      }
+    })
+
+    if (!profesor) {
+      return { success: false, error: 'Profesor no encontrado' }
+    }
+
+    // Extraer eventos de todos los grupos
+    const eventos = profesor.Grupos.flatMap(grupo => grupo.Eventos)
+
+    return { success: true, data: eventos }
+  } catch (err) {
+    console.error('Error en user:getEventos:', err)
+    return { success: false, error: err.message }
+  }
+})
+
 ipcMain.handle('ejercicios:getAll', async () => {
   try {
     const { getModels } = await import('../db/index.js')
@@ -379,6 +601,38 @@ ipcMain.handle('app:openExternal', async (event, url) => {
 ipcMain.handle('app:sendMessage', async (event, message) => {
   console.log('Message from renderer:', message)
   return { success: true }
+})
+
+ipcMain.handle('user:getGrupos2', async (event, userId) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { Grupo } = models
+
+    const grupos = await Grupo.findAll({
+      order: [['id', 'ASC']]
+    })
+    const result = grupos.map(g => ({ id: g.id, name: g.name }))
+    return { success: true, data: result }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('user:getPlanes', async (event, userId) => {
+  try {
+    const { getModels } = await import('../db/index.js')
+    const models = await getModels()
+    const { PlanEntrenamiento } = models
+
+    const planes = await PlanEntrenamiento.findAll({
+      order: [['id', 'ASC']]
+    })
+    const result = planes.map(p => ({ id: p.id, name: p.name }))
+    return { success: true, data: result }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
 })
 
 // This method will be called when Electron has finished initialization
