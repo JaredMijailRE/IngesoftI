@@ -139,6 +139,8 @@ function handleSubmit() {
             // Aquí podrías redirigir a la página principal o dashboard
             console.log('Usuario registrado:', response.user)
           }, 100)
+
+          router.push('/main')
         } else {
           signupMessage.value = `Error: ${response.error}`
         }
@@ -151,8 +153,6 @@ function handleSubmit() {
         isLoading.value = false
       })
   }
-
-  router.push('/main')
 }
 </script>
 
