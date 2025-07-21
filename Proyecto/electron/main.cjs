@@ -864,22 +864,6 @@ ipcMain.handle('app:sendMessage', async (event, message) => {
   return { success: true }
 })
 
-ipcMain.handle('user:getGrupos2', async (event, userId) => {
-  try {
-    const { getModels } = await import('../db/index.js')
-    const models = await getModels()
-    const { Grupo } = models
-
-    const grupos = await Grupo.findAll({
-      order: [['id', 'ASC']]
-    })
-    const result = grupos.map(g => ({ id: g.id, name: g.name }))
-    return { success: true, data: result }
-  } catch (error) {
-    return { success: false, error: error.message }
-  }
-})
-
 ipcMain.handle('user:getPlanes', async (event, userId) => {
   try {
     const { getModels } = await import('../db/index.js')
