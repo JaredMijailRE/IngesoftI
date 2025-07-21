@@ -71,7 +71,6 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// Form model y estado
 const form = ref({
   name: '',
   objectives: '',

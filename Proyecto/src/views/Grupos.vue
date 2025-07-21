@@ -3,6 +3,7 @@
     <!-- Breadcrumb -->
     <Breadcrumb :items="[{ label: 'Inicio', to: '/' }, { label: 'Grupos' }]" />
 
+
     <!-- Botón Nuevo Grupo -->
     <div class="flex justify-end mb-4">
       <button
@@ -14,9 +15,11 @@
       </button>
     </div>
 
+
     <!-- Cargando / Error -->
     <div v-if="isLoading" class="text-white">Cargando grupos…</div>
     <div v-else-if="loadError" class="text-red-200">{{ loadError }}</div>
+
 
     <!-- Lista de Grupos -->
     <div v-else class="space-y-4 mt-6">
@@ -52,12 +55,14 @@
           </div>
         </template>
 
+
         <!-- Body con preview de estudiantes -->
         <template #body v-if="expandedId === group.id">
           <div class="p-4 bg-white rounded-b-lg">
             <h2 class="text-xl font-bold text-gray-700 mb-3">
               {{ group.objectives || 'Sin objetivos definidos' }}
             </h2>
+
 
             <ul class="space-y-2 mb-4">
               <li
@@ -78,6 +83,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref }               from 'vue'
 import { useRouter }         from 'vue-router'
@@ -86,23 +92,31 @@ import Breadcrumb            from '@/components/ui/Breadcrumb.vue'
 import BaseCard              from '@/components/BaseCard.vue'
 import { useGroups }         from '@/composables/useGroups'
 
+
 const router = useRouter()
 const { groups, isLoading, loadError } = useGroups()
 const expandedId = ref(null)
+
 
 function toggle(id) {
   expandedId.value = expandedId.value === id ? null : id
 }
 
+
 function goToNewGroup() {
   router.push({ name: 'FormGroup' })
 }
+
 
 function goToDashboard(id) {
   router.push({ name: 'GrupoDashboard', params: { id } })
 }
 </script>
 
+
 <style scoped>
 /* Ajustes de estilo si los necesitas */
 </style>
+
+
+
