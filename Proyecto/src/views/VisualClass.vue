@@ -24,7 +24,7 @@ onMounted(async () => {
     // Llamada a la API de Electron para obtener la clase por ID
     const response = await window.electronAPI.classEvent.getById(classId)
     if (!response || !response.success || !response.classEvent) {
-      loadError.value = 'No se encontró la clase.'
+      // No asignar error, solo dejar los campos vacíos
       return
     }
     const clase = response.classEvent
@@ -47,43 +47,85 @@ function goBack() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9">
+  <div
+    class="min-h-screen bg-gradient-to-t from-sportu-200 from-10% via-sportu-300 via-20% to-sportu-600 py-9"
+  >
     <div class="flex justify-center">
-      <div class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/2 flex-col mx-8 px-8 py-8">
+      <div
+        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/2 flex-col mx-8 px-8 py-8"
+      >
         <h1 class="text-2xl text-center font-bold text-gray-700 mb-4">
           Detalles de la Clase
         </h1>
         <div v-if="isLoading" class="text-center py-8">Cargando clase...</div>
-        <div v-else-if="loadError" class="text-center py-8 text-red-600">{{ loadError }}</div>
         <template v-else>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block mb-1 text-sm font-medium text-gray-700">Grupo</label>
-              <input v-model="groupid" disabled class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70" />
+              <label class="block mb-1 text-sm font-medium text-gray-700"
+                >Grupo</label
+              >
+              <input
+                v-model="groupid"
+                disabled
+                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70"
+              />
             </div>
             <div>
-              <label class="block mb-1 text-sm font-medium text-gray-700">Plan</label>
-              <input v-model="planid" disabled class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70" />
+              <label class="block mb-1 text-sm font-medium text-gray-700"
+                >Plan</label
+              >
+              <input
+                v-model="planid"
+                disabled
+                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70"
+              />
             </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block mb-1 text-sm font-medium text-gray-700">Fecha</label>
-              <input v-model="date" type="date" disabled class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70" />
+              <label class="block mb-1 text-sm font-medium text-gray-700"
+                >Fecha</label
+              >
+              <input
+                v-model="date"
+                type="date"
+                disabled
+                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70"
+              />
             </div>
             <div>
-              <label class="block mb-1 text-sm font-medium text-gray-700">Recurrencia</label>
-              <input v-model="recurrence" disabled class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70" />
+              <label class="block mb-1 text-sm font-medium text-gray-700"
+                >Recurrencia</label
+              >
+              <input
+                v-model="recurrence"
+                disabled
+                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70"
+              />
             </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block mb-1 text-sm font-medium text-gray-700">Hora Inicio</label>
-              <input v-model="starttime" type="time" disabled class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70" />
+              <label class="block mb-1 text-sm font-medium text-gray-700"
+                >Hora Inicio</label
+              >
+              <input
+                v-model="starttime"
+                type="time"
+                disabled
+                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70"
+              />
             </div>
             <div>
-              <label class="block mb-1 text-sm font-medium text-gray-700">Hora Fin</label>
-              <input v-model="finishtime" type="time" disabled class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70" />
+              <label class="block mb-1 text-sm font-medium text-gray-700"
+                >Hora Fin</label
+              >
+              <input
+                v-model="finishtime"
+                type="time"
+                disabled
+                class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 mb-2 opacity-70"
+              />
             </div>
           </div>
         </template>
