@@ -39,7 +39,7 @@
       </RouterLink>
 
       <RouterLink
-        to="/eventos"
+        to="/selecteventtype"
         class="flex items-center px-4 py-2 rounded-md hover:bg-sportu-100 text-gray-700"
         active-class="bg-sportu-200 font-semibold"
       >

@@ -67,7 +67,7 @@ const routes = [
     redirect: '/',
   },
   {
-    path: '/g',
+    path: '/grupos',
     name: 'Grupos',
     component: () => import('@/views/Grupos.vue'),
     meta: { title: 'Grupos' },

@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   ejercicios: {
     getAll: () => ipcRenderer.invoke('ejercicios:getAll'),
     create: (data) => ipcRenderer.invoke('ejercicios:create', data),
-    delete: (id) => ipcRenderer.invoke('ejercicios:delete', id)
+    delete: (id) => ipcRenderer.invoke('ejercicios:delete', id),
     create: data => ipcRenderer.invoke('ejercicios:create', data),
   },
 

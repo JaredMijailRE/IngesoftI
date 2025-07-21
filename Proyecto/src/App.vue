@@ -1,6 +1,6 @@
 <script setup>
 import NotificationToast from '@/components/NotificationToast.vue'
-import Sidebar from '@/components/Sidebar.vue'
+import Sidebar from '@/components/SideBar.vue'
 import { useRoute } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useAuth } from '../src/composables/useAuth.js'
