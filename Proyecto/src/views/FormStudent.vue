@@ -219,16 +219,14 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStudents } from '@/composables/useStudents'
 
-const router   = useRouter()
-const route    = useRoute()
+const router = useRouter()
+const route  = useRoute()
 const { updateStudent } = useStudents()
-const groupId  = Number(route.query.groupId)
+const groupId = Number(route.query.groupId)
 const studentIdParam = route.query.studentId
-const isEditMode     = Boolean(studentIdParam)
+const isEditMode = Boolean(studentIdParam)
 
-if (!groupId) {
-  router.replace({ name: 'Grupos' })
-}
+if (!groupId) router.replace({ name: 'Grupos' })
 
 const form = ref({
   id: '',
@@ -243,8 +241,8 @@ const form = ref({
   preexistencias: ''
 })
 
-const errors        = ref({})
-const isLoading     = ref(false)
+const errors = ref({})
+const isLoading = ref(false)
 const signupMessage = ref('')
 
 // Carga datos en modo edición
@@ -260,11 +258,11 @@ onMounted(async () => {
           lastnames:         record.lastnames,
           birthdate:         record.birthdate,
           gender:            record.gender,
-          peso:              record.weight,
-          altura:            record.height,
-          porcentajegrasa:   record.bodyFatPercentage,
-          porcentajemusculo: record.muscleMassPercentage,
-          preexistencias:    record.medicalConditions
+          peso:              record.peso,
+          altura:            record.altura,
+          porcentajegrasa:   record.porcentajegrasa,
+          porcentajemusculo: record.porcentajemusculo,
+          preexistencias:    record.preexistencias
         })
       }
     }
@@ -277,21 +275,20 @@ function goBack() {
 
 function validateForm() {
   errors.value = {}
-  if (!form.value.id)         errors.value.id           = 'La identificación es obligatoria.'
-  if (!form.value.firstnames) errors.value.firstnames   = 'El nombre es obligatorio.'
-  if (!form.value.lastnames)  errors.value.lastnames    = 'El apellido es obligatorio.'
-  if (!form.value.birthdate)  errors.value.birthdate    = 'La fecha de nacimiento es obligatoria.'
-  if (!form.value.gender)     errors.value.gender       = 'El género es obligatorio.'
+  if (!form.value.id)           errors.value.id           = 'La identificación es obligatoria.'
+  if (!form.value.firstnames)   errors.value.firstnames   = 'El nombre es obligatorio.'
+  if (!form.value.lastnames)    errors.value.lastnames    = 'El apellido es obligatorio.'
+  if (!form.value.birthdate)    errors.value.birthdate    = 'La fecha de nacimiento es obligatoria.'  
+  if (!form.value.gender)       errors.value.gender       = 'El género es obligatorio.'
 
-  ['peso','altura','porcentajegrasa','porcentajemusculo']
-    .forEach(field => {
-      const val = form.value[field]
-      if (val === '') {
-        form.value[field] = null
-      } else if (isNaN(Number(val))) {
-        errors.value[field] = 'Debe ser un número válido.'
-      }
-    })
+  ['peso','altura','porcentajegrasa','porcentajemusculo'].forEach(field => {
+    const val = form.value[field]
+    if (val === '') {
+      form.value[field] = null
+    } else if (isNaN(Number(val))) {
+      errors.value[field] = 'Debe ser un número válido.'
+    }
+  })
 
   return Object.keys(errors.value).length === 0
 }
@@ -306,17 +303,17 @@ async function handleSubmit() {
   signupMessage.value = ''
 
   const payload = {
-    id:                Number(form.value.id),
+    id:                 Number(form.value.id),
     groupId,
-    firstnames:        form.value.firstnames,
-    lastnames:         form.value.lastnames,
-    birthdate:         form.value.birthdate,
-    gender:            form.value.gender,
-    peso:              form.value.peso != null ? Number(form.value.peso) : null,
-    altura:            form.value.altura != null ? Number(form.value.altura) : null,
-    porcentajegrasa:   form.value.porcentajegrasa != null ? Number(form.value.porcentajegrasa) : null,
-    porcentajemusculo: form.value.porcentajemusculo != null ? Number(form.value.porcentajemusculo) : null,
-    preexistencias:    form.value.preexistencias || null
+    firstnames:         form.value.firstnames,
+    lastnames:          form.value.lastnames,
+    birthdate:          form.value.birthdate,
+    gender:             form.value.gender,
+    peso:               form.value.peso != null ? Number(form.value.peso) : null,
+    altura:             form.value.altura != null ? Number(form.value.altura) : null,
+    porcentajegrasa:    form.value.porcentajegrasa != null ? Number(form.value.porcentajegrasa) : null,
+    porcentajemusculo:  form.value.porcentajemusculo != null ? Number(form.value.porcentajemusculo) : null,
+    preexistencias:     form.value.preexistencias || null
   }
 
   try {
