@@ -212,14 +212,14 @@ function handleSubmit() {
             Regresar
           </button>
         </h1>
-        <h1 class="text-xs font-bold text-secondary-600 mb-2">
+        <!-- <h1 class="text-xs font-bold text-secondary-600 mb-2">
           <button
             class="color-blue-600 hover:underline flex"
             @click="$router.push('/VisualEvents')"
           >
             Visual
           </button>
-        </h1>
+        </h1> -->
 
         <!-- Mensaje de resultado del registro -->
         <div
