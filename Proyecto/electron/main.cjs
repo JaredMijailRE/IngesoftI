@@ -428,23 +428,39 @@ ipcMain.handle('classEvent:create', async (event, data) => {
 
 
 // API handlers
-ipcMain.handle('user:getGrupos', async (event, userId) => {
+ipcMain.handle('user:getGrupos', async (event) => {
   try {
     const { getModels } = await import('../db/index.js')
     const { Profesor, Grupo } = await getModels()
 
+    const storageFile = path.join(__dirname, 'storage.json')
+    const storage = JSON.parse(fs.readFileSync(storageFile, 'utf8'))
+
+    const userId = storage.auth_user.id
+
     const profesor = await Profesor.findByPk(userId, {
       include: {
         model: Grupo,
-        through: { attributes: [] } // evita retornar datos de la tabla intermedia
+        through: { attributes: [] } // oculta los datos de ProfesorGrupo
       }
     })
 
-    if (!profesor) {
-      return { success: false, error: 'Profesor no encontrado' }
+    if (!profesor || !profesor.Grupos || profesor.Grupos.length === 0) {
+      return { success: false, error: 'No se encontraron grupos asignados' }
     }
 
-    return { success: true, data: profesor.Grupos }
+    const grupos = profesor.Grupos.map(grupo => {
+      const plain = grupo.get({ plain: true })
+      return {
+        id: plain.id,
+        nombre: plain.name,
+        objetivos: plain.objectives,
+        objetivos_especificos: plain.specific_objectives
+      }
+    })
+
+    return { success: true, data: grupos }
+
   } catch (err) {
     console.error('Error en user:getGrupos:', err)
     return { success: false, error: err.message }

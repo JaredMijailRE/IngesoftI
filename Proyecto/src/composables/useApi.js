@@ -25,14 +25,7 @@ export function useApi() {
     error.value = null
 
     try {
-      const result = await window.electronAPI.auth.getCurrentUser()
-
-      if (!result?.id) {
-        throw new Error('Usuario no autenticado o ID no disponible')
-      }
-
-      const userId = result.id
-      const response = await window.electronAPI.user.getGrupos(userId)
+      const response = await window.electronAPI.user.getGrupos()
 
       if (response.success) {
         return response
