@@ -71,11 +71,6 @@ onMounted(async () => {
     } catch (err) {
       console.error('Error cargando datos del usuario:', err)
     }
-
-    // const planesResponse = await getPlanes()
-    // console.log('Planes recibidos:', planesResponse)
-    // planes.value = planesResponse
-    //user.value.planes = planesResponse.data || []
     user.value.planesIds = user.value.planes.map(e => e.id) // ← Extraer PKs
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
