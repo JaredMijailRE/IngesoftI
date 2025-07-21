@@ -149,6 +149,17 @@ ipcMain.handle('group:create', async (_evt, data) => {
       objectives: data.objectives,
       specific_objectives: data.specific_objectives,
     })
+    
+    const storageFile = path.join(__dirname, 'storage.json')
+    storage = JSON.parse(fs.readFileSync(storageFile, 'utf8'))
+
+    const userId = storage.auth_user.id
+
+    await dbInstance.ProfesorGrupo.create({
+      profesor_id: userId,
+      grupo_id: nuevo.id,
+    })
+
     return {
       success: true,
       group: {
