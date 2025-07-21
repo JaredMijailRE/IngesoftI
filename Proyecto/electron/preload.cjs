@@ -28,8 +28,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   user: {
     getGrupos: () => ipcRenderer.invoke('user:getGrupos'),
-    getEventos: (userId) => ipcRenderer.invoke('user:getEventos', userId),
-    getGrupos2: (userId) => ipcRenderer.invoke('user:getGrupos2', userId),
+    getEventos: () => ipcRenderer.invoke('user:getEventos'),
     getPlanes: (userId) => ipcRenderer.invoke('user:getPlanes', userId),
     create: data => ipcRenderer.invoke('planes:create', data),
   },

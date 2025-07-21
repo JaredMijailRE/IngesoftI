@@ -467,27 +467,38 @@ ipcMain.handle('user:getGrupos', async (event) => {
   }
 })
 
-ipcMain.handle('user:getEventos', async (event, userId) => {
+ipcMain.handle('user:getEventos', async (event) => {
   try {
     const { getModels } = await import('../db/index.js')
     const { Profesor, Grupo, Evento } = await getModels()
 
+    const storageFile = path.join(__dirname, 'storage.json')
+    const storage = JSON.parse(fs.readFileSync(storageFile, 'utf8'))
+
+    const userId = storage.auth_user.id
+
     const profesor = await Profesor.findByPk(userId, {
       include: {
         model: Grupo,
-        include: Evento, // incluir eventos dentro de cada grupo
-        through: { attributes: [] }
+        through: { attributes: [] },
+        include: {
+          model: Evento,
+          through: { attributes: [] } // si usas tabla intermedia EventoGrupo
+        }
       }
     })
 
-    if (!profesor) {
-      return { success: false, error: 'Profesor no encontrado' }
+    if (!profesor || !profesor.Grupos || profesor.Grupos.length === 0) {
+      return { success: false, error: 'No se encontraron grupos o profesor' }
     }
 
-    // Extraer eventos de todos los grupos
-    const eventos = profesor.Grupos.flatMap(grupo => grupo.Eventos)
+    // Extraer y aplanar eventos
+    const eventos = profesor.Grupos.flatMap(grupo =>
+      (grupo.Eventos || []).map(evento => evento.get({ plain: true }))
+    )
 
     return { success: true, data: eventos }
+
   } catch (err) {
     console.error('Error en user:getEventos:', err)
     return { success: false, error: err.message }
