@@ -14,7 +14,7 @@ const routes = [
     component: () => import('@/views/LogIn.vue'),
     meta: {
       title: 'USport - Iniciar Sesión',
-      requiresAuth: false
+      requiresAuth: false,
     },
   },
   {
@@ -29,7 +29,7 @@ const routes = [
     component: () => import('@/views/SignUp.vue'),
     meta: {
       title: 'Sign Up',
-      requiresAuth: false
+      requiresAuth: false,
     },
   },
   {
@@ -38,7 +38,7 @@ const routes = [
     component: () => import('@/views/FormStudent.vue'),
     meta: {
       title: 'Form Student',
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -47,7 +47,25 @@ const routes = [
     component: () => import('@/views/SelectEventType.vue'),
     meta: {
       title: 'Select Event Type',
-      requiresAuth: true
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/VisualClass',
+    name: 'VisualClass',
+    component: () => import('@/views/VisualClass.vue'),
+    meta: {
+      title: 'Visual Class',
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/VisualEvents',
+    name: 'VisualEvents',
+    component: () => import('@/views/VisualEvents.vue'),
+    meta: {
+      title: 'Visual Events',
+      requiresAuth: true,
     },
   },
   {
@@ -56,7 +74,7 @@ const routes = [
     component: () => import('@/views/SportEvent.vue'),
     meta: {
       title: 'Sport Event',
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -65,7 +83,7 @@ const routes = [
     component: () => import('@/views/ClassEvent.vue'),
     meta: {
       title: 'Class Event',
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
