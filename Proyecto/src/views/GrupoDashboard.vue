@@ -5,7 +5,7 @@
       :items="[
         { label: 'Inicio', to: '/' },
         { label: 'Grupos', to: '/' },
-        { label: `Grupo ${groupId}`, to: `/grupos/${groupId}/dashboard` }
+        { label: `Grupo ${groupId}`, to: `/grupos/${groupId}/dashboard` },
       ]"
     />
 
@@ -32,60 +32,62 @@
       v-else-if="studentList.length"
       class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto"
     >
-    <!-- ─── src/views/GrupoDashboard.vue ─── -->
-<table class="min-w-full table-auto border-collapse">
-  <thead>
-    <tr class="bg-sportu-100 text-white text-left">
-      <th class="p-2">ID</th>
-      <th class="p-2">Nombres</th>
-      <th class="p-2">Apellidos</th>
-      <th class="p-2">Nacimiento</th>
-      <th class="p-2">Género</th>
-      <th class="p-2">Peso (kg)</th>
-      <th class="p-2">Altura (cm)</th>
-      <th class="p-2">% Grasa</th>
-      <th class="p-2">% Músculo</th>
-      <th class="p-2">Preexistencias</th>
-      <th class="p-2">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="student in studentList" :key="student.id" class="border-b hover:bg-gray-100">
-      <td class="p-2">{{ student.id }}</td>
-      <td class="p-2">{{ student.firstnames }}</td>
-      <td class="p-2">{{ student.lastnames }}</td>
-      <td class="p-2">{{ student.birthdate }}</td>
-      <td class="p-2">{{ student.gender }}</td>
-      <td class="p-2">{{ student.peso }}</td>
-      <td class="p-2">{{ student.altura }}</td>
-      <td class="p-2">{{ student.porcentajegrasa }}</td>
-      <td class="p-2">{{ student.porcentajemusculo }}</td>
-      <td class="p-2">{{ student.preexistencias || '–' }}</td>
-      <td class="p-2 flex space-x-2">
-        <!-- Editar -->
-        <button
-          type="button"
-          @click="editStudent(student.id)"
-          class="p-1 bg-blue-500 hover:bg-blue-600 text-white rounded"
-          aria-label="Editar estudiante"
-        >
-          <Icon icon="mdi:pencil" />
-        </button>
-        <!-- Eliminar -->
-        <button
-          type="button"
-          @click="deleteStudent(student.id)"
-          class="p-1 bg-red-500 hover:bg-red-600 text-white rounded"
-          aria-label="Eliminar estudiante"
-        >
-          <Icon icon="mdi:delete" />
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
+      <!-- ─── src/views/GrupoDashboard.vue ─── -->
+      <table class="min-w-full table-auto border-collapse">
+        <thead>
+          <tr class="bg-sportu-100 text-white text-left">
+            <th class="p-2">ID</th>
+            <th class="p-2">Nombres</th>
+            <th class="p-2">Apellidos</th>
+            <th class="p-2">Nacimiento</th>
+            <th class="p-2">Género</th>
+            <th class="p-2">Peso (kg)</th>
+            <th class="p-2">Altura (cm)</th>
+            <th class="p-2">% Grasa</th>
+            <th class="p-2">% Músculo</th>
+            <th class="p-2">Preexistencias</th>
+            <th class="p-2">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="student in studentList"
+            :key="student.id"
+            class="border-b hover:bg-gray-100"
+          >
+            <td class="p-2">{{ student.id }}</td>
+            <td class="p-2">{{ student.firstnames }}</td>
+            <td class="p-2">{{ student.lastnames }}</td>
+            <td class="p-2">{{ student.birthdate }}</td>
+            <td class="p-2">{{ student.gender }}</td>
+            <td class="p-2">{{ student.peso }}</td>
+            <td class="p-2">{{ student.altura }}</td>
+            <td class="p-2">{{ student.porcentajegrasa }}</td>
+            <td class="p-2">{{ student.porcentajemusculo }}</td>
+            <td class="p-2">{{ student.preexistencias || '–' }}</td>
+            <td class="p-2 flex space-x-2">
+              <!-- Editar -->
+              <button
+                type="button"
+                @click="editStudent(student.id)"
+                class="p-1 bg-blue-500 hover:bg-blue-600 text-white rounded"
+                aria-label="Editar estudiante"
+              >
+                <Icon icon="mdi:pencil" />
+              </button>
+              <!-- Eliminar -->
+              <button
+                type="button"
+                @click="deleteStudent(student.id)"
+                class="p-1 bg-red-500 hover:bg-red-600 text-white rounded"
+                aria-label="Eliminar estudiante"
+              >
+                <Icon icon="mdi:delete" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Mensaje cuando no hay estudiantes -->
@@ -99,31 +101,29 @@
 </template>
 
 <script setup>
-import { onMounted, watch }    from 'vue'
-import { useRoute, useRouter }  from 'vue-router'
-import { Icon }                 from '@iconify/vue'
-import Breadcrumb               from '@/components/ui/Breadcrumb.vue'
-import { useStudents }          from '@/composables/useStudents'
+import { onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Icon } from '@iconify/vue'
+import Breadcrumb from '@/components/ui/Breadcrumb.vue'
+import { useStudents } from '@/composables/useStudents'
 
-const router   = useRouter()
-const route    = useRoute()
-const groupId  = Number(route.params.id)
+const router = useRouter()
+const route = useRoute()
+const groupId = Number(route.params.id)
 
-const {
-  studentList,
-  isLoading,
-  loadError,
-  fetchStudents,
-  deleteStudentById
-} = useStudents()
+const { studentList, isLoading, loadError, fetchStudents, deleteStudentById } =
+  useStudents()
 
 // Carga inicial
 onMounted(() => fetchStudents(groupId))
 
 // Si vuelves del form, recarga
-watch(() => route.fullPath, () => {
-  if (!route.query.studentId) fetchStudents(groupId)
-})
+watch(
+  () => route.fullPath,
+  () => {
+    if (!route.query.studentId) fetchStudents(groupId)
+  }
+)
 
 function goToForm() {
   router.push({ name: 'FormStudent', query: { groupId } })

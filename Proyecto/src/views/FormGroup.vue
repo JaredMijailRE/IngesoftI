@@ -1,11 +1,17 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-t from-sportu-200 via-sportu-300 to-sportu-600 flex items-center justify-center p-6">
+  <div
+    class="min-h-screen bg-gradient-to-t from-sportu-200 via-sportu-300 to-sportu-600 flex items-center justify-center p-6"
+  >
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-8 space-y-6">
-      <h1 class="text-2xl font-bold text-gray-800 text-center">Crear Nuevo Grupo</h1>
+      <h1 class="text-2xl font-bold text-gray-800 text-center">
+        Crear Nuevo Grupo
+      </h1>
 
       <!-- Nombre -->
       <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+        <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
+          >Nombre *</label
+        >
         <input
           id="name"
           v-model="form.name"
@@ -14,12 +20,18 @@
           class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
           :class="{ 'border-red-500': errors.name }"
         />
-        <p v-if="errors.name" class="mt-1 text-sm text-red-500">{{ errors.name }}</p>
+        <p v-if="errors.name" class="mt-1 text-sm text-red-500">
+          {{ errors.name }}
+        </p>
       </div>
 
       <!-- Objectives -->
       <div>
-        <label for="objectives" class="block text-sm font-medium text-gray-700 mb-1">Objectives</label>
+        <label
+          for="objectives"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Objectives</label
+        >
         <textarea
           id="objectives"
           v-model="form.objectives"
@@ -30,7 +42,11 @@
 
       <!-- Specific Objectives -->
       <div>
-        <label for="specific" class="block text-sm font-medium text-gray-700 mb-1">Specific Objectives</label>
+        <label
+          for="specific"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Specific Objectives</label
+        >
         <textarea
           id="specific"
           v-model="form.specific_objectives"
@@ -60,7 +76,9 @@
       </div>
 
       <!-- Mensaje de error genérico -->
-      <p v-if="submitError" class="mt-4 text-sm text-red-500 text-center">{{ submitError }}</p>
+      <p v-if="submitError" class="mt-4 text-sm text-red-500 text-center">
+        {{ submitError }}
+      </p>
     </div>
   </div>
 </template>
@@ -74,11 +92,11 @@ const router = useRouter()
 const form = ref({
   name: '',
   objectives: '',
-  specific_objectives: ''
+  specific_objectives: '',
 })
 
-const errors      = ref({})
-const isLoading   = ref(false)
+const errors = ref({})
+const isLoading = ref(false)
 const submitError = ref(null)
 
 function goBack() {
@@ -96,14 +114,14 @@ function validate() {
 async function handleSubmit() {
   if (!validate()) return
 
-  isLoading.value   = true
+  isLoading.value = true
   submitError.value = null
 
   try {
     const { success, group, error } = await window.electronAPI.group.create({
       name: form.value.name.trim(),
       objectives: form.value.objectives.trim() || null,
-      specific_objectives: form.value.specific_objectives.trim() || null
+      specific_objectives: form.value.specific_objectives.trim() || null,
     })
 
     if (!success) {

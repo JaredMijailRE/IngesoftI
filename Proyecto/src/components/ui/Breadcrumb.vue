@@ -4,13 +4,13 @@ defineProps({
   items: {
     type: Array,
     required: true,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 
 const router = useRouter()
 
-const goTo = (to) => {
+const goTo = to => {
   if (to) router.push(to)
 }
 </script>

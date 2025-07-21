@@ -1,8 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-t from-sportu-200 via-sportu-300 to-sportu-600 py-9">
+  <div
+    class="min-h-screen bg-gradient-to-t from-sportu-200 via-sportu-300 to-sportu-600 py-9"
+  >
     <div class="flex justify-center">
-      <div class="card hover:shadow-lg bg-blue-50 transition-shadow w-full max-w-xl mx-8 px-8 py-8 space-y-6">
-
+      <div
+        class="card hover:shadow-lg bg-blue-50 transition-shadow w-full max-w-xl mx-8 px-8 py-8 space-y-6"
+      >
         <!-- Título -->
         <h1 class="text-2xl text-center font-bold text-gray-700">
           {{ isEditMode ? 'Editar Estudiante' : 'Registro de Estudiante' }}
@@ -13,7 +16,10 @@
 
         <!-- Identificación -->
         <div>
-          <label for="student-id" class="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            for="student-id"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
             Identificación del Estudiante
           </label>
           <input
@@ -24,13 +30,18 @@
             class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
             :class="{ 'border-red-500': errors.id }"
           />
-          <p v-if="errors.id" class="mt-1 text-sm text-red-500">{{ errors.id }}</p>
+          <p v-if="errors.id" class="mt-1 text-sm text-red-500">
+            {{ errors.id }}
+          </p>
         </div>
 
         <!-- Nombres / Apellidos -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="firstnames" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="firstnames"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               Nombres
             </label>
             <input
@@ -41,10 +52,15 @@
               class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
               :class="{ 'border-red-500': errors.firstnames }"
             />
-            <p v-if="errors.firstnames" class="mt-1 text-sm text-red-500">{{ errors.firstnames }}</p>
+            <p v-if="errors.firstnames" class="mt-1 text-sm text-red-500">
+              {{ errors.firstnames }}
+            </p>
           </div>
           <div>
-            <label for="lastnames" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="lastnames"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               Apellidos
             </label>
             <input
@@ -55,14 +71,19 @@
               class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
               :class="{ 'border-red-500': errors.lastnames }"
             />
-            <p v-if="errors.lastnames" class="mt-1 text-sm text-red-500">{{ errors.lastnames }}</p>
+            <p v-if="errors.lastnames" class="mt-1 text-sm text-red-500">
+              {{ errors.lastnames }}
+            </p>
           </div>
         </div>
 
         <!-- Género / Fecha de nacimiento -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="gender"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               Género
             </label>
             <select
@@ -77,10 +98,15 @@
               <option value="F">F</option>
               <option value="O">O</option>
             </select>
-            <p v-if="errors.gender" class="mt-1 text-sm text-red-500">{{ errors.gender }}</p>
+            <p v-if="errors.gender" class="mt-1 text-sm text-red-500">
+              {{ errors.gender }}
+            </p>
           </div>
           <div>
-            <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="birthdate"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               Fecha de Nacimiento
             </label>
             <input
@@ -91,14 +117,19 @@
               class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
               :class="{ 'border-red-500': errors.birthdate }"
             />
-            <p v-if="errors.birthdate" class="mt-1 text-sm text-red-500">{{ errors.birthdate }}</p>
+            <p v-if="errors.birthdate" class="mt-1 text-sm text-red-500">
+              {{ errors.birthdate }}
+            </p>
           </div>
         </div>
 
         <!-- Peso / Altura -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="peso" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="peso"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               Peso (kg)
             </label>
             <input
@@ -110,10 +141,15 @@
               class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
               :class="{ 'border-red-500': errors.peso }"
             />
-            <p v-if="errors.peso" class="mt-1 text-sm text-red-500">{{ errors.peso }}</p>
+            <p v-if="errors.peso" class="mt-1 text-sm text-red-500">
+              {{ errors.peso }}
+            </p>
           </div>
           <div>
-            <label for="altura" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="altura"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               Altura (cm)
             </label>
             <input
@@ -125,14 +161,19 @@
               class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
               :class="{ 'border-red-500': errors.altura }"
             />
-            <p v-if="errors.altura" class="mt-1 text-sm text-red-500">{{ errors.altura }}</p>
+            <p v-if="errors.altura" class="mt-1 text-sm text-red-500">
+              {{ errors.altura }}
+            </p>
           </div>
         </div>
 
         <!-- % Grasa / % Músculo -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="porcentajegrasa" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="porcentajegrasa"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               % Grasa
             </label>
             <input
@@ -144,10 +185,15 @@
               class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
               :class="{ 'border-red-500': errors.porcentajegrasa }"
             />
-            <p v-if="errors.porcentajegrasa" class="mt-1 text-sm text-red-500">{{ errors.porcentajegrasa }}</p>
+            <p v-if="errors.porcentajegrasa" class="mt-1 text-sm text-red-500">
+              {{ errors.porcentajegrasa }}
+            </p>
           </div>
           <div>
-            <label for="porcentajemusculo" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="porcentajemusculo"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
               % Músculo
             </label>
             <input
@@ -159,13 +205,21 @@
               class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
               :class="{ 'border-red-500': errors.porcentajemusculo }"
             />
-            <p v-if="errors.porcentajemusculo" class="mt-1 text-sm text-red-500">{{ errors.porcentajemusculo }}</p>
+            <p
+              v-if="errors.porcentajemusculo"
+              class="mt-1 text-sm text-red-500"
+            >
+              {{ errors.porcentajemusculo }}
+            </p>
           </div>
         </div>
 
         <!-- Preexistencias -->
         <div>
-          <label for="preexistencias" class="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            for="preexistencias"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
             Preexistencias Médicas
           </label>
           <input
@@ -175,7 +229,9 @@
             class="w-full border px-3 py-2 rounded focus:outline-none focus:border-sportu-400"
             :class="{ 'border-red-500': errors.preexistencias }"
           />
-          <p v-if="errors.preexistencias" class="mt-1 text-sm text-red-500">{{ errors.preexistencias }}</p>
+          <p v-if="errors.preexistencias" class="mt-1 text-sm text-red-500">
+            {{ errors.preexistencias }}
+          </p>
         </div>
 
         <!-- Botones -->
@@ -202,13 +258,14 @@
         <div
           v-if="signupMessage"
           class="mt-4 p-3 rounded-md text-center"
-          :class="signupMessage.includes('exitoso')
-            ? 'bg-green-100 text-green-700'
-            : 'bg-red-100 text-red-700'"
+          :class="
+            signupMessage.includes('exitoso')
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'
+          "
         >
           {{ signupMessage }}
         </div>
-
       </div>
     </div>
   </div>
@@ -220,7 +277,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStudents } from '@/composables/useStudents'
 
 const router = useRouter()
-const route  = useRoute()
+const route = useRoute()
 const { updateStudent } = useStudents()
 const groupId = Number(route.query.groupId)
 const studentIdParam = route.query.studentId
@@ -238,7 +295,7 @@ const form = ref({
   altura: '',
   porcentajegrasa: '',
   porcentajemusculo: '',
-  preexistencias: ''
+  preexistencias: '',
 })
 
 const errors = ref({})
@@ -248,21 +305,23 @@ const signupMessage = ref('')
 // Carga datos en modo edición
 onMounted(async () => {
   if (isEditMode) {
-    const { success, students } = await window.electronAPI.student.getAll({ groupId })
+    const { success, students } = await window.electronAPI.student.getAll({
+      groupId,
+    })
     if (success) {
       const record = students.find(s => s.id.toString() === studentIdParam)
       if (record) {
         Object.assign(form.value, {
-          id:                String(record.id),
-          firstnames:        record.firstnames,
-          lastnames:         record.lastnames,
-          birthdate:         record.birthdate,
-          gender:            record.gender,
-          peso:              record.peso,
-          altura:            record.altura,
-          porcentajegrasa:   record.porcentajegrasa,
+          id: String(record.id),
+          firstnames: record.firstnames,
+          lastnames: record.lastnames,
+          birthdate: record.birthdate,
+          gender: record.gender,
+          peso: record.peso,
+          altura: record.altura,
+          porcentajegrasa: record.porcentajegrasa,
           porcentajemusculo: record.porcentajemusculo,
-          preexistencias:    record.preexistencias
+          preexistencias: record.preexistencias,
         })
       }
     }
@@ -275,20 +334,24 @@ function goBack() {
 
 function validateForm() {
   errors.value = {}
-  if (!form.value.id)           errors.value.id           = 'La identificación es obligatoria.'
-  if (!form.value.firstnames)   errors.value.firstnames   = 'El nombre es obligatorio.'
-  if (!form.value.lastnames)    errors.value.lastnames    = 'El apellido es obligatorio.'
-  if (!form.value.birthdate)    errors.value.birthdate    = 'La fecha de nacimiento es obligatoria.'  
-  if (!form.value.gender)       errors.value.gender       = 'El género es obligatorio.'
-
-  ['peso','altura','porcentajegrasa','porcentajemusculo'].forEach(field => {
-    const val = form.value[field]
-    if (val === '') {
-      form.value[field] = null
-    } else if (isNaN(Number(val))) {
-      errors.value[field] = 'Debe ser un número válido.'
-    }
-  })
+  if (!form.value.id) errors.value.id = 'La identificación es obligatoria.'
+  if (!form.value.firstnames)
+    errors.value.firstnames = 'El nombre es obligatorio.'
+  if (!form.value.lastnames)
+    errors.value.lastnames = 'El apellido es obligatorio.'
+  if (!form.value.birthdate)
+    errors.value.birthdate = 'La fecha de nacimiento es obligatoria.'
+  if (!form.value.gender)
+    errors.value.gender = 'El género es obligatorio.'[
+      ('peso', 'altura', 'porcentajegrasa', 'porcentajemusculo')
+    ].forEach(field => {
+      const val = form.value[field]
+      if (val === '') {
+        form.value[field] = null
+      } else if (isNaN(Number(val))) {
+        errors.value[field] = 'Debe ser un número válido.'
+      }
+    })
 
   return Object.keys(errors.value).length === 0
 }
@@ -303,17 +366,23 @@ async function handleSubmit() {
   signupMessage.value = ''
 
   const payload = {
-    id:                 Number(form.value.id),
+    id: Number(form.value.id),
     groupId,
-    firstnames:         form.value.firstnames,
-    lastnames:          form.value.lastnames,
-    birthdate:          form.value.birthdate,
-    gender:             form.value.gender,
-    peso:               form.value.peso != null ? Number(form.value.peso) : null,
-    altura:             form.value.altura != null ? Number(form.value.altura) : null,
-    porcentajegrasa:    form.value.porcentajegrasa != null ? Number(form.value.porcentajegrasa) : null,
-    porcentajemusculo:  form.value.porcentajemusculo != null ? Number(form.value.porcentajemusculo) : null,
-    preexistencias:     form.value.preexistencias || null
+    firstnames: form.value.firstnames,
+    lastnames: form.value.lastnames,
+    birthdate: form.value.birthdate,
+    gender: form.value.gender,
+    peso: form.value.peso != null ? Number(form.value.peso) : null,
+    altura: form.value.altura != null ? Number(form.value.altura) : null,
+    porcentajegrasa:
+      form.value.porcentajegrasa != null
+        ? Number(form.value.porcentajegrasa)
+        : null,
+    porcentajemusculo:
+      form.value.porcentajemusculo != null
+        ? Number(form.value.porcentajemusculo)
+        : null,
+    preexistencias: form.value.preexistencias || null,
   }
 
   try {
@@ -331,7 +400,9 @@ async function handleSubmit() {
       return
     }
 
-    signupMessage.value = isEditMode ? '¡Actualizado exitosamente!' : '¡Registro exitoso!'
+    signupMessage.value = isEditMode
+      ? '¡Actualizado exitosamente!'
+      : '¡Registro exitoso!'
     setTimeout(goBack, 800)
   } catch (e) {
     console.error(e)

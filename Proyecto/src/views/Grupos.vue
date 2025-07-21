@@ -3,7 +3,6 @@
     <!-- Breadcrumb -->
     <Breadcrumb :items="[{ label: 'Inicio', to: '/' }, { label: 'Grupos' }]" />
 
-
     <!-- Botón Nuevo Grupo -->
     <div class="flex justify-end mb-4">
       <button
@@ -15,11 +14,9 @@
       </button>
     </div>
 
-
     <!-- Cargando / Error -->
     <div v-if="isLoading" class="text-white">Cargando grupos…</div>
     <div v-else-if="loadError" class="text-red-200">{{ loadError }}</div>
-
 
     <!-- Lista de Grupos -->
     <div v-else class="space-y-4 mt-6">
@@ -31,10 +28,7 @@
         <!-- Header clickeable + botón Ir a Grupo -->
         <template #header>
           <div class="w-full flex justify-between items-center px-4 py-3">
-            <button
-              @click="toggle(group.id)"
-              class="flex-1 text-left"
-            >
+            <button @click="toggle(group.id)" class="flex-1 text-left">
               <span class="text-lg font-semibold text-gray-800">
                 {{ group.name }}
               </span>
@@ -48,13 +42,16 @@
               </button>
               <Icon
                 @click="toggle(group.id)"
-                :icon="expandedId === group.id ? 'mdi:chevron-up' : 'mdi:chevron-down'"
+                :icon="
+                  expandedId === group.id
+                    ? 'mdi:chevron-up'
+                    : 'mdi:chevron-down'
+                "
                 class="text-2xl text-gray-600 cursor-pointer"
               />
             </div>
           </div>
         </template>
-
 
         <!-- Body con preview de estudiantes -->
         <template #body v-if="expandedId === group.id">
@@ -62,7 +59,6 @@
             <h2 class="text-xl font-bold text-gray-700 mb-3">
               {{ group.objectives || 'Sin objetivos definidos' }}
             </h2>
-
 
             <ul class="space-y-2 mb-4">
               <li
@@ -83,40 +79,31 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref }               from 'vue'
-import { useRouter }         from 'vue-router'
-import { Icon }              from '@iconify/vue'
-import Breadcrumb            from '@/components/ui/Breadcrumb.vue'
-import BaseCard              from '@/components/BaseCard.vue'
-import { useGroups }         from '@/composables/useGroups'
-
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Icon } from '@iconify/vue'
+import Breadcrumb from '@/components/ui/Breadcrumb.vue'
+import BaseCard from '@/components/BaseCard.vue'
+import { useGroups } from '@/composables/useGroups'
 
 const router = useRouter()
 const { groups, isLoading, loadError } = useGroups()
 const expandedId = ref(null)
 
-
 function toggle(id) {
   expandedId.value = expandedId.value === id ? null : id
 }
 
-
 function goToNewGroup() {
   router.push({ name: 'FormGroup' })
 }
-
 
 function goToDashboard(id) {
   router.push({ name: 'GrupoDashboard', params: { id } })
 }
 </script>
 
-
 <style scoped>
 /* Ajustes de estilo si los necesitas */
 </style>
-
-
-
