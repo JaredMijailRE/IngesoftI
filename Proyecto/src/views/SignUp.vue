@@ -4,7 +4,9 @@
 import { Icon } from '@iconify/vue'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuth } from '../composables/useAuth.js'
 
+const { user } = useAuth()
 const router = useRouter()
 
 const showPassword = ref(false)
@@ -25,6 +27,7 @@ const signupMessage = ref('')
 
 // Función para ir a LogIn
 function goToLogin() {
+  user.value = null
   router.push('/')
 }
 
@@ -148,6 +151,8 @@ function handleSubmit() {
         isLoading.value = false
       })
   }
+
+  router.push('/main')
 }
 </script>
 
@@ -159,7 +164,7 @@ function handleSubmit() {
   >
     <div class="flex justify-center">
       <div
-        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 flex-col px-8 py-8"
+        class="card hover:shadow-lg bg-blue-50 transition-shadow w-1/3 min-w-[400px] flex-col px-8 py-8"
       >
         <img
           class="w-40 h-40 mx-auto my-5 rounded-full object-cover"
