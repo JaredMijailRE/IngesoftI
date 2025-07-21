@@ -219,6 +219,11 @@ function goToRegister() {
   router.push('/signup')
 }
 
+// Función para ir al formulario de estudiante
+function gotoFormStudent() {
+  router.push('/formstudent')
+}
+
 // Función para cerrar sesión
 function handleLogout() {
   logout()

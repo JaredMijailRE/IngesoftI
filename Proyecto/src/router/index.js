@@ -7,6 +7,7 @@ const routes = [
     component: () => import('@/views/Main.vue'),
     meta: { title: 'Main' },
   },
+
   {
     path: '/',
     name: 'Login',
@@ -27,6 +28,14 @@ const routes = [
     component: () => import('@/views/SignUp.vue'),
     meta: {
       title: 'Sign Up',
+    },
+  },
+  {
+    path: '/formstudent', //formstudent
+    name: 'FormStudent',
+    component: () => import('@/views/FormStudent.vue'),
+    meta: {
+      title: 'Form Student',
     },
   },
   {
@@ -56,6 +65,24 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/',
+  },
+  {
+    path: '/g',
+    name: 'Grupos',
+    component: () => import('@/views/Grupos.vue'),
+    meta: { title: 'Grupos' },
+  },
+  {
+    path: '/grupos/:id/dashboard',
+    name: 'GrupoDashboard',
+    component: () => import('@/views/GrupoDashboard.vue'),
+    meta: { title: 'Dashboard del Grupo' },
+  },
+  {
+    path: '/grupos/new',
+    name: 'FormGroup',
+    component: () => import('@/views/FormGroup.vue'),
+    meta: { title: 'Crear Nuevo Grupo' },
   },
 ]
 
