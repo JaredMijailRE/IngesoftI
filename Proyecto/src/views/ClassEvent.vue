@@ -29,7 +29,9 @@ const errors = ref({})
 const isLoading = ref(false)
 const signupMessage = ref('')
 
-const { getCurrentUser, getUserGrupos, getUserPlanes } = useApi()
+const { getCurrentUser, getUserGrupos, getUserPlanes, getPlanes } = useApi()
+
+const planes = ref([])
 
 const user = ref({
   username: '',
@@ -38,9 +40,6 @@ const user = ref({
   gruposIds: [], // Aquí se guardan las PK de grupos
   planesIds: [], // Aquí se guardan las PK de eventos
 })
-
-const grupos = ref([])
-const planes = ref([])
 
 const router = useRouter()
 
@@ -63,12 +62,21 @@ onMounted(async () => {
     user.value.grupos = gruposResponse.data || []
     user.value.gruposIds = user.value.grupos.map(g => g.id) // ← Extraer PKs
 
-    const planesResponse = await getUserPlanes()
-    user.value.planes = planesResponse.data || []
-    user.value.planesIds = user.value.planes.map(e => e.id) // ← Extraer PKs
+    try {
+      console.log('Entrando a onMounted')
+      const res = await getPlanes()
+      console.log('Planes recibidos:', res)
+      planes.value = res
+      console.log('planes.value:', planes.value)
+    } catch (err) {
+      console.error('Error cargando datos del usuario:', err)
+    }
 
-    grupos.value = gruposResponse.data || []
-    planes.value = planesResponse.data || []
+    // const planesResponse = await getPlanes()
+    // console.log('Planes recibidos:', planesResponse)
+    // planes.value = planesResponse
+    //user.value.planes = planesResponse.data || []
+    user.value.planesIds = user.value.planes.map(e => e.id) // ← Extraer PKs
   } catch (err) {
     console.error('Error cargando datos del usuario:', err)
   }
@@ -178,8 +186,12 @@ function handleSubmit() {
               :class="{ 'border-red-500': errors.groupid }"
             >
               <option value="">Seleccionar un Grupo</option>
-              <option v-for="g in grupos" :key="g.id" :value="g.id">
-                {{ g.name }}
+              <option
+                v-for="grupo in user.grupos"
+                :key="grupo.id"
+                :value="grupo.id"
+              >
+                {{ grupo.nombre }}
               </option>
             </select>
             <p v-if="errors.groupid" class="text-sm text-red-500 mb-2">
@@ -198,8 +210,8 @@ function handleSubmit() {
               :class="{ 'border-red-500': errors.planid }"
             >
               <option value="">Selecciona un plan</option>
-              <option v-for="p in planes" :key="p.id" :value="p.id">
-                {{ p.name }}
+              <option v-for="plan in planes" :key="plan.id" :value="plan.id">
+                {{ plan.name }}
               </option>
             </select>
             <p v-if="errors.planid" class="text-sm text-red-500 mb-2">
